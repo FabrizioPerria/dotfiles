@@ -1,4 +1,5 @@
-vim.keymap.set("n", "<leader>g", ":vertical Git | vertical resize 40<CR>")
+-- vim.keymap.set("n", "<leader>G", ":vertical Git | vertical resize 40<CR>")
+vim.keymap.set("n", "<leader>G", ":Git<CR>")
 vim.keymap.set("n", "<leader>gco", ':Git commit -m ""<Left>')
 vim.keymap.set("n", "<leader>gg", ":Git pull --rebase")
 vim.keymap.set("n", "<leader>gp", ":Git push -u origin ")
