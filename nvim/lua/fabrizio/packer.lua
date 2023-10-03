@@ -17,6 +17,12 @@ return require('packer').startup(function(use)
         requires = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' }
     }
 
+    use {
+        "nvim-telescope/telescope-fzf-native.nvim",
+        requires = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
+        run = 'make'
+    }
+
     use({
         'nvim-treesitter/nvim-treesitter',
         run = function()
@@ -72,7 +78,7 @@ return require('packer').startup(function(use)
     use("projekt0n/github-nvim-theme")
     use("rose-pine/neovim")
     use("gmr458/dark_modern.nvim")
-    use("shaunsigh/nord.nvim")
+    use("shaunsingh/nord.nvim")
     use("navarasu/onedark.nvim")
     use("sainnhe/edge")
 
@@ -100,4 +106,5 @@ return require('packer').startup(function(use)
     use("terrortylor/nvim-comment")
     use('folke/which-key.nvim')
     use("lukas-reineke/indent-blankline.nvim")
+    use("nvim-lualine/lualine.nvim")
 end)
