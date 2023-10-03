@@ -17,12 +17,12 @@ require('telescope').setup({
             hijack_netrw = true,
             hidden = true
         },
-        fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = 'smart_case'
-        }
+        -- fzf = {
+        --     fuzzy = true,
+        --     override_generic_sorter = true,
+        --     override_file_sorter = true,
+        --     case_mode = 'smart_case'
+        -- }
     },
     pickers = {
         find_files = {
