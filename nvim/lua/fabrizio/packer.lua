@@ -8,8 +8,8 @@ return require('packer').startup(function(use)
     use 'wbthomason/packer.nvim'
 
     use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.0',
-        requires = { { 'nvim-lua/plenary.nvim' } }
+        'nvim-telescope/telescope.nvim',
+        requires = { 'nvim-lua/plenary.nvim' }
     }
 
     use {
@@ -19,9 +19,12 @@ return require('packer').startup(function(use)
 
     use {
         "nvim-telescope/telescope-fzf-native.nvim",
-        requires = { 'nvim-telescope/telescope.nvim', 'nvim-lua/plenary.nvim' },
-        run = { 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' },
+        requires = { 'nvim-lua/plenary.nvim' ,'nvim-telescope/telescope.nvim' },
+        run = { 'make' },
     }
+
+    use('BurntSushi/ripgrep')
+    use('sharkdp/fd')
 
     use({
         'nvim-treesitter/nvim-treesitter',
@@ -99,7 +102,6 @@ return require('packer').startup(function(use)
     use("m4xshen/autoclose.nvim")
     use("christoomey/vim-tmux-navigator")
     use("sindrets/diffview.nvim")
-    use("folke/zen-mode.nvim")
     use("eandrju/cellular-automaton.nvim")
     use("nvim-tree/nvim-tree.lua")
     use("nvim-tree/nvim-web-devicons")
@@ -107,4 +109,8 @@ return require('packer').startup(function(use)
     use('folke/which-key.nvim')
     use("lukas-reineke/indent-blankline.nvim")
     use("nvim-lualine/lualine.nvim")
+    use('alec-gibson/nvim-tetris')
+    use('seandewar/nvimesweeper')
+    use('andrewferrier/debugprint.nvim')
+    use('aznhe21/actions-preview.nvim')
 end)

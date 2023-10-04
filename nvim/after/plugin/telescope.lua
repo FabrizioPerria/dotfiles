@@ -9,8 +9,8 @@ end)
 vim.keymap.set('n', '<leader>hh', builtin.help_tags, {})
 
 vim.keymap.set('n', '<leader>fv', ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>')
-
-require('telescope').setup({
+local telescope = require('telescope')
+telescope.setup({
     extensions = {
         file_browser = {
             hijack_netrw = true,
@@ -66,5 +66,6 @@ require('telescope').setup({
     }
 })
 
-require('telescope').load_extension("fzf")
-require('telescope').load_extension "file_browser"
+telescope.load_extension("fzf")
+telescope.load_extension ( "file_browser" )
+telescope.load_extension ( "refactoring" )
