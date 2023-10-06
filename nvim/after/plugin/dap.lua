@@ -48,10 +48,12 @@ dap.configurations.cpp = dap.configurations.c
 
 require('dap-python').setup('/opt/homebrew/bin/python3')
 
-vim.keymap.set('n', '<F4>', ':DapToggleBreakpoint<CR>')
-vim.keymap.set('n', '<F5>', ':DapContinue<CR>')
-vim.keymap.set('n', '<F10>', ':DapStepOver<CR>')
-vim.keymap.set('n', '<F12>', ':DapTerminate<CR>')
+vim.keymap.set('n', '<F4>', ':DapToggleBreakpoint<CR>', {desc="Toggle Breakpoint"})
+vim.keymap.set('n', '<F5>', ':DapContinue<CR>', {desc="Run/Continue Debug"})
+vim.keymap.set('n', '<F9>', ':DapStepInto<CR>', {desc="Debug step into"})
+vim.keymap.set('n', '<F10>', ':DapStepOver<CR>', {desc="Debug step over"})
+vim.keymap.set('n', '<F11>', ':DapStepOut<CR>', {desc="Debug step out"})
+vim.keymap.set('n', '<F12>', ':DapTerminate<CR>', {desc="Stop debug"})
 
 
 vim.api.nvim_set_hl(0, "DapStoppedLinehl", { bg = "#555530" })

@@ -38,6 +38,7 @@ return require('packer').startup(function(use)
         'nvim-treesitter/nvim-treesitter-textobjects',
         requires = 'nvim-treesitter/nvim-treesitter'
     })
+    use('jose-elias-alvarez/null-ls.nvim')
 
     use {
         'VonHeikemen/lsp-zero.nvim',
@@ -95,6 +96,7 @@ return require('packer').startup(function(use)
     use("tpope/vim-rhubarb")
     use("lewis6991/gitsigns.nvim")
     use("junegunn/gv.vim")
+    use('kdheepak/lazygit.nvim')
 
     use("folke/todo-comments.nvim")
     use("nvim-treesitter/nvim-treesitter-context");
@@ -113,4 +115,6 @@ return require('packer').startup(function(use)
     use('seandewar/nvimesweeper')
     use('andrewferrier/debugprint.nvim')
     use('aznhe21/actions-preview.nvim')
+    use('ahmedkhalf/project.nvim')
+    use('akinsho/toggleterm.nvim')
 end)

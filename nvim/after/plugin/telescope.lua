@@ -24,6 +24,8 @@ telescope.setup({
         }
     },
     defaults = {
+        mappings = {
+        },
         vimgrep_arguments = {
             'rg',
             '--color=never',
