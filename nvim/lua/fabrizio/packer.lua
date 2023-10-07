@@ -36,7 +36,7 @@ return require('packer').startup(function(use)
 
     use({
         'nvim-treesitter/nvim-treesitter-textobjects',
-        requires = 'nvim-treesitter/nvim-treesitter'
+        requires = {'nvim-treesitter/nvim-treesitter', 'nvim-treesitter/playground'}
     })
     use('jose-elias-alvarez/null-ls.nvim')
 
@@ -97,6 +97,7 @@ return require('packer').startup(function(use)
     use("lewis6991/gitsigns.nvim")
     use("junegunn/gv.vim")
     use('kdheepak/lazygit.nvim')
+    use('f-person/git-blame.nvim')
 
     use("folke/todo-comments.nvim")
     use("nvim-treesitter/nvim-treesitter-context");
@@ -117,4 +118,5 @@ return require('packer').startup(function(use)
     use('aznhe21/actions-preview.nvim')
     use('ahmedkhalf/project.nvim')
     use('akinsho/toggleterm.nvim')
+    use('seblj/nvim-tabline')
 end)

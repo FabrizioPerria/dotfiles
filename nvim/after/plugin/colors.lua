@@ -8,8 +8,16 @@
 
 -- vim.cmd.colorscheme('carbonfox')
 
-require('github-theme').setup()
 vim.cmd.colorscheme('github_dark_dimmed')
+require('github-theme').setup({
+    groups = {
+        all = {
+            DiffText = {bg = '#333027', fg = '#c69026'},
+            DiffChanged = {bg = '#333027', fg = '#c69026'},
+            DiffChange = {bg='#292e36', fg = '#adbac7'}
+        }
+    }
+})
 
 -- require('tokyonight').setup()
 -- vim.cmd.colorscheme('tokyonight')
