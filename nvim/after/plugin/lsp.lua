@@ -9,11 +9,20 @@ lsp.ensure_installed({
     'cmake',
     'pyright',
     'zk',
-    'lua_ls'
+    'lua_ls',
+    'vimls',
+    'efm'
 })
 
 -- Fix Undefined global 'vim'
 lsp.nvim_workspace()
+
+require'lspconfig'.bashls.setup{
+    filetypes = {
+       'sh',
+       'bash'
+    }
+}
 
 require'lspconfig'.lua_ls.setup{
     settings = {
@@ -25,7 +34,7 @@ require'lspconfig'.lua_ls.setup{
     }
 }
 
-vim.keymap.set('n', '<leader>tt', function()
+vim.keymap.set('n', '<leader>dd', function()
     if vim.diagnostic.is_disabled() 
     then
         vim.diagnostic.enable()
