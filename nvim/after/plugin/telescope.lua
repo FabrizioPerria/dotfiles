@@ -1,5 +1,6 @@
 local builtin = require('telescope.builtin')
 
+vim.keymap.set('n', '<leader>b', ':Telescope buffers<CR>', {}, 'Show buffers')
 vim.keymap.set('n', '<leader>ff', builtin.find_files, {desc='Fuzzy file search'})
 vim.keymap.set('n', '<leader>fh', builtin.keymaps, {desc='Show keymaps'})
 vim.keymap.set('n', '<leader>fg', builtin.git_files, {desc='Fuzzy file search in git repository'})
