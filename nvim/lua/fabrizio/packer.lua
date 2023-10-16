@@ -4,7 +4,6 @@
 vim.cmd.packadd('packer.nvim')
 
 local vscode = vim.g.vscode == 1
-
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
@@ -113,21 +112,21 @@ return require('packer').startup(function(use)
     use({ "m4xshen/autoclose.nvim" })
     use({ "christoomey/vim-tmux-navigator", disable = vscode })
     use({ "sindrets/diffview.nvim", disable = vscode })
-    use({ "eandrju/cellular-automaton.nvim" })
+    use({ "eandrju/cellular-automaton.nvim", disable = vscode })
     use({ "nvim-tree/nvim-tree.lua" })
     use({ "nvim-tree/nvim-web-devicons" })
     use({ "terrortylor/nvim-comment" })
     use({ "folke/which-key.nvim" })
-    use({ "lukas-reineke/indent-blankline.nvim" })
+    use({ "lukas-reineke/indent-blankline.nvim", disable = vscode })
     use({ "nvim-lualine/lualine.nvim" })
     use({ "alec-gibson/nvim-tetris", disable = vscode })
     use({ "andrewferrier/debugprint.nvim" })
     use({ "aznhe21/actions-preview.nvim" })
-    use({'nvim-telescope/telescope-project.nvim'})
+    use({ 'nvim-telescope/telescope-project.nvim' })
     use({ "akinsho/toggleterm.nvim", disable = vscode })
     use({ "seblj/nvim-tabline", disable = vscode })
     use({ "chrisgrieser/nvim-spider" })
-    use({ "RRethy/vim-illuminate" })
+    -- use({ "RRethy/vim-illuminate" })
     use({ "zane-/cder.nvim" })
 
     use({ "folke/tokyonight.nvim", disable = vscode })
