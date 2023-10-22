@@ -25,14 +25,19 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
 end)
 
 require("ibl").setup {
-    indent = { highlight = highlight },
+    indent = {
+        highlight = highlight,
+        -- char = { "⎜" },
+    },
+    scope = {
+        enabled = true,
+        priority = 2000,
+        highlight = highlight,
+        char = { "▎" },
+    },
     whitespace = {
         highlight = hi_whitespace,
         remove_blankline_trail = false
-    },
-    scope = {
-        enabled = false,
-        highlight = highlight
     }
 }
 
@@ -48,10 +53,11 @@ require("tokyonight").setup {
         hl.DiffDelete = { bg = "#360000", fg = "#db4b4b" }
 
         hl.LineNr = { fg = "#6f99bb", }
-        hl.CursorLineNr = { bg = "#637bff", fg = "#ffffff" }
+        hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
     end,
 }
 vim.cmd.colorscheme('tokyonight-storm')
+-- vim.g.tokyonight_storm_cursor_color = "#0000ff"
 --
 -- vim.cmd.colorscheme('github_dark_dimmed')
 -- require('github-theme').setup({
