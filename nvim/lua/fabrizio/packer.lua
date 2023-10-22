@@ -36,6 +36,7 @@ return require('packer').startup(function(use)
         disable = vscode,
         run = { 'make' },
     }
+    use { 'nvim-telescope/telescope-ui-select.nvim', disable = vscode }
 
     use { 'BurntSushi/ripgrep', disable = vscode, }
     use { 'sharkdp/fd', disable = vscode }
@@ -57,8 +58,9 @@ return require('packer').startup(function(use)
             { 'nvim-treesitter/playground',      disable = vscode }
         }
     })
-    use { 'jose-elias-alvarez/null-ls.nvim', disable = vscode }
+    use({ "nvim-treesitter/nvim-treesitter-context", disable = vscode });
 
+    use { 'jose-elias-alvarez/null-ls.nvim', disable = vscode }
     use {
         'VonHeikemen/lsp-zero.nvim',
         branch = 'v1.x',
@@ -106,38 +108,28 @@ return require('packer').startup(function(use)
     use({ "junegunn/gv.vim", disable = vscode })
     use({ 'f-person/git-blame.nvim', disable = vscode })
 
+    use({ 'prichrd/netrw.nvim' })
     use({ "folke/todo-comments.nvim" })
-    use({ "nvim-treesitter/nvim-treesitter-context", disable = vscode });
+    use({ "folke/which-key.nvim" })
     use({ "kylechui/nvim-surround" })
     use({ "m4xshen/autoclose.nvim" })
     use({ "christoomey/vim-tmux-navigator", disable = vscode })
     use({ "sindrets/diffview.nvim", disable = vscode })
     use({ "eandrju/cellular-automaton.nvim", disable = vscode })
-    use({ "nvim-tree/nvim-tree.lua" })
     use({ "nvim-tree/nvim-web-devicons" })
     use({ "terrortylor/nvim-comment" })
-    use({ "folke/which-key.nvim" })
     use({ "lukas-reineke/indent-blankline.nvim", disable = vscode })
     use({ "nvim-lualine/lualine.nvim" })
     use({ "alec-gibson/nvim-tetris", disable = vscode })
-    use({ "andrewferrier/debugprint.nvim" })
     use({ "aznhe21/actions-preview.nvim" })
     use({ 'nvim-telescope/telescope-project.nvim' })
     use({ "akinsho/toggleterm.nvim", disable = vscode })
     use({ "seblj/nvim-tabline", disable = vscode })
     use({ "chrisgrieser/nvim-spider" })
-    -- use({ "RRethy/vim-illuminate" })
     use({ "zane-/cder.nvim" })
 
+    use({ "norcalli/nvim-colorizer.lua", disable = vscode })
     use({ "folke/tokyonight.nvim", disable = vscode })
-    use({ "morhetz/gruvbox", disable = vscode })
-    use({ "catppuccin/nvim", disable = vscode })
-    use({ "rebelot/kanagawa.nvim", disable = vscode })
-    use({ "sainnhe/edge", disable = vscode })
-    use({ "EdenEast/nightfox.nvim", disable = vscode })
     use({ "projekt0n/github-nvim-theme", disable = vscode })
-    use({ "rose-pine/neovim", disable = vscode })
-    use({ "gmr458/dark_modern.nvim", disable = vscode })
-    use({ "shaunsingh/nord.nvim", disable = vscode })
-    use({ "navarasu/onedark.nvim", disable = vscode })
+    use({ 'startup-nvim/startup.nvim', disable = vscode})
 end)

@@ -5,3 +5,5 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export PATH="/opt/homebrew/opt/gawk/libexec/gnubin:/opt/homebrew/bin:/opt/homebrew/opt/llvm/bin:$PATH"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
+
+export GPG_TTY=$(tty)

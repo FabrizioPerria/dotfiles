@@ -4,5 +4,3 @@ require('gitblame').setup({
 })
 
 vim.g.gitblame_enabled = false
-vim.keymap.set("n", "<leader>gb", ':GitBlameToggle<CR>')
-

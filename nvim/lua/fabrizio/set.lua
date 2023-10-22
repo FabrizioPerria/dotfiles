@@ -36,6 +36,6 @@ vim.opt.foldlevelstart=20
 -- vim.opt.encoding="utf-8"
 vim.opt.autoindent=true
 vim.opt.fileformat='unix'
-vim.opt.listchars={eol='_',tab='t>',trail='~',space='·'}
+vim.opt.listchars={eol='_',tab='→→',trail='~',space='·'}
 
 vim.opt.list=true

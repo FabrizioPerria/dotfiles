@@ -10,6 +10,3 @@ require('tabline').setup({
     show_icon = true,         -- Shows the devicon
 })
 
-vim.keymap.set('n', '<leader>t<Left>', ':tabprev<CR>', {desc='Move to previous tab'})
-vim.keymap.set('n', '<leader>t<Right>', ':tabnext<CR>', {desc='Move to next tab'})
-vim.keymap.set('n', '<leader>tq', ':tabclose<CR>', {desc='Move to next tab'})
