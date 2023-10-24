@@ -78,5 +78,6 @@ telescope.load_extension("file_browser")
 telescope.load_extension("cder")
 telescope.load_extension("refactoring")
 telescope.load_extension("ui-select")
+telescope.load_extension("undo")
 
 -- telescope.load_extension("projects")

@@ -13,16 +13,33 @@ local hi_whitespace = {
     "Whitespace"
 }
 
-local hooks = require "ibl.hooks"
-hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-end)
+vim.keymap.set('n', '<leader>co', ':ColorizerToggle<CR>')
+
+require("tokyonight").setup {
+    terminal_colors = true,
+    on_highlights = function(hl, colors)
+        hl.RainbowRed = { fg = "#E06C75" }
+        hl.RainbowYellow = { fg = "#E5C07B" }
+        hl.RainbowBlue = { fg = "#61AFEF" }
+        hl.RainbowOrange = { fg = "#D19A66" }
+        hl.RainbowGreen = { fg = "#98C379" }
+        hl.RainbowViolet = { fg = "#C678DD" }
+        hl.RainbowCyan = { fg = "#56B6C2" }
+
+        hl.DiffText = { bg = "#373640", fg = "#e0af68" }
+        hl.DiffAdd = { bg = "#233745", fg = "#1abc9c" }
+        hl.DiffChange = { bg = colors.none }
+        hl.DiffDelete = { bg = "#362c3d", fg = "#db4b4b" }
+        hl.DiffDelete = { bg = "#360000", fg = "#db4b4b" }
+
+        hl.DapBreakpoint = { ctermbg = 0, fg = '#993939', bg = '#31353f' }
+        hl.DapLogPoint = { ctermbg = 0, fg = '#61afef', bg = '#31353f' }
+        hl.DapStopped = { ctermbg = 0, fg = '#98c379', bg = '#31353f' }
+        hl.LineNr = { fg = "#6f99bb", }
+        hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
+    end,
+}
+vim.cmd.colorscheme('tokyonight-storm')
 
 require("ibl").setup {
     indent = {
@@ -40,32 +57,3 @@ require("ibl").setup {
         remove_blankline_trail = false
     }
 }
-
-vim.keymap.set('n', '<leader>co', ':ColorizerToggle<CR>')
-
-require("tokyonight").setup {
-    terminal_colors = true,
-    on_highlights = function(hl, colors)
-        hl.DiffText = { bg = "#373640", fg = "#e0af68" }
-        hl.DiffAdd = { bg = "#233745", fg = "#1abc9c" }
-        hl.DiffChange = { bg = colors.none }
-        hl.DiffDelete = { bg = "#362c3d", fg = "#db4b4b" }
-        hl.DiffDelete = { bg = "#360000", fg = "#db4b4b" }
-
-        hl.LineNr = { fg = "#6f99bb", }
-        hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
-    end,
-}
-vim.cmd.colorscheme('tokyonight-storm')
--- vim.g.tokyonight_storm_cursor_color = "#0000ff"
---
--- vim.cmd.colorscheme('github_dark_dimmed')
--- require('github-theme').setup({
---     groups = {
---         all = {
---             DiffText = { bg = "#373640", fg = "#e0af68" },
---             DiffAdd = { bg = "#233745", fg = "#1abc9c" },
---             DiffDelete = { bg = "#362c3d", fg = "#db4b4b" }
---         }
---     }
--- })

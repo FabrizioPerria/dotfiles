@@ -37,7 +37,8 @@ if not vim.g.vscode then
             program = function()
                 return vim.fn.input({
                     prompt = 'Path to executable: ',
-                    default = vim.fn.getcwd() .. '/',
+                    -- default = vim.fn.getcwd() .. '/',
+                    default = '/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost',
                     completion = 'file',
                 })
             end,
@@ -95,10 +96,20 @@ if not vim.g.vscode then
     vim.keymap.set('n', '<F10>', ':DapStepOver<CR>', { desc = "Debug step over" })
     vim.keymap.set('n', '<F11>', ':DapStepInto<CR>', { desc = "Debug step into" })
     vim.keymap.set('n', '<C-F11>', ':DapStepOut<CR>', { desc = "Debug step out" })
-    vim.keymap.set('n', '<F12>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop debug" })
+    vim.keymap.set('n', '<F12>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop and quit debug" })
 
 
-    vim.api.nvim_set_hl(0, "DapStoppedLinehl", { bg = "#555530" })
-    vim.fn.sign_define("DapStopped", { text = 'S', texthl = "Error", linehl = "DapStoppedLinehl", numhl = "" })
-    vim.fn.sign_define('DapBreakpoint', { text = '•', texthl = 'Error', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapBreakpoint',
+        { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+    vim.fn.sign_define('DapBreakpointCondition',
+        { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+    vim.fn.sign_define('DapBreakpointRejected',
+        { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+    vim.fn.sign_define('DapLogPoint', {
+        text = '',
+        texthl = 'DapLogPoint',
+        linehl = 'DapLogPoint',
+        numhl = 'DapLogPoint'
+    })
+    vim.fn.sign_define('DapStopped', { text = '', texthl = 'DapStopped', linehl = 'DapStopped', numhl = 'DapStopped' })
 end

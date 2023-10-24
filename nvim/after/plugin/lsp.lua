@@ -1,5 +1,5 @@
 if not vim.g.vscode then
-    vim.lsp.set_log_level("off")
+    vim.lsp.set_log_level("debug")
     local lsp = require("lsp-zero")
 
     lsp.preset("recommended")
@@ -76,31 +76,41 @@ if not vim.g.vscode then
     })
 
     lsp.on_attach(function(client, bufnr)
-        local opts = { buffer = bufnr, remap = false }
-
-        vim.keymap.set("i", "<C-s>", function() vim.lsp.buf.signature_help() end, opts)
-        vim.keymap.set("n", "<leader>.", require("actions-preview").code_actions, opts)
-
-        vim.keymap.set("n", "<leader>vwf", function() vim.lsp.buf.list_workspace_folders() end, opts)
-        vim.keymap.set("n", "<leader>vS", function() require('telescope.builtin').lsp_dynamic_workspace_symbols({ symbol_width = 60, symbol_type_width = 30, fname_width = 50 }) end,
-            opts)
+        vim.keymap.set("i", "<C-s>", function() vim.lsp.buf.signature_help() end,
+            { desc = "Signature help", buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>.", require("actions-preview").code_actions,
+            { desc = 'Code Actions', buffer = bufnr, remap = false })
+        -- vim.keymap.set("n", "<leader>vwf", function() vim.lsp.buf.list_workspace_folders() end, { buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>vS",
+            function() require('telescope.builtin').lsp_dynamic_workspace_symbols({ symbol_width = 60,
+                    symbol_type_width = 30, fname_width = 50 }) end,
+            { buffer = bufnr, remap = false, desc = "Show current Workspace Symbols" })
         vim.keymap.set("n", "<leader>vs",
-            function() require('telescope.builtin').lsp_document_symbols({ symbol_width = 60, symbol_type_width = 30, fname_width = 80 }) end, opts)
-        vim.keymap.set("n", "<leader>vr", function() require('telescope.builtin').lsp_references({fname_width=80}) end, opts)
-        vim.keymap.set("n", "<leader>vd", function() require('telescope.builtin').lsp_definitions({jump_type='vsplit', fname_width=80}) end, opts)
-        vim.keymap.set("n", "<leader>vt", function() require('telescope.builtin').lsp_type_definitions({fname_width=80}) end, opts)
-        vim.keymap.set("n", "<leader>vi", function() require('telescope.builtin').lsp_implementations({fname_width=80}) end, opts)
+            function() require('telescope.builtin').lsp_document_symbols({ symbol_width = 60, symbol_type_width = 30,
+                    fname_width = 80 }) end, { desc = "Show symbols in document", buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>vr", function() require('telescope.builtin').lsp_references({ fname_width = 80 }) end,
+            { buffer = bufnr, remap = false, desc = "Show references"})
+        vim.keymap.set("n", "<leader>vd",
+            function() require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
+            { buffer = bufnr, remap = false, desc="Go to definition" })
+        vim.keymap.set("n", "<leader>vt",
+            function() require('telescope.builtin').lsp_type_definitions({ fname_width = 80 }) end,
+            { buffer = bufnr, remap = false, desc="Go to type definition" })
+        vim.keymap.set("n", "<leader>vi",
+            function() require('telescope.builtin').lsp_implementations({ fname_width = 80 }) end,
+            { buffer = bufnr, remap = false, desc="Go to implementation" })
 
-        vim.keymap.set("n", "<leader>;", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>:", function() vim.lsp.buf.implementation() end, opts)
-        vim.keymap.set("n", "<leader>vrn", ":lua vim.lsp.buf.rename()<CR>", opts)
-        vim.keymap.set("n", "gD", function() vim.lsp.buf.declaration() end, opts)
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+        vim.keymap.set("n", "<leader>;", function() vim.lsp.buf.hover() end,
+            { buffer = bufnr, remap = false, desc = 'Hover' })
+        -- vim.keymap.set("n", "<leader>:", function() vim.lsp.buf.implementation() end, { buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>vrn", ":lua vim.lsp.buf.rename()<CR>", { desc="rename symbol", buffer = bufnr, remap = false })
+        -- vim.keymap.set("n", "gD", function() vim.lsp.buf.declaration() end, { buffer = bufnr, remap = false })
+        -- vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { buffer = bufnr, remap = false })
         vim.keymap.set('n', '<leader>dd',
-            function() if vim.diagnostic.is_disabled() then vim.diagnostic.enable() else vim.diagnostic.disable() end end)
-        vim.keymap.set("n", "<leader>vD", function() vim.diagnostic.open_float() end, opts)
-        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+            function() if vim.diagnostic.is_disabled() then vim.diagnostic.enable() else vim.diagnostic.disable() end end, {desc="Toggle diagnostics"})
+        vim.keymap.set("n", "<leader>vD", function() vim.diagnostic.open_float() end, { buffer = bufnr, remap = false, desc="Show diagnostics window" })
+        -- vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, { buffer = bufnr, remap = false })
+        -- vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, { buffer = bufnr, remap = false })
     end)
 
     lsp.setup({})

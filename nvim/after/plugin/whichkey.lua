@@ -18,9 +18,21 @@ local function DiffViewToggle()
     end
 end
 
+local function replace()
+    local keys
+    local mode= vim.api.nvim_get_mode()['mode']
+    if mode == 'n' then
+        keys = vim.api.nvim_replace_termcodes(':%s///gI<Left><Left><Left><Left>', false, false, true)
+    else
+        keys = vim.api.nvim_replace_termcodes(':s///gI<Left><Left><Left><Left>', false, false, true)
+    end
+    vim.api.nvim_feedkeys(keys, mode, {})
+end
+
 local wk = require("which-key")
 local telescope = require('telescope')
 local projects = telescope.extensions.project.project
+local undo = telescope.extensions.undo.undo
 local refactoring = require('refactoring')
 local diffview = require('diffview.actions')
 local tbi = require("telescope.builtin")
@@ -36,11 +48,13 @@ wk.register({
             ['f'] = { tbi.find_files, 'Fuzzy file search', mode = { 'n' } },
             ['g'] = { tbi.git_files, 'Fuzzy file search in git repository', mode = { 'n' } },
             ['s'] = { function() tbi.live_grep({ search_dir = '%:p:h' }) end, 'Grep search', mode = { 'n' } },
-            ['v'] = { ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>', 'Show file browser', silent = false, mode = { 'n' } },
+            ['v'] = { ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>',
+                'Show file browser', silent = false, mode = { 'n' } },
             ['k'] = { tbi.keymaps, 'Show keymaps', mode = { 'n' } },
             ['h'] = { tbi.help_tags, 'Find man pages for vim commands', mode = { 'n' } },
             ['p'] = { projects, 'Show marked projects', silent = false, mode = { 'n' } },
         },
+        ['u'] = { undo, "Undo menu", mode = { 'n', 'x' } },
 
         ["g"] = {
             ["name"] = '+git',
@@ -120,13 +134,9 @@ wk.register({
         },
         ["y"] = { [["+y]], 'copy selection to system clipboard', mode = { 'n', 'x' } },
         ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
-        ["s"] = {
-            ---@diagnostic disable-next-line: duplicate-index
-            [""] = { [[:s///gI<Left><Left><Left><Left>]], 'Replace in selection', mode = { "v" }, silent = false },
-            ---@diagnostic disable-next-line: duplicate-index
-            [""] = { [[:%s///gI<Left><Left><Left><Left>]], 'Replace in file', mode = { "n" }, silent = false },
-        },
+        ["s"] = { replace, 'Replace in file', mode = { "n", 'x' }, silent = false },
         ["x"] = { "<cmd>!chmod +x %<CR>", 'Make current file executable', silent = true, mode = { "n" } },
-        ['w'] = { match_path, "Change current Directory", mode = { 'n' } }
+        ['w'] = { match_path, "Change current Directory", mode = { 'n' } },
+
     }
 })

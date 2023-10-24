@@ -37,6 +37,7 @@ return require('packer').startup(function(use)
         run = { 'make' },
     }
     use { 'nvim-telescope/telescope-ui-select.nvim', disable = vscode }
+    use { 'debugloop/telescope-undo.nvim', disable = vscode }
 
     use { 'BurntSushi/ripgrep', disable = vscode, }
     use { 'sharkdp/fd', disable = vscode }
