@@ -95,6 +95,7 @@ return require('packer').startup(function(use)
         },
     })
 
+    use({ 'Issafalcon/lsp-overloads.nvim', disable = vscode})
     use({ 'jay-babu/mason-nvim-dap.nvim', disable = vscode })
     use({ "mfussenegger/nvim-dap-python", disable = vscode })
 

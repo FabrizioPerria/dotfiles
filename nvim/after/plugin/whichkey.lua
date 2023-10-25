@@ -20,7 +20,7 @@ end
 
 local function replace()
     local keys
-    local mode= vim.api.nvim_get_mode()['mode']
+    local mode = vim.api.nvim_get_mode()['mode']
     if mode == 'n' then
         keys = vim.api.nvim_replace_termcodes(':%s///gI<Left><Left><Left><Left>', false, false, true)
     else
@@ -47,6 +47,7 @@ wk.register({
             ['b'] = { tbi.buffers, 'Show buffers', silent = false, mode = { 'n' } },
             ['f'] = { tbi.find_files, 'Fuzzy file search', mode = { 'n' } },
             ['g'] = { tbi.git_files, 'Fuzzy file search in git repository', mode = { 'n' } },
+            ['r'] = { tbi.registers, 'Peek Register contents', mode = { 'n', 'v' } },
             ['s'] = { function() tbi.live_grep({ search_dir = '%:p:h' }) end, 'Grep search', mode = { 'n' } },
             ['v'] = { ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>',
                 'Show file browser', silent = false, mode = { 'n' } },
@@ -59,11 +60,11 @@ wk.register({
         ["g"] = {
             ["name"] = '+git',
             [""] = { ":vertical Git | vertical resize 60<CR>", ' ', silent = false, mode = { "n" } },
-            ["co"] = { ':Git commit -m ""<Left>', ' ', mode = { "n" }, silent = false },
+            ["co"] = { ':Git commit -S -m ""<Left>', ' ', mode = { "n" }, silent = false },
             ["g"] = { ":Git pull --rebase", ' ', silent = false, mode = { "n" } },
             ["p"] = { ":Git push -u origin ", ' ', silent = false, mode = { "n" } },
             ["m"] = { ":Git merge ", ' ', silent = false, mode = { "n" } },
-            ["L"] = { ":vertical Git log | vertical resize 100<CR>", ' ', silent = false, mode = { "n" } },
+            ["L"] = { ":vertical Git log --show-signature | vertical resize 100<CR>", ' ', silent = false, mode = { "n" } },
             ["t"] = { ":GV<CR>", ' ', silent = false, mode = { "n" } },
             ["a"] = { ":Gwrite<CR>", ' ', silent = false, mode = { "n" } },
             ["-"] = { ":Gread<CR>", ' ', silent = false, mode = { "n" } },
@@ -110,11 +111,11 @@ wk.register({
             ["2"]    = { function() harpoonui.nav_file(2) end, 'Open mark 2' },
             ["3"]    = { function() harpoonui.nav_file(3) end, 'Open mark 3' },
             ["4"]    = { function() harpoonui.nav_file(4) end, 'Open mark 4' },
-            ["5"]    = { function() harpoonui.nav_file(1) end, 'Open mark 5' },
-            ["6"]    = { function() harpoonui.nav_file(2) end, 'Open mark 6' },
-            ["7"]    = { function() harpoonui.nav_file(3) end, 'Open mark 7' },
-            ["8"]    = { function() harpoonui.nav_file(4) end, 'Open mark 8' },
-            ["9"]    = { function() harpoonui.nav_file(4) end, 'Open mark 9' },
+            ["5"]    = { function() harpoonui.nav_file(5) end, 'Open mark 5' },
+            ["6"]    = { function() harpoonui.nav_file(6) end, 'Open mark 6' },
+            ["7"]    = { function() harpoonui.nav_file(7) end, 'Open mark 7' },
+            ["8"]    = { function() harpoonui.nav_file(8) end, 'Open mark 8' },
+            ["9"]    = { function() harpoonui.nav_file(9) end, 'Open mark 9' },
         },
         ["t"] = {
             ["name"] = '+tabline',
@@ -136,7 +137,12 @@ wk.register({
         ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
         ["s"] = { replace, 'Replace in file', mode = { "n", 'x' }, silent = false },
         ["x"] = { "<cmd>!chmod +x %<CR>", 'Make current file executable', silent = true, mode = { "n" } },
-        ['w'] = { match_path, "Change current Directory", mode = { 'n' } },
-
+        ['w'] = {
+            [''] = { match_path, "Change current Directory", mode = { 'n' } },
+            ['-'] = { [[ 10<C-w>- ]], "Decrease split's height", mode = { 'n' } },
+            ['='] = { [[ 10<C-w>+ ]], "Increase split's height", mode = { 'n' } },
+            [','] = { [[ 20<C-w>< ]], "Decrease split's width", mode = { 'n' } },
+            ['.'] = { [[ 20<C-w>> ]], "Increase split's width", mode = { 'n' } },
+        },
     }
 })

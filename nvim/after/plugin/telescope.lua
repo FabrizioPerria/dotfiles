@@ -8,7 +8,7 @@ telescope.setup({
         file_browser = {
             hidden = true,
             hijack_netrw = true,
-            
+
         },
         fzf = {
             fuzzy = true,
@@ -20,6 +20,18 @@ telescope.setup({
     defaults = {
         path_display = { 'truncate' },
         mappings = {
+            i = {
+                -- ["<C-u>"] = require('telescope.actions').preview_scrolling_up,
+                -- ["<C-d>"] = require('telescope.actions').preview_scrolling_down,
+                ["<C-a>"] = require('telescope.actions').preview_scrolling_left,
+                ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
+            },
+            n = {
+                -- ["<C-u>"] = require('telescope.actions').preview_scrolling_up,
+                -- ["<C-d>"] = require('telescope.actions').preview_scrolling_down,
+                ["<C-a>"] = require('telescope.actions').preview_scrolling_left,
+                ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
+            }
         },
         vimgrep_arguments = {
             'rg',
@@ -37,10 +49,10 @@ telescope.setup({
         buffers = {
             mappings = {
                 n = {
-                    ['<C-d>'] = require('telescope.actions').delete_buffer
+                    ['<C-x>'] = require('telescope.actions').delete_buffer,
                 },
                 i = {
-                    ['<C-d>'] = require('telescope.actions').delete_buffer
+                    ['<C-x>'] = require('telescope.actions').delete_buffer,
                 }
             }
         },

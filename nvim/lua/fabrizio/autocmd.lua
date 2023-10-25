@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd(
     {
         pattern = { '*.c', '*.cpp', '*.h', '*.hpp', 'CMakeLists.txt' },
         group = refresh,
-        command = 'nnoremap <buffer> <leader><leader> :w<CR>:!./doit.sh<CR>'
+        command = 'nnoremap <buffer> <leader><leader> :w<CR>:vsplit<bar>term ./doit.sh<CR>'
     }
 )
 vim.api.nvim_create_autocmd(
@@ -22,19 +22,19 @@ vim.api.nvim_create_autocmd(
     {
         pattern = { 'cs' },
         group = refresh,
-        command = 'nnoremap <buffer> <leader><leader> :w<CR>:!dotnet build<CR>'
+        command = 'nnoremap <buffer> <leader><leader> :w<CR>:term dotnet build<CR>'
     }
 )
 
-vim.api.nvim_create_autocmd("TabNew", {
-    callback = function()
-        print('yo')
-    end,
-})
-
 vim.api.nvim_create_autocmd("BufWritePre", {
-     pattern = {"*.h", "*.cpp"},
     callback = function()
         vim.lsp.buf.format()
     end,
+})
+
+vim.api.nvim_create_autocmd("TermOpen", {
+    callback = function()
+        vim.cmd('norm G')
+        vim.cmd([[nnoremap <buffer> <Esc> :bd!<CR>]])
+    end
 })

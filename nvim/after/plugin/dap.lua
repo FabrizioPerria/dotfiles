@@ -73,7 +73,7 @@ if not vim.g.vscode then
 
     dap.adapters.python = {
         type = "executable",
-        command = "python3",
+        command = "./bin/python",
         args = {
             "-m",
             "debugpy.adapter",
