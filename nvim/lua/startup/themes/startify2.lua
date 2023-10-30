@@ -26,6 +26,7 @@ local projects = require("telescope._extensions.project.utils").get_projects('re
 for _, project in pairs(projects) do
     index = (index % #keys) + 1
     key = keys:sub(index, index)
+    key = '<F' .. index .. '>'
     user_bookmark_mappings[key] = "<cmd>e " .. project.path .. "<CR>" .. "<cmd>cd " .. project.path .. "<CR>"
     bookmark_texts[#bookmark_texts + 1] = '[' .. key .. ']' .. " " .. project.path
 end
@@ -63,7 +64,7 @@ local function get_quote_from_theme()
 end
 
 local complete = {}
-local quote = {""}
+local quote = { "" }
 local handle = io.popen('fortune')
 if handle ~= nil then
     local output = handle:read('*a')

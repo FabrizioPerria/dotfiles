@@ -89,14 +89,15 @@ if not vim.g.vscode then
         },
     }
 
-    vim.keymap.set('n', '<F4>', ':DapToggleBreakpoint<CR>', { desc = "Toggle Breakpoint" })
-    vim.keymap.set('n', '<F3>', ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-        { desc = 'Conditional Breakpoint' })
     vim.keymap.set('n', '<F5>', ':DapContinue<CR>', { desc = "Run/Continue Debug" })
+    vim.keymap.set('n', '<F8>', ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+        { desc = 'Conditional Breakpoint' })
+    vim.keymap.set('n', '<F9>', ':DapToggleBreakpoint<CR>', { desc = "Toggle Breakpoint" })
     vim.keymap.set('n', '<F10>', ':DapStepOver<CR>', { desc = "Debug step over" })
     vim.keymap.set('n', '<F11>', ':DapStepInto<CR>', { desc = "Debug step into" })
     vim.keymap.set('n', '<C-F11>', ':DapStepOut<CR>', { desc = "Debug step out" })
     vim.keymap.set('n', '<F12>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop and quit debug" })
+    vim.keymap.set('n', '<s-F5>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop and quit debug" })
 
 
     vim.fn.sign_define('DapBreakpoint',

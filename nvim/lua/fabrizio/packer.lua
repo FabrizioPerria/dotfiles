@@ -95,7 +95,7 @@ return require('packer').startup(function(use)
         },
     })
 
-    use({ 'Issafalcon/lsp-overloads.nvim', disable = vscode})
+    use({ 'Issafalcon/lsp-overloads.nvim', disable = vscode })
     use({ 'jay-babu/mason-nvim-dap.nvim', disable = vscode })
     use({ "mfussenegger/nvim-dap-python", disable = vscode })
 
@@ -133,5 +133,7 @@ return require('packer').startup(function(use)
     use({ "norcalli/nvim-colorizer.lua", disable = vscode })
     use({ "folke/tokyonight.nvim", disable = vscode })
     use({ "projekt0n/github-nvim-theme", disable = vscode })
-    use({ 'startup-nvim/startup.nvim', disable = vscode})
+    use({ 'startup-nvim/startup.nvim', disable = vscode })
+    use { 'github/copilot.vim' }
+    use({ 'voldikss/vim-floaterm', disable = vscode })
 end)

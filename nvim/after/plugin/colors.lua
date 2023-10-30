@@ -13,7 +13,6 @@ local hi_whitespace = {
     "Whitespace"
 }
 
-vim.keymap.set('n', '<leader>co', ':ColorizerToggle<CR>')
 
 require("tokyonight").setup {
     terminal_colors = true,

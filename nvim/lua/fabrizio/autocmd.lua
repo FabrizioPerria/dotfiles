@@ -14,7 +14,8 @@ vim.api.nvim_create_autocmd(
     {
         pattern = { '*.c', '*.cpp', '*.h', '*.hpp', 'CMakeLists.txt' },
         group = refresh,
-        command = 'nnoremap <buffer> <leader><leader> :w<CR>:vsplit<bar>term ./doit.sh<CR>'
+        -- command = 'nnoremap <buffer> <leader><leader> :w<CR>:vsplit<bar>term ./doit.sh<CR>'
+        command = 'nnoremap <buffer> <leader><leader> :w<CR>:FloatermNew --autoclose=0 ./doit.sh<CR>'
     }
 )
 vim.api.nvim_create_autocmd(

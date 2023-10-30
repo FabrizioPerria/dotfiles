@@ -1,5 +1,5 @@
 if not vim.g.vscode then
-    vim.lsp.set_log_level("debug")
+    vim.lsp.set_log_level("off")
     local lsp = require("lsp-zero")
 
     lsp.preset("recommended")
@@ -44,6 +44,9 @@ if not vim.g.vscode then
         }
     }
 
+    vim.g.copilot_no_tab_map = true
+    vim.g.copilot_assume_mapped = true
+    vim.g.copilot_tab_fallback = ""
     local cmp = require('cmp')
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
     local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -51,15 +54,22 @@ if not vim.g.vscode then
         ['Down'] = cmp.mapping.select_next_item(cmp_select),
         ['Enter'] = cmp.mapping.confirm({ select = true }),
         ["<C-Space>"] = cmp.mapping.complete(),
-        ['<Tab>'] = nil,
-        ['<S-Tab>'] = nil
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            cmp.mapping.abort()
+            local copilot_keys = vim.fn["copilot#Accept"]()
+            if copilot_keys ~= "" then
+                vim.api.nvim_feedkeys(copilot_keys, "i", true)
+            else
+                fallback()
+            end
+        end)
     })
 
     lsp.setup_nvim_cmp({
         mapping = cmp_mappings,
         formatting = {
             format = function(entry, vim_item)
-                -- vim_item.abbr = string.sub(vim_item.abbr, 1, 40)
+                vim_item.abbr = string.sub(vim_item.abbr, 1, 80)
                 return vim_item
             end
         }
@@ -75,18 +85,18 @@ if not vim.g.vscode then
         }
     })
 
+    local telescopeBI = require('telescope.builtin')
     lsp.on_attach(function(client, bufnr)
         if client.server_capabilities.signatureHelpProvider then
             require('lsp-overloads').setup(client, {})
         end
-        vim.keymap.set("i", "<C-s>", function() vim.lsp.buf.signature_help() end,
+        vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help,
             { desc = "Signature help", buffer = bufnr, remap = false })
         vim.keymap.set("n", "<leader>.", require("actions-preview").code_actions,
             { desc = 'Code Actions', buffer = bufnr, remap = false })
-        -- vim.keymap.set("n", "<leader>vwf", function() vim.lsp.buf.list_workspace_folders() end, { buffer = bufnr, remap = false })
         vim.keymap.set("n", "<leader>vS",
             function()
-                require('telescope.builtin').lsp_dynamic_workspace_symbols({
+                telescopeBI.lsp_dynamic_workspace_symbols({
                     symbol_width = 60,
                     symbol_type_width = 30,
                     fname_width = 50
@@ -95,45 +105,50 @@ if not vim.g.vscode then
             { buffer = bufnr, remap = false, desc = "Show current Workspace Symbols" })
         vim.keymap.set("n", "<leader>vs",
             function()
-                require('telescope.builtin').lsp_document_symbols({
+                telescopeBI.lsp_document_symbols({
                     symbol_width = 60,
                     symbol_type_width = 30,
                     fname_width = 80
                 })
             end, { desc = "Show symbols in document", buffer = bufnr, remap = false })
         vim.keymap.set("n", "<leader>vr",
-            function() require('telescope.builtin').lsp_references({ fname_width = 80 }) end,
+            function() telescopeBI.lsp_references({ fname_width = 80 }) end,
             { buffer = bufnr, remap = false, desc = "Show references" })
         vim.keymap.set("n", "<leader>vd",
-            function() require('telescope.builtin').lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
+            function() telescopeBI.lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
             { buffer = bufnr, remap = false, desc = "Go to definition" })
         vim.keymap.set("n", "<leader>vt",
-            function() require('telescope.builtin').lsp_type_definitions({ fname_width = 80 }) end,
+            function() telescopeBI.lsp_type_definitions({ fname_width = 80 }) end,
             { buffer = bufnr, remap = false, desc = "Go to type definition" })
         vim.keymap.set("n", "<leader>vi",
-            function() require('telescope.builtin').lsp_implementations({ fname_width = 80 }) end,
+            function() telescopeBI.lsp_implementations({ fname_width = 80 }) end,
             { buffer = bufnr, remap = false, desc = "Go to implementation" })
 
-        vim.keymap.set("n", "<leader>;", function() vim.lsp.buf.hover() end,
-            { buffer = bufnr, remap = false, desc = 'Hover' })
-        -- vim.keymap.set("n", "<leader>:", function() vim.lsp.buf.implementation() end, { buffer = bufnr, remap = false })
-        vim.keymap.set("n", "<leader>vrn", ":lua vim.lsp.buf.rename()<CR>",
-            { desc = "rename symbol", buffer = bufnr, remap = false })
-        -- vim.keymap.set("n", "gD", function() vim.lsp.buf.declaration() end, { buffer = bufnr, remap = false })
-        -- vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, { buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>;", vim.lsp.buf.hover, { buffer = bufnr, remap = false, desc = 'Hover' })
+        vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, { desc = "rename symbol", buffer = bufnr, remap = false })
         vim.keymap.set('n', '<leader>dd',
             function() if vim.diagnostic.is_disabled() then vim.diagnostic.enable() else vim.diagnostic.disable() end end,
             { desc = "Toggle diagnostics" })
-        vim.keymap.set("n", "<leader>vD", function() vim.diagnostic.open_float() end,
-            { buffer = bufnr, remap = false, desc = "Show diagnostics window" })
-        -- vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, { buffer = bufnr, remap = false })
-        -- vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, { buffer = bufnr, remap = false })
+        vim.keymap.set("n", "<leader>ve", telescopeBI.diagnostics,
+            { buffer = bufnr, remap = false, desc = "Show diagnostics" })
+        vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, remap = false, desc = 'Next diagnostic' })
+        vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, remap = false, desc = 'Prev diagnostic' })
     end)
 
     lsp.setup({})
 
     vim.diagnostic.config({
-        virtual_text = true
+        underline = true,
+        signs = true,
+        virtual_text = true,
+        float = {
+            show_header = true,
+            source = 'always',
+            border = 'rounded',
+            focusable = false,
+        },
+        update_in_insert = false, -- default to false
+        severity_sort = false,    -- default to false
     })
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()

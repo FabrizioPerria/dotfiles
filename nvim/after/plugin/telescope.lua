@@ -21,15 +21,15 @@ telescope.setup({
         path_display = { 'truncate' },
         mappings = {
             i = {
-                -- ["<C-u>"] = require('telescope.actions').preview_scrolling_up,
-                -- ["<C-d>"] = require('telescope.actions').preview_scrolling_down,
-                ["<C-a>"] = require('telescope.actions').preview_scrolling_left,
+                ["<C-k>"] = require('telescope.actions').preview_scrolling_up,
+                ["<C-j>"] = require('telescope.actions').preview_scrolling_down,
+                ["<C-h>"] = require('telescope.actions').preview_scrolling_left,
                 ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
             },
             n = {
-                -- ["<C-u>"] = require('telescope.actions').preview_scrolling_up,
-                -- ["<C-d>"] = require('telescope.actions').preview_scrolling_down,
-                ["<C-a>"] = require('telescope.actions').preview_scrolling_left,
+                ["<C-k>"] = require('telescope.actions').preview_scrolling_up,
+                ["<C-j>"] = require('telescope.actions').preview_scrolling_down,
+                ["<C-h>"] = require('telescope.actions').preview_scrolling_left,
                 ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
             }
         },
