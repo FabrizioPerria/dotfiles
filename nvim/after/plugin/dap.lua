@@ -34,14 +34,15 @@ if not vim.g.vscode then
             name = 'Debug with codelldb',
             type = 'codelldb',
             request = 'launch',
-            program = function()
-                return vim.fn.input({
-                    prompt = 'Path to executable: ',
-                    -- default = vim.fn.getcwd() .. '/',
-                    default = '/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost',
-                    completion = 'file',
-                })
-            end,
+            program = '/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost',
+            -- program = function()
+            --     return vim.fn.input({
+            --         prompt = 'Path to executable: ',
+            --         -- default = vim.fn.getcwd() .. '/',
+            --         default = '/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost',
+            --         completion = 'file',
+            --     })
+            -- end,
             cwd = '${workspaceFolder}',
             stopOnEntry = false,
         },

@@ -13,7 +13,7 @@ if not vim.g.vscode then
         'zk',
         'lua_ls',
         'vimls',
-        'efm'
+        'efm',
     })
 
     -- Fix Undefined global 'vim'
@@ -53,26 +53,46 @@ if not vim.g.vscode then
         ['Up'] = cmp.mapping.select_prev_item(cmp_select),
         ['Down'] = cmp.mapping.select_next_item(cmp_select),
         ['Enter'] = cmp.mapping.confirm({ select = true }),
-        ["<C-Space>"] = cmp.mapping.complete(),
+        ["<C-s>"] = cmp.mapping.complete({ reason = cmp.ContextReason.Auto }),
+        ["<C-j>"] = cmp.mapping.scroll_docs(4),
+        ["<C-k>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-d>"] = cmp.mapping.scroll_docs(4),
+        ["<C-u>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-e>"] = cmp.mapping.close(),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
+        ["<C-b>"] = cmp.mapping.scroll_docs(-4),
         ["<Tab>"] = cmp.mapping(function(fallback)
-            cmp.mapping.abort()
-            local copilot_keys = vim.fn["copilot#Accept"]()
-            if copilot_keys ~= "" then
-                vim.api.nvim_feedkeys(copilot_keys, "i", true)
+            if require("copilot.suggestion").is_visible() then
+                require("copilot.suggestion").accept()
             else
                 fallback()
             end
-        end)
+        end, { "i", "s", }),
+    })
+
+
+    local lspkind = require('lspkind')
+    lspkind.init({
+        symbol_map = {
+            Copilot = "",
+        },
     })
 
     lsp.setup_nvim_cmp({
+        sources = {
+            { name = 'nvim_lsp' },
+        },
+
         mapping = cmp_mappings,
+
         formatting = {
-            format = function(entry, vim_item)
-                vim_item.abbr = string.sub(vim_item.abbr, 1, 80)
-                return vim_item
-            end
-        }
+            format = lspkind.cmp_format({
+                mode = 'symbol_text',  -- show only symbol annotations
+                maxwidth = 80,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+            })
+        },
+
     })
 
     lsp.set_preferences({

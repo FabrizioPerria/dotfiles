@@ -17,13 +17,13 @@ local hi_whitespace = {
 require("tokyonight").setup {
     terminal_colors = true,
     on_highlights = function(hl, colors)
-        hl.RainbowRed = { fg = "#E06C75" }
-        hl.RainbowYellow = { fg = "#E5C07B" }
-        hl.RainbowBlue = { fg = "#61AFEF" }
-        hl.RainbowOrange = { fg = "#D19A66" }
-        hl.RainbowGreen = { fg = "#98C379" }
-        hl.RainbowViolet = { fg = "#C678DD" }
-        hl.RainbowCyan = { fg = "#56B6C2" }
+        hl.RainbowRed = { fg = "#891d25" }
+        hl.RainbowYellow = { fg = "#936a1b" }
+        hl.RainbowBlue = { fg = "#0f5b99" }
+        hl.RainbowOrange = { fg = "#784d24" }
+        hl.RainbowGreen = { fg = "#4a6d31" }
+        hl.RainbowViolet = { fg = "#712288" }
+        hl.RainbowCyan = { fg = "#256067" }
 
         hl.DiffText = { bg = "#373640", fg = "#e0af68" }
         hl.DiffAdd = { bg = "#233745", fg = "#1abc9c" }
@@ -36,8 +36,10 @@ require("tokyonight").setup {
         hl.DapStopped = { ctermbg = 0, fg = '#98c379', bg = '#31353f' }
         hl.LineNr = { fg = "#6f99bb", }
         hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
-    end,
+        hl.CmpItemKindCopilot = { fg = "#6CC644" }
+    end
 }
+
 vim.cmd.colorscheme('tokyonight-storm')
 
 require("ibl").setup {
