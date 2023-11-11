@@ -89,29 +89,4 @@ if not vim.g.vscode then
             program = "${file}", -- This configuration will launch the current file if used.
         },
     }
-
-    vim.keymap.set('n', '<F5>', ':DapContinue<CR>', { desc = "Run/Continue Debug" })
-    vim.keymap.set('n', '<F8>', ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
-        { desc = 'Conditional Breakpoint' })
-    vim.keymap.set('n', '<F9>', ':DapToggleBreakpoint<CR>', { desc = "Toggle Breakpoint" })
-    vim.keymap.set('n', '<F10>', ':DapStepOver<CR>', { desc = "Debug step over" })
-    vim.keymap.set('n', '<F11>', ':DapStepInto<CR>', { desc = "Debug step into" })
-    vim.keymap.set('n', '<C-F11>', ':DapStepOut<CR>', { desc = "Debug step out" })
-    vim.keymap.set('n', '<F12>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop and quit debug" })
-    vim.keymap.set('n', '<s-F5>', ':DapTerminate<CR>:lua require"dapui".close()<CR>"', { desc = "Stop and quit debug" })
-
-
-    vim.fn.sign_define('DapBreakpoint',
-        { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-    vim.fn.sign_define('DapBreakpointCondition',
-        { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-    vim.fn.sign_define('DapBreakpointRejected',
-        { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
-    vim.fn.sign_define('DapLogPoint', {
-        text = '',
-        texthl = 'DapLogPoint',
-        linehl = 'DapLogPoint',
-        numhl = 'DapLogPoint'
-    })
-    vim.fn.sign_define('DapStopped', { text = '', texthl = 'DapStopped', linehl = 'DapStopped', numhl = 'DapStopped' })
 end

@@ -22,6 +22,11 @@ if not vim.g.vscode then
         end
     end
 
+    local function prompt()
+        vim.fn.input('Condition: ')
+    end
+
+    local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
     local telescope = require('telescope')
     local projects = telescope.extensions.project.project
     local undo = telescope.extensions.undo.undo
@@ -30,12 +35,25 @@ if not vim.g.vscode then
     local diffview = require('diffview.actions')
     local harpoonmark = require('harpoon.mark')
     local harpoonui = require('harpoon.ui')
+    local dap = require('dap')
 
     vim.keymap.set('n', 'J', 'mzJ`z', { noremap = true })
     vim.keymap.set('n', '<leader>s', ':%s///gI<Left><Left><Left><Left>')
     vim.keymap.set('x', '<leader>s', ':s///gI<Left><Left><Left><Left>')
 
     wk.register({
+        ['<F3>'] = { ':Telescope dap variables<CR>', 'List variables', mode = { 'n' } },
+        ['<F4>'] = { ':Telescope dap list_breakpoints<CR>', 'List breakpoints', mode = { 'n' } },
+        ['<F5>'] = { ':DapContinue<CR>', "Run/Continue Debug", mode = { 'n' } },
+        ['<F6>'] = { ':Telescope dap frames<CR>', 'List frames', mode = { 'n' } },
+        ['<F8>'] = { function() dap.set_breakpoint(prompt()) end, 'Conditional Breakpoint', mode = { 'n' } },
+        ['<F9>'] = { ':DapToggleBreakpoint<CR>', "Toggle Breakpoint", mode = { 'n' } },
+        ['<F10>'] = { ':DapStepOver<CR>', "Debug step over", mode = { 'n' } },
+        ['<F11>'] = { ':DapStepInto<CR>', "Debug step into", mode = { 'n' } },
+        ['<C-F11>'] = { ':DapStepOut<CR>', "Debug step out", mode = { 'n' } },
+        ['<F12>'] = { ':DapTerminate<CR>:lua require"dapui".close()<CR>"', "Stop and quit debug", mode = { 'n' } },
+        ['<s-F5>'] = { ':DapTerminate<CR>:lua require"dapui".close()<CR>"', "Stop and quit debug", mode = { 'n' } },
+
         ['J'] = { ":m \'>+1<CR>gv=gv", 'Move selected block up', mode = { 'x' } },
         ['K'] = { ":m \'<-2<CR>gv=gv", 'Move selected block down', mode = { 'x' } },
         ["Y"] = { 'yy', 'Alternative copy full line', mode = { 'n' } },
@@ -45,7 +63,6 @@ if not vim.g.vscode then
 
         ['<leader>'] = {
             ["f"] = {
-                ["name"] = '+file',
                 [""] = { vim.lsp.buf.format, 'Format file', mode = { 'n' } },
                 ['f'] = { tbi.find_files, 'Fuzzy file search', mode = { 'n' } },
                 ['b'] = { tbi.buffers, 'Show buffers', silent = false, mode = { 'n' } },
@@ -58,17 +75,16 @@ if not vim.g.vscode then
                 ['h'] = { tbi.help_tags, 'Find man pages for vim commands', mode = { 'n' } },
                 ['p'] = { projects, 'Show marked projects', silent = false, mode = { 'n' } },
             },
+
             ['u'] = { undo, "Undo menu", mode = { 'n', 'x' } },
 
             ["g"] = {
-                ["name"] = '+git',
                 [""] = { tbi.git_status, ' ', silent = false, mode = { "n" } },
                 ["co"] = { ':Git commit -S -m ""<Left>', ' ', mode = { "n" }, silent = false },
                 ["g"] = { ":Git pull --rebase", ' ', silent = false, mode = { "n" } },
                 ["p"] = { ":Git push -u origin ", ' ', silent = false, mode = { "n" } },
                 ["m"] = { ":Git merge ", ' ', silent = false, mode = { "n" } },
-                ["L"] = { ":vertical Git log --show-signature | vertical resize 100<CR>", ' ', silent = false, mode = {
-                    "n" } },
+                ["L"] = { ":vert Git log --show-signature | vertical resize 100<CR>", ' ', silent = false, mode = { "n" } },
                 ["t"] = { ":GV<CR>", ' ', silent = false, mode = { "n" } },
                 ["a"] = { ":Gwrite<CR>", ' ', silent = false, mode = { "n" } },
                 ["-"] = { ":Gread<CR>", ' ', silent = false, mode = { "n" } },
@@ -88,7 +104,6 @@ if not vim.g.vscode then
             },
 
             ["r"] = {
-                ["name"] = '+refactoring',
                 [""] = { refactoring.select_refactor, 'Select refactor type', mode = { "n", "x" }, },
                 ["e"] = { ":Refactor extract ", 'Extract Selection', silent = false, mode = { "x" }, },
                 ["f"] = { ":Refactor extract_to_file ", "Extract selection to file", silent = false, mode = { "x" }, },
@@ -100,7 +115,6 @@ if not vim.g.vscode then
             },
 
             ["p"] = {
-                ["name"] = '+print',
                 ['p'] = { function() refactoring.debug.printf({ below = false }) end, ' ', mode = { "n" } },
                 ['P'] = { function() refactoring.debug.printf({ below = true }) end, ' ', mode = { "n" } },
                 ['v'] = { refactoring.debug.print_var, ' ', mode = { "x", "n" } },
@@ -108,22 +122,19 @@ if not vim.g.vscode then
             },
 
             ["h"] = {
-                ["name"] = "+harpoon",
-                ["a"]    = { harpoonmark.add_file, 'Add file' },
-                ["s"]    = { harpoonui.toggle_quick_menu, 'Show files' },
-                ["1"]    = { function() harpoonui.nav_file(1) end, 'Open mark 1' },
-                ["2"]    = { function() harpoonui.nav_file(2) end, 'Open mark 2' },
-                ["3"]    = { function() harpoonui.nav_file(3) end, 'Open mark 3' },
-                ["4"]    = { function() harpoonui.nav_file(4) end, 'Open mark 4' },
-                ["5"]    = { function() harpoonui.nav_file(5) end, 'Open mark 5' },
-                ["6"]    = { function() harpoonui.nav_file(6) end, 'Open mark 6' },
-                ["7"]    = { function() harpoonui.nav_file(7) end, 'Open mark 7' },
-                ["8"]    = { function() harpoonui.nav_file(8) end, 'Open mark 8' },
-                ["9"]    = { function() harpoonui.nav_file(9) end, 'Open mark 9' },
+                ["a"] = { harpoonmark.add_file, 'Add file' },
+                ["s"] = { harpoonui.toggle_quick_menu, 'Show files' },
+                ["1"] = { function() harpoonui.nav_file(1) end, 'Open mark 1' },
+                ["2"] = { function() harpoonui.nav_file(2) end, 'Open mark 2' },
+                ["3"] = { function() harpoonui.nav_file(3) end, 'Open mark 3' },
+                ["4"] = { function() harpoonui.nav_file(4) end, 'Open mark 4' },
+                ["5"] = { function() harpoonui.nav_file(5) end, 'Open mark 5' },
+                ["6"] = { function() harpoonui.nav_file(6) end, 'Open mark 6' },
+                ["7"] = { function() harpoonui.nav_file(7) end, 'Open mark 7' },
+                ["8"] = { function() harpoonui.nav_file(8) end, 'Open mark 8' },
+                ["9"] = { function() harpoonui.nav_file(9) end, 'Open mark 9' },
             },
             ["t"] = {
-                ["name"] = '+tabline',
-                [''] = { ':ToggleTerm<CR>', 'Open float terminal', mode = { 'n' } },
                 ['n'] = { ':tabedit ', 'Open file in new tab', silent = false, mode = { 'n' } },
                 ['<Left>'] = { ':tabprev<CR>', 'Move to previous tab', silent = false, mode = { 'n' } },
                 ['<Right>'] = { ':tabnext<CR>', 'Move to next tab', silent = false, mode = { 'n' } },
@@ -151,7 +162,15 @@ if not vim.g.vscode then
                 ['.'] = { [[ 20<C-w>> ]], "Increase split's width", mode = { 'n' } },
             },
             ['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } }
-        }
+        },
+
+        [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
+        [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },
+
+        ["f"] = { ts_repeat_move.builtin_f, ' ', mode = { "n", "x", "o" } },
+        ["F"] = { ts_repeat_move.builtin_F, ' ', mode = { "n", "x", "o" } },
+        ["t"] = { ts_repeat_move.builtin_t, ' ', mode = { "n", "x", "o" } },
+        ["T"] = { ts_repeat_move.builtin_T, ' ', mode = { "n", "x", "o" } },
     })
 else
     vim.keymap.set('n', '<leader>', function() vim.fn.VSCodeNotify('whichkey.show') end,

@@ -40,7 +40,7 @@ require("tokyonight").setup {
     end
 }
 
-vim.cmd.colorscheme('tokyonight-storm')
+vim.cmd.colorscheme('tokyonight-moon')
 
 require("ibl").setup {
     indent = {
@@ -58,3 +58,17 @@ require("ibl").setup {
         remove_blankline_trail = false
     }
 }
+
+vim.fn.sign_define('DapBreakpoint',
+    { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointCondition',
+    { text = 'ﳁ', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapBreakpointRejected',
+    { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
+vim.fn.sign_define('DapLogPoint', {
+    text = '',
+    texthl = 'DapLogPoint',
+    linehl = 'DapLogPoint',
+    numhl = 'DapLogPoint'
+})
+vim.fn.sign_define('DapStopped', { text = '', texthl = 'DapStopped', linehl = 'DapStopped', numhl = 'DapStopped' })

@@ -7,34 +7,14 @@ return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
-    use { 'nvim-lua/plenary.nvim' }
-
-    use {
-        'nvim-telescope/telescope.nvim',
-        requires = {
-            { 'nvim-lua/plenary.nvim' }
-        },
-    }
-
-    use {
-        "nvim-telescope/telescope-file-browser.nvim",
-        requires = {
-            { 'nvim-lua/plenary.nvim' },
-            { 'nvim-telescope/telescope.nvim' },
-        },
-    }
-
-    use {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        requires = {
-            { 'nvim-lua/plenary.nvim' },
-            { 'nvim-telescope/telescope.nvim' }
-        },
-        run = { 'make' },
-    }
+    use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/plenary.nvim' } }, }
+    use { "nvim-telescope/telescope-file-browser.nvim", requires = { { 'nvim-telescope/telescope.nvim' }, }, }
+    use { "nvim-telescope/telescope-fzf-native.nvim", requires = { { 'nvim-telescope/telescope.nvim' } }, run = { 'make' }, }
     use { 'nvim-telescope/telescope-ui-select.nvim' }
     use({ 'nvim-telescope/telescope-project.nvim' })
     use { 'debugloop/telescope-undo.nvim' }
+    use { 'nvim-telescope/telescope-packer.nvim' }
+    use({ "nvim-telescope/telescope-dap.nvim" })
 
     use({
         'nvim-treesitter/nvim-treesitter',
@@ -43,14 +23,9 @@ return require('packer').startup(function(use)
             ts_update()
         end
     })
-
     use({
         'nvim-treesitter/nvim-treesitter-textobjects',
-
-        requires = {
-            { 'nvim-treesitter/nvim-treesitter' },
-            { 'nvim-treesitter/playground' }
-        }
+        requires = { { 'nvim-treesitter/nvim-treesitter' }, { 'nvim-treesitter/playground' } }
     })
     use({ "nvim-treesitter/nvim-treesitter-context" });
 
@@ -78,19 +53,10 @@ return require('packer').startup(function(use)
             { 'rafamadriz/friendly-snippets' },
         }
     }
-    -- use({ 'github/copilot.vim' })
     use({ 'zbirenbaum/copilot.lua' })
-    -- use { "zbirenbaum/copilot-cmp" }
     use({ 'onsails/lspkind.nvim' })
 
-    use({
-        "mfussenegger/nvim-dap",
-        requires = {
-            { 'theHamsta/nvim-dap-virtual-text' },
-            { 'rcarriga/nvim-dap-ui' },
-        },
-    })
-
+    use({ "mfussenegger/nvim-dap", requires = { { 'theHamsta/nvim-dap-virtual-text' }, { 'rcarriga/nvim-dap-ui' }, }, })
     use({ 'jay-babu/mason-nvim-dap.nvim' })
     use({ "mfussenegger/nvim-dap-python" })
 
@@ -102,7 +68,6 @@ return require('packer').startup(function(use)
 
     use({ "theprimeagen/harpoon" })
     use({ "theprimeagen/refactoring.nvim" })
-    use({ "mbbill/undotree" })
     use({ "folke/todo-comments.nvim" })
     use({ "folke/which-key.nvim" })
     use({ "kylechui/nvim-surround" })
@@ -111,7 +76,6 @@ return require('packer').startup(function(use)
     use({ "eandrju/cellular-automaton.nvim" })
     use({ "terrortylor/nvim-comment" })
     use({ "aznhe21/actions-preview.nvim" })
-    use({ "akinsho/toggleterm.nvim" })
     use({ 'voldikss/vim-floaterm' })
 
     use({ "folke/trouble.nvim" })

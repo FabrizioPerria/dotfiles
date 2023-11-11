@@ -1,5 +1,6 @@
 local telescope = require('telescope')
 local actions = require('telescope.actions')
+local action_state = require('telescope.actions.state')
 
 telescope.setup({
 
@@ -10,7 +11,7 @@ telescope.setup({
         file_browser = {
             hidden = true,
             hijack_netrw = false,
-
+            no_ignore = true
         },
         fzf = {
             fuzzy = true,
@@ -59,6 +60,26 @@ telescope.setup({
                 }
             }
         },
+        git_status = {
+            mappings = {
+                n = {
+                    ['d'] = function(prompt_bufnr)
+                        local selection = action_state.get_selected_entry(prompt_bufnr)
+                        os.execute('git checkout -- ' .. selection.value)
+                        actions._close(prompt_bufnr, true)
+                        require('telescope.builtin').git_status()
+                    end,
+                },
+                i = {
+                    ['<A-d>'] = function(prompt_bufnr)
+                        local selection = action_state.get_selected_entry(prompt_bufnr)
+                        os.execute('git checkout -- ' .. selection.value)
+                        actions._close(prompt_bufnr, true)
+                        require('telescope.builtin').git_status()
+                    end,
+                },
+            },
+        },
         find_files = {
             find_command = {
                 'fd',
@@ -66,6 +87,7 @@ telescope.setup({
                 '--type',
                 'f',
                 '--hidden',
+                '--no-ignore',
                 '--strip-cwd-prefix',
                 '--exclude',
                 'node_modules',
@@ -93,5 +115,4 @@ telescope.load_extension("file_browser")
 telescope.load_extension("refactoring")
 telescope.load_extension("ui-select")
 telescope.load_extension("undo")
-
--- telescope.load_extension("projects")
+telescope.load_extension("dap")
