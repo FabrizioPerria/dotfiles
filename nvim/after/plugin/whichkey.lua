@@ -1,7 +1,10 @@
-if not vim.g.vscode then
-    local wk = require("which-key")
-    vim.g.mapleader = " "
+local wk = require("which-key")
+vim.g.mapleader = " "
+vim.keymap.set('n', 'J', 'mzJ`z', { noremap = true })
 
+if not vim.g.vscode then
+    vim.keymap.set('n', '<leader>s', ':%s///gI<Left><Left><Left><Left>')
+    vim.keymap.set('x', '<leader>s', ':s///gI<Left><Left><Left><Left>')
     local function match_path()
         local projects = require("telescope._extensions.project.utils").get_projects('recent')
         for _, project in pairs(projects) do
@@ -36,10 +39,7 @@ if not vim.g.vscode then
     local harpoonmark = require('harpoon.mark')
     local harpoonui = require('harpoon.ui')
     local dap = require('dap')
-
-    vim.keymap.set('n', 'J', 'mzJ`z', { noremap = true })
-    vim.keymap.set('n', '<leader>s', ':%s///gI<Left><Left><Left><Left>')
-    vim.keymap.set('x', '<leader>s', ':s///gI<Left><Left><Left><Left>')
+    local telescopeBI = require('telescope.builtin')
 
     wk.register({
         ['<F3>'] = { ':Telescope dap variables<CR>', 'List variables', mode = { 'n' } },
@@ -161,7 +161,112 @@ if not vim.g.vscode then
                 [','] = { [[ 20<C-w>< ]], "Decrease split's width", mode = { 'n' } },
                 ['.'] = { [[ 20<C-w>> ]], "Increase split's width", mode = { 'n' } },
             },
-            ['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } }
+            ['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } },
+            ['.'] = { require("actions-preview").code_actions, 'Code Actions', mode = { 'n' } },
+            [";"] = { vim.lsp.buf.hover, 'Hover', mode = { "n", "x" } },
+            ['v'] = {
+                ['S'] = { function()
+                    telescopeBI.lsp_dynamic_workspace_symbols({
+                        symbol_width = 60,
+                        symbol_type_width = 30,
+                        fname_width = 50
+                    })
+                end, "Show current Workspace Symbols", mode = { 'n' } },
+                ['s'] = { function()
+                    telescopeBI.lsp_document_symbols({
+                        symbol_width = 60,
+                        symbol_type_width = 30,
+                        fname_width = 80
+                    })
+                end, "Show symbols in document", mode = { 'n' } },
+                ['r'] = { function() telescopeBI.lsp_references({ fname_width = 80 }) end, "Show references", mode = {
+                    'n' } },
+                ['d'] = { function() telescopeBI.lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
+                    "Go to definition", mode = { 'n' } },
+                ['t'] = { function() telescopeBI.lsp_type_definitions({ fname_width = 80 }) end, "Go to type definition", mode = {
+                    'n' } },
+                ['i'] = { function() telescopeBI.lsp_implementations({ fname_width = 80 }) end, "Go to implementation", mode = {
+                    'n' } },
+                ['rn'] = { vim.lsp.buf.rename, "rename symbol", mode = { 'n' } },
+                ['e'] = { telescopeBI.diagnostics, "Show diagnostics", mode = { 'n' } },
+            },
+            -- vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, remap = false, desc = 'Next diagnostic' })
+            -- vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, remap = false, desc = 'Prev diagnostic' })
+            ['dd'] = { function()
+                if vim.diagnostic.is_disabled() then
+                    vim.diagnostic.enable()
+                else
+                    vim.diagnostic
+                        .disable()
+                end
+            end, 'Toggle diagnostics', mode = { 'n', 'x' } },
+        },
+        [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
+        [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },
+
+        ["f"] = { ts_repeat_move.builtin_f, ' ', mode = { "n", "x", "o" } },
+        ["F"] = { ts_repeat_move.builtin_F, ' ', mode = { "n", "x", "o" } },
+        ["t"] = { ts_repeat_move.builtin_t, ' ', mode = { "n", "x", "o" } },
+        ["T"] = { ts_repeat_move.builtin_T, ' ', mode = { "n", "x", "o" } },
+    })
+else
+    local vscode = require("vscode-neovim")
+    local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
+    wk.register({
+        ['J'] = { ":m \'>+1<CR>gv=gv", 'Move selected block up', mode = { 'x' } },
+        ['K'] = { ":m \'<-2<CR>gv=gv", 'Move selected block down', mode = { 'x' } },
+        ["Y"] = { 'yy', 'Alternative copy full line', mode = { 'n' } },
+
+        ["<C-d>"] = { "<C-d>zz", 'Scroll down and center', mode = { 'n', 'x' } },
+        ["<C-u>"] = { "<C-u>zz", 'Scroll up and center', mode = { 'n', 'x' } },
+
+        ['<leader>'] = {
+            ['s'] = { function() vscode.call("vim-search-and-replace.start") end, 'Find in files', mode = { 'n', 'x' } },
+            ["f"] = {
+                [""] = { function() vscode.call("editor.action.formatDocument") end, 'Format file', mode = { 'n' } },
+                ['f'] = { function() vscode.call("workbench.action.quickOpen") end, 'Fuzzy file search', mode = { 'n' } },
+                -- ['F'] = { function() vscode.call("find-it-faster.findFiles") end, 'Fuzzy file search', mode = { 'n' } },
+                ['b'] = { function() vscode.call("workbench.action.showAllEditors") end, 'Show buffers', silent = false, mode = {
+                    'n' } },
+                ['g'] = { function() vscode.call("workbench.view.scm") end, 'Fuzzy file search in git repository', mode = {
+                    'n' } },
+                ['s'] = { function() vscode.call("livegrep.search") end, 'Grep search', mode = { 'n' } },
+                -- ['S'] = { function() vscode.call("find-it-faster.findWithinFiles") end, '', mode = { 'n' } },
+                ['v'] = { function() vscode.call("workbench.explorer.fileView.focus") end, 'Show file browser', silent = false, mode = {
+                    'n' } },
+            },
+
+            ["g"] = {
+                [""] = { function() vscode.call("workbench.view.scm") end, ' ', silent = false, mode = { "n" } },
+                ["co"] = { function() vscode.call("git.commit") end, ' ', mode = { "n" }, silent = false },
+                ["g"] = { function() vscode.call("git.pullRebase") end, ' ', silent = false, mode = { "n" } },
+                ["p"] = { function() vscode.call("git.push") end, ' ', silent = false, mode = { "n" } },
+                ["m"] = { function() vscode.call("git.merge") end, ' ', silent = false, mode = { "n" } },
+                ["t"] = { function() vscode.call("git-graph.view") end, ' ', silent = false, mode = { "n" } },
+                ["ch"] = { function() vscode.call("git.checkout") end, ' ', silent = false, mode = { "n" } },
+                ["sa"] = { function() vscode.call("git.stash") end, ' ', silent = false, mode = { "n" } },
+                ["sp"] = { function() vscode.call("git.stashPop") end, ' ', silent = false, mode = { "n" } },
+                ["l"] = { function() vscode.call("git.viewHistory") end, ' ', silent = false, mode = { "n" } },
+                ["b"] = { function() vscode.call("gitlens.toggleLineBlame") end, '', silent = false, mode = { 'n', 'x' } }
+            },
+
+
+            ["t"] = {
+                [''] = { function() vscode.call("workbench.action.terminal.focus") end, 'Enable Terminal', mode = { 'n' } },
+                ['t'] = { function() vscode.call("todohighlight.listAnnotations") end, 'Show todo list', mode = { 'n' } },
+            },
+            ["v"] = {
+                ["s"] = { function() vscode.call("workbench.action.gotoSymbol") end, '', mode = { 'n' } },
+                ["r"] = { function() vscode.call("editor.action.goToReferences") end, '', mode = { 'n' } },
+                ["d"] = { function() vscode.call("editor.action.goToDeclaration") end, '', mode = { 'n' } },
+                ["i"] = { function() vscode.call("editor.action.goToImplementation") end, '', mode = { 'n' } },
+                [";"] = { function() vscode.call("editor.action.showHover") end, '', mode = { 'n' } },
+                ["rn"] = { function() vscode.call("editor.action.rename") end, '', mode = { 'n' } },
+                ["d"] = { function() vscode.call("workbench.action.showErrorsWarnings") end, '', mode = { 'n' } },
+            },
+            ["y"] = { [["+y]], 'copy selection to system clipboard', mode = { 'n', 'x' } },
+            ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
+            ['/'] = { function() vscode.call("editor.action.commentLine") end, 'Comment selection', mode = { 'n', 'x' } }
         },
 
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
@@ -172,7 +277,14 @@ if not vim.g.vscode then
         ["t"] = { ts_repeat_move.builtin_t, ' ', mode = { "n", "x", "o" } },
         ["T"] = { ts_repeat_move.builtin_T, ' ', mode = { "n", "x", "o" } },
     })
-else
-    vim.keymap.set('n', '<leader>', function() vim.fn.VSCodeNotify('whichkey.show') end,
-        { noremap = true, silent = true })
 end
+
+-- ],
+
+-- {
+--   ["<leader>"],
+--   function() vscode.call("cmake.build") end,
+--   "when": "(editorTextFocus && editorLangId == 'cmake') || editorTextFocus && editorLangId == 'cpp'"
+-- },
+-- vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help,
+--     { desc = "Signature help", buffer = bufnr, remap = false })

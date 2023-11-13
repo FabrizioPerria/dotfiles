@@ -5,7 +5,7 @@ if not vim.g.vscode then
     lsp.preset("recommended")
     lsp.setup_servers({ "csharp_ls", "bashls", 'cmake' })
     lsp.ensure_installed({
-        'clangd',
+        -- 'clangd',
         'cmake',
         'bashls',
         'cmake',
@@ -18,8 +18,8 @@ if not vim.g.vscode then
 
     -- Fix Undefined global 'vim'
     lsp.nvim_workspace()
-
-    require 'lspconfig'.cmake.setup {
+    local lspc = require("lspconfig")
+    lspc.cmake.setup {
         cmd = { '/opt/homebrew/bin/cmake-language-server' },
         filetypes = {
             'cmake',
@@ -27,14 +27,14 @@ if not vim.g.vscode then
         }
     }
 
-    require 'lspconfig'.bashls.setup {
+    lspc.bashls.setup {
         filetypes = {
             'sh',
             'bash'
         }
     }
 
-    require 'lspconfig'.lua_ls.setup {
+    lspc.lua_ls.setup {
         settings = {
             Lua = {
                 diagnostics = {
@@ -105,54 +105,10 @@ if not vim.g.vscode then
         }
     })
 
-    local telescopeBI = require('telescope.builtin')
     lsp.on_attach(function(client, bufnr)
         if client.server_capabilities.signatureHelpProvider then
             require('lsp-overloads').setup(client, {})
         end
-        vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help,
-            { desc = "Signature help", buffer = bufnr, remap = false })
-        vim.keymap.set("n", "<leader>.", require("actions-preview").code_actions,
-            { desc = 'Code Actions', buffer = bufnr, remap = false })
-        vim.keymap.set("n", "<leader>vS",
-            function()
-                telescopeBI.lsp_dynamic_workspace_symbols({
-                    symbol_width = 60,
-                    symbol_type_width = 30,
-                    fname_width = 50
-                })
-            end,
-            { buffer = bufnr, remap = false, desc = "Show current Workspace Symbols" })
-        vim.keymap.set("n", "<leader>vs",
-            function()
-                telescopeBI.lsp_document_symbols({
-                    symbol_width = 60,
-                    symbol_type_width = 30,
-                    fname_width = 80
-                })
-            end, { desc = "Show symbols in document", buffer = bufnr, remap = false })
-        vim.keymap.set("n", "<leader>vr",
-            function() telescopeBI.lsp_references({ fname_width = 80 }) end,
-            { buffer = bufnr, remap = false, desc = "Show references" })
-        vim.keymap.set("n", "<leader>vd",
-            function() telescopeBI.lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
-            { buffer = bufnr, remap = false, desc = "Go to definition" })
-        vim.keymap.set("n", "<leader>vt",
-            function() telescopeBI.lsp_type_definitions({ fname_width = 80 }) end,
-            { buffer = bufnr, remap = false, desc = "Go to type definition" })
-        vim.keymap.set("n", "<leader>vi",
-            function() telescopeBI.lsp_implementations({ fname_width = 80 }) end,
-            { buffer = bufnr, remap = false, desc = "Go to implementation" })
-
-        vim.keymap.set("n", "<leader>;", vim.lsp.buf.hover, { buffer = bufnr, remap = false, desc = 'Hover' })
-        vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, { desc = "rename symbol", buffer = bufnr, remap = false })
-        vim.keymap.set('n', '<leader>dd',
-            function() if vim.diagnostic.is_disabled() then vim.diagnostic.enable() else vim.diagnostic.disable() end end,
-            { desc = "Toggle diagnostics" })
-        vim.keymap.set("n", "<leader>ve", telescopeBI.diagnostics,
-            { buffer = bufnr, remap = false, desc = "Show diagnostics" })
-        vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, remap = false, desc = 'Next diagnostic' })
-        vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, remap = false, desc = 'Prev diagnostic' })
     end)
 
     lsp.setup({})
@@ -173,7 +129,22 @@ if not vim.g.vscode then
 
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.offsetEncoding = 'utf-8'
-    require('lspconfig').clangd.setup {
-        capabilities = capabilities
+    lspc.clangd.setup {
+        capabilities = capabilities,
+        cmd = { "/opt/homebrew/opt/llvm/bin/clangd", "--background-index" },
+        filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp" },
+        root_dir = function(fname)
+            return lspc.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git")(fname) or vim.fn.getcwd()
+        end,
+        on_attach = function(client, bufnr) buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc') end
     }
+    -- lspc.ccls.setup {
+    --     capabilities = capabilities,
+    --     cmd = { "ccls" },
+    --     filetypes = { "c", "cpp", "objc", "objcpp", "cc" },
+    --     root_dir = function(fname)
+    --         return lspc.util.root_pattern("compile_commands.json", ".ccls", ".git")(fname) or vim.fn.getcwd()
+    --     end,
+    --     on_attach = function(client, bufnr) buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc') end
+    -- }
 end
