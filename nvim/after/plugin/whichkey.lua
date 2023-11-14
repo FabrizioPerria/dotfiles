@@ -225,15 +225,20 @@ else
             ["f"] = {
                 [""] = { function() vscode.call("editor.action.formatDocument") end, 'Format file', mode = { 'n' } },
                 ['f'] = { function() vscode.call("workbench.action.quickOpen") end, 'Fuzzy file search', mode = { 'n' } },
-                -- ['F'] = { function() vscode.call("find-it-faster.findFiles") end, 'Fuzzy file search', mode = { 'n' } },
                 ['b'] = { function() vscode.call("workbench.action.showAllEditors") end, 'Show buffers', silent = false, mode = {
                     'n' } },
                 ['g'] = { function() vscode.call("workbench.view.scm") end, 'Fuzzy file search in git repository', mode = {
                     'n' } },
                 ['s'] = { function() vscode.call("livegrep.search") end, 'Grep search', mode = { 'n' } },
-                -- ['S'] = { function() vscode.call("find-it-faster.findWithinFiles") end, '', mode = { 'n' } },
                 ['v'] = { function() vscode.call("workbench.explorer.fileView.focus") end, 'Show file browser', silent = false, mode = {
                     'n' } },
+                ['p'] = {
+                    [''] = { function() vscode.call("projectManager.listFavoriteProjects#sideBarFavorites") end,
+                        'Show marked projects', silent = false, mode = {
+                        'n' } },
+                    ['a'] = { function() vscode.call("projectManager.addToFavorites") end, "Add to projects", mode = {
+                        'n' } }
+                }
             },
 
             ["g"] = {
@@ -250,6 +255,19 @@ else
                 ["b"] = { function() vscode.call("gitlens.toggleLineBlame") end, '', silent = false, mode = { 'n', 'x' } }
             },
 
+            ["h"] = {
+                ["a"] = { function() vscode.call("vscode-harpoon.addEditor") end, 'Add file' },
+                ["s"] = { function() vscode.call("vscode-harpoon.editorQuickPick") end, 'Show files' },
+                ["1"] = { function() vscode.call("vscode-harpoon.gotoEditor1") end, 'Open mark 1' },
+                ["2"] = { function() vscode.call("vscode-harpoon.gotoEditor2") end, 'Open mark 2' },
+                ["3"] = { function() vscode.call("vscode-harpoon.gotoEditor3") end, 'Open mark 3' },
+                ["4"] = { function() vscode.call("vscode-harpoon.gotoEditor4") end, 'Open mark 4' },
+                ["5"] = { function() vscode.call("vscode-harpoon.gotoEditor5") end, 'Open mark 5' },
+                ["6"] = { function() vscode.call("vscode-harpoon.gotoEditor6") end, 'Open mark 6' },
+                ["7"] = { function() vscode.call("vscode-harpoon.gotoEditor7") end, 'Open mark 7' },
+                ["8"] = { function() vscode.call("vscode-harpoon.gotoEditor8") end, 'Open mark 8' },
+                ["9"] = { function() vscode.call("vscode-harpoon.gotoEditor9") end, 'Open mark 9' },
+            },
 
             ["t"] = {
                 [''] = { function() vscode.call("workbench.action.terminal.focus") end, 'Enable Terminal', mode = { 'n' } },
