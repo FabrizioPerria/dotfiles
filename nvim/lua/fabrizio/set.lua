@@ -17,10 +17,10 @@ vim.opt.wrap = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-if vim.fn.has('win32') then
-    vim.opt.undodir = os.getenv("LOCALAPPDATA") .. "/.vim/undodir"
+if vim.fn.has('unix') then
+    vim.opt.undodir = vim.fn.getenv("HOME") .. "/.vim/undodir"
 else
-    vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+    vim.opt.undodir = vim.fn.getenv("LOCALAPPDATA") .. "/.vim/undodir"
 end
 vim.opt.undofile = true
 
