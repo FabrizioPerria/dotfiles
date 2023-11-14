@@ -262,7 +262,6 @@ else
                 ["i"] = { function() vscode.call("editor.action.goToImplementation") end, '', mode = { 'n' } },
                 [";"] = { function() vscode.call("editor.action.showHover") end, '', mode = { 'n' } },
                 ["rn"] = { function() vscode.call("editor.action.rename") end, '', mode = { 'n' } },
-                ["d"] = { function() vscode.call("workbench.action.showErrorsWarnings") end, '', mode = { 'n' } },
             },
             ["y"] = { [["+y]], 'copy selection to system clipboard', mode = { 'n', 'x' } },
             ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
@@ -279,12 +278,5 @@ else
     })
 end
 
--- ],
-
--- {
---   ["<leader>"],
---   function() vscode.call("cmake.build") end,
---   "when": "(editorTextFocus && editorLangId == 'cmake') || editorTextFocus && editorLangId == 'cpp'"
--- },
 -- vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help,
 --     { desc = "Signature help", buffer = bufnr, remap = false })
