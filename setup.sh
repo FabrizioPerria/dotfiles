@@ -14,13 +14,14 @@ fi
 
 if [[ $(uname) == "Darwin" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck
+	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
 	sudo apt update
-	sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim fzf ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
+	sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
 	curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
 	sudo dpkg -i bottom_0.9.6_amd64.deb
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 	chsh -s $(which zsh)
 	if [[ ! -d ${HOME}/.local/bin ]]; then
 		mkdir -p ${HOME}/.local/bin
