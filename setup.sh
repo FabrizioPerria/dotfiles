@@ -60,11 +60,11 @@ echo 'source ${HOME}/.config/fzf/completion.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/keybindings.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/colors.zsh'>> ${HOME}/.zshrc
 
-cp -r ./fzf ${HOME}/.config/fzf
-cp -r ./nvim ${HOME}/.config/nvim
-cp -r ./shell ${HOME}/.config/shell
-cp -r ./tmux ${HOME}/.config/tmux
-
-#zsh
-#source "${HOME}"/.zshrc
-
+mkdir -p ${HOME}/.config/fzf
+cp -r fzf/* ${HOME}/.config/fzf
+mkdir -p ${HOME}/.config/nvim
+cp -r nvim/* ${HOME}/.config
+mkdir -p ${HOME}/.config/shell
+cp -r shell/* ${HOME}/.config
+mkdir -p ${HOME}/.config/tmux
+cp -r tmux/* ${HOME}/.config
