@@ -50,6 +50,7 @@ echo 'source ${HOME}/.config/shell/zsh.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/p10k.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/completion.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/keybindings.sh'>> ${HOME}/.zshrc
+echo 'source ${HOME}/.config/shell/colors.sh'>> ${HOME}/.zshrc
 
 cp -r ./fzf ${HOME}/.config
 cp -r ./shell ${HOME}/.config
