@@ -6,7 +6,6 @@ if [[ -d ${HOME}/.config ]]; then
     rm -rf ${HOME}/.config.backup
     mv ${HOME}/.config ${HOME}/.config.backup
     mkdir ${HOME}/.config
-    touch ${HOME}/.config/.keep
 fi
 
 if [[ -f ${HOME}/.zshrc ]]; then 
@@ -21,7 +20,7 @@ if [[ $(uname) == "Darwin" ]]; then
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
     sudo apt update
-    sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
+    sudo apt install -y zsh python3 python3-venv python3-pip python3-neovim unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
     chsh -s $(which zsh)
     curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
     sudo dpkg -i bottom_0.9.6_amd64.deb
@@ -52,7 +51,7 @@ git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 rm -rf  ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 git clone --depth=1 https://github.com/wbthomason/packer.nvim ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-echo $extra_cmd> ${HOME}/.zshrc
+echo $extra_cmd > ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/aliases.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/exports.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/zsh.zsh'>> ${HOME}/.zshrc
@@ -61,10 +60,10 @@ echo 'source ${HOME}/.config/fzf/completion.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/keybindings.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/colors.zsh'>> ${HOME}/.zshrc
 
-cp -r ./fzf ${HOME}/.config
-cp -r ./shell ${HOME}/.config
-cp -r ./nvim ${HOME}/.config
-cp -r ./tmux ${HOME}/.config
+cp -r ./fzf ${HOME}/.config/fzf
+cp -r ./nvim ${HOME}/.config/nvim
+cp -r ./shell ${HOME}/.config/shell
+cp -r ./tmux ${HOME}/.config/tmux
 
 #zsh
 #source "${HOME}"/.zshrc
