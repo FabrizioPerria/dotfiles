@@ -12,9 +12,11 @@ if [[ -f ${HOME}/.zshrc ]]; then
 	mv ${HOME}/.zshrc ${HOME}/.zshrc.bak
 fi
 
+extra_cmd=""
 if [[ $(uname) == "Darwin" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat
+    extra_cmd='eval $(/opt/homebrew/bin/brew shellenv)'
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
 	sudo apt update
@@ -45,13 +47,14 @@ git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 rm -rf  ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 git clone --depth=1 https://github.com/wbthomason/packer.nvim ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 
+echo '$extra_cmd'> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/aliases.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/exports.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/zsh.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/p10k.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/completion.sh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/fzf/keybindings.sh'>> ${HOME}/.zshrc
-echo 'source ${HOME}/.config/shell/colors.sh'>> ${HOME}/.zshrc
+echo 'source ${HOME}/.config/shell/colors.zsh'>> ${HOME}/.zshrc
 
 cp -r ./fzf ${HOME}/.config
 cp -r ./shell ${HOME}/.config
