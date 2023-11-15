@@ -15,16 +15,20 @@ fi
 extra_cmd=""
 if [[ $(uname) == "Darwin" ]]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat
+	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
     extra_cmd='eval $(/opt/homebrew/bin/brew shellenv)'
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
 	sudo apt update
 	sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
+	chsh -s $(which zsh)
 	curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
 	sudo dpkg -i bottom_0.9.6_amd64.deb
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
-	chsh -s $(which zsh)
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    nvm install --lts
 	if [[ ! -d ${HOME}/.local/bin ]]; then
 		mkdir -p ${HOME}/.local/bin
 	fi
