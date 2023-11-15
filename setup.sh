@@ -10,6 +10,7 @@ fi
 
 if [[ -f ${HOME}/.zshrc ]]; then 
 	mv ${HOME}/.zshrc ${HOME}/.zshrc.bak
+    echo test > ${HOME}/.zshrc
 fi
 
 if [[ $(uname) == "Darwin" ]]; then
