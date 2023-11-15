@@ -3,39 +3,40 @@
 set -e
 
 if [[ -d ${HOME}/.config ]]; then
-	rm -rf ${HOME}/.config.backup
-	mv ${HOME}/.config ${HOME}/.config.backup
-	mkdir ${HOME}/.config
+    rm -rf ${HOME}/.config.backup
+    mv ${HOME}/.config ${HOME}/.config.backup
+    mkdir ${HOME}/.config
+    touch ${HOME}/.config/.keep
 fi
 
 if [[ -f ${HOME}/.zshrc ]]; then 
-	mv ${HOME}/.zshrc ${HOME}/.zshrc.bak
+    mv ${HOME}/.zshrc ${HOME}/.zshrc.bak
 fi
 
 extra_cmd=""
 if [[ $(uname) == "Darwin" ]]; then
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
     extra_cmd='eval $(/opt/homebrew/bin/brew shellenv)'
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
-	sudo apt update
-	sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
-	chsh -s $(which zsh)
-	curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
-	sudo dpkg -i bottom_0.9.6_amd64.deb
+    sudo apt update
+    sudo apt install -y zsh python3 python3-venv python3-pip unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
+    chsh -s $(which zsh)
+    curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
+    sudo dpkg -i bottom_0.9.6_amd64.deb
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    extra_cmd='export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+    export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
     nvm install --lts
-	if [[ ! -d ${HOME}/.local/bin ]]; then
-		mkdir -p ${HOME}/.local/bin
-	fi
-	if [[ -L ${HOME}/.local/bin/fd ]]; then
-		rm ${HOME}/.local/bin/fd
-	fi
-	ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
+    if [[ ! -d ${HOME}/.local/bin ]]; then
+        mkdir -p ${HOME}/.local/bin
+    fi
+    if [[ -L ${HOME}/.local/bin/fd ]]; then
+        rm ${HOME}/.local/bin/fd
+    fi
+    ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
 fi
 
 rm -rf ${HOME}/.oh-my-zsh
@@ -51,7 +52,7 @@ git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 rm -rf  ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 git clone --depth=1 https://github.com/wbthomason/packer.nvim ${HOME}/.local/share/nvim/site/pack/packer/start/packer.nvim
 
-echo '$extra_cmd'> ${HOME}/.zshrc
+echo $extra_cmd> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/aliases.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/exports.zsh'>> ${HOME}/.zshrc
 echo 'source ${HOME}/.config/shell/zsh.zsh'>> ${HOME}/.zshrc
