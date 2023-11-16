@@ -23,7 +23,7 @@ if [[ $(uname) == "Darwin" ]]; then
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
     sudo apt update
-    sudo apt install -y zsh python3 python3-venv python3-pip python3-neovim unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck wget
+    sudo apt install -y zsh python3 python3-venv python3-pip python3-neovim unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck wget bat
     chsh -s $(which zsh)
     curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
     sudo dpkg -i bottom_0.9.6_amd64.deb
@@ -39,6 +39,7 @@ elif command -v apt > /dev/null; then
         rm ${HOME}/.local/bin/fd
     fi
     ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
+    ln -s /usr/bin/batcat ${HOME}/.local/bin/bat
 fi
 
 rm -rf ${HOME}/.oh-my-zsh
