@@ -41,15 +41,19 @@ elif command -v apt > /dev/null; then
     ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
 fi
 
-wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.zip
-
 rm -rf ${HOME}/.oh-my-zsh
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
+
+if [[ $(uname) == "Darwin" ]]; then
+    git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
+elif command -v apt > /dev/null; then
+    git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
+fi
+
 rm -rf ${HOME}/.tmux
 git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 
@@ -76,4 +80,5 @@ cp -r shell/* ${HOME}/.config/shell
 mkdir ${HOME}/.config/tmux
 cp -r tmux/* ${HOME}/.config/tmux
 
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.zip
 echo "Now you can install Meslo fonts, reopen your terminal and run nvim +PackerSync to install plugins"
