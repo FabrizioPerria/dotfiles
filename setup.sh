@@ -14,7 +14,11 @@ fi
 extra_cmd=""
 if [[ $(uname) == "Darwin" ]]; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    brew install iterm2 python3 python3-pip python3-venv tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
+    eval $(/opt/homebrew/bin/brew shellenv)
+    if [[ ! -d /Applications/iTerm.app ]]; then
+        brew install --cask iterm2
+    fi
+    brew install --force python3 tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
     extra_cmd='eval $(/opt/homebrew/bin/brew shellenv)'
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
