@@ -18,12 +18,12 @@ if [[ $(uname) == "Darwin" ]]; then
     if [[ ! -d /Applications/iTerm.app ]]; then
         brew install --cask iterm2
     fi
-    brew install --force python3 tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node
+    brew install --force python3 tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node wget
     extra_cmd='eval $(/opt/homebrew/bin/brew shellenv)'
 elif command -v apt > /dev/null; then
     sudo add-apt-repository ppa:neovim-ppa/unstable
     sudo apt update
-    sudo apt install -y zsh python3 python3-venv python3-pip python3-neovim unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck
+    sudo apt install -y zsh python3 python3-venv python3-pip python3-neovim unzip cmake tmux neovim ripgrep fd-find llvm jq git-lfs exa ncdu thefuck wget
     chsh -s $(which zsh)
     curl -LO https://github.com/ClementTsang/bottom/releases/download/0.9.6/bottom_0.9.6_amd64.deb
     sudo dpkg -i bottom_0.9.6_amd64.deb
@@ -40,6 +40,8 @@ elif command -v apt > /dev/null; then
     fi
     ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
 fi
+
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/Meslo.zip
 
 rm -rf ${HOME}/.oh-my-zsh
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -74,4 +76,4 @@ cp -r shell/* ${HOME}/.config/shell
 mkdir ${HOME}/.config/tmux
 cp -r tmux/* ${HOME}/.config/tmux
 
-echo "Now you can reopen your terminal and run nvim +PackerSync to install plugins"
+echo "Now you can install Meslo fonts, reopen your terminal and run nvim +PackerSync to install plugins"
