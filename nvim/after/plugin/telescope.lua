@@ -9,11 +9,11 @@ if not vim.g.vscode then
             ["ui-select"] = {
                 require("telescope.themes").get_dropdown {}
             },
-            file_browser = {
-                hidden = true,
-                hijack_netrw = false,
-                no_ignore = true
-            },
+            -- file_browser = {
+            --     hidden = true,
+            --     hijack_netrw = false,
+            --     no_ignore = true
+            -- },
             fzf = {
                 fuzzy = true,
                 override_generic_sorter = true,
@@ -112,7 +112,7 @@ if not vim.g.vscode then
     })
 
     telescope.load_extension("fzf")
-    telescope.load_extension("file_browser")
+    -- telescope.load_extension("file_browser")
     telescope.load_extension("refactoring")
     telescope.load_extension("ui-select")
     telescope.load_extension("undo")

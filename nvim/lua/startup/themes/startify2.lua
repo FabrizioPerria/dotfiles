@@ -66,13 +66,18 @@ if not vim.g.vscode then
 
     local complete = {}
     local quote = { "" }
-    local handle = io.popen('fortune')
-    if handle ~= nil then
-        local output = handle:read('*a')
-        if #output < 1 then
-            quote = get_quote_from_theme()
-        else
-            quote = get_quote_from_fortune(output)
+    while true do
+        local handle = io.popen('fortune')
+        if handle ~= nil then
+            local output = handle:read('*a')
+            if #output < 1 then
+                quote = get_quote_from_theme()
+            else
+                quote = get_quote_from_fortune(output)
+            end
+        end
+        if #quote < 6 then
+            break
         end
     end
     quote[#quote + 1] = ""
@@ -149,7 +154,7 @@ if not vim.g.vscode then
             cursor_column = 0.25,
             empty_line_between_mappings = false,
             disable_statuslines = true,
-            paddings = { 1, 1, 1, 1 },
+            paddings = { 1, 1, 1, 1, 1 },
         },
         mappings = {
             execute_command = "<CR>",
@@ -162,7 +167,14 @@ if not vim.g.vscode then
             background = "#1f2227",
             folded_section = "#56b6c2",
         },
-        parts = { "header", "body", "body_2", "bookmarks" },
+        footer = {
+            type = "text",
+            align = "right",
+            margin = 5,
+            content = { "Load Time: " },
+            highlight = "Comment",
+        },
+        parts = { "header", "body", "body_2", "bookmarks", "footer" },
     }
 
     return settings

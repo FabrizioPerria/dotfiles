@@ -138,13 +138,11 @@ if not vim.g.vscode then
         end,
         on_attach = function(client, bufnr) buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc') end
     }
-    -- lspc.ccls.setup {
-    --     capabilities = capabilities,
-    --     cmd = { "ccls" },
-    --     filetypes = { "c", "cpp", "objc", "objcpp", "cc" },
-    --     root_dir = function(fname)
-    --         return lspc.util.root_pattern("compile_commands.json", ".ccls", ".git")(fname) or vim.fn.getcwd()
-    --     end,
-    --     on_attach = function(client, bufnr) buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc') end
-    -- }
+
+    require "lsp_signature".setup({
+        bind = true, -- This is mandatory, otherwise border config won't get registered.
+        handler_opts = {
+            border = "rounded"
+        }
+    })
 end

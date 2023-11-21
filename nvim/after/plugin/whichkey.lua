@@ -5,6 +5,7 @@ vim.keymap.set('n', 'J', 'mzJ`z', { noremap = true })
 if not vim.g.vscode then
     vim.keymap.set('n', '<leader>s', ':%s///gI<Left><Left><Left><Left>')
     vim.keymap.set('x', '<leader>s', ':s///gI<Left><Left><Left><Left>')
+    -- vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, { desc = "Signature help", buffer = bufnr, remap = false })
     local function match_path()
         local projects = require("telescope._extensions.project.utils").get_projects('recent')
         for _, project in pairs(projects) do
@@ -295,6 +296,3 @@ else
         ["T"] = { ts_repeat_move.builtin_T, ' ', mode = { "n", "x", "o" } },
     })
 end
-
--- vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help,
---     { desc = "Signature help", buffer = bufnr, remap = false })
