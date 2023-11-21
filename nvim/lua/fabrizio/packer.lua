@@ -1,6 +1,7 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 
 local vscode = vim.g.vscode == 1
+--
 -- Only required if you have packer configured as `opt`
 vim.cmd.packadd('packer.nvim')
 
@@ -60,6 +61,7 @@ return require('packer').startup(function(use)
     }
     use({ 'zbirenbaum/copilot.lua', disable = vscode })
     use({ 'onsails/lspkind.nvim', disable = vscode })
+    use({ "ray-x/lsp_signature.nvim", disable = vscode })
 
     use({
         "mfussenegger/nvim-dap",

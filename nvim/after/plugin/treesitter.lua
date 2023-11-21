@@ -1,9 +1,9 @@
 -- if not vim.g.vscode then
-require 'treesitter-context'.setup {
-    enable = true,
-    throttle = true,
-    multiline_threshold = 4,
-}
+-- require 'treesitter-context'.setup {
+--     enable = true,
+--     throttle = true,
+--     multiline_threshold = 4,
+-- }
 
 require 'nvim-treesitter.configs'.setup {
     ensure_installed = { "vimdoc", "javascript", "c", 'go', 'lua', 'python', 'rust', 'typescript', 'regex',
@@ -49,7 +49,7 @@ require 'nvim-treesitter.configs'.setup {
         },
         move = {
             enable = true,
-            set_jumps = true,     -- whether to set jumps in the jumplist
+            set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
                 [']a'] = '@parameter.outer',
                 [']b'] = '@block.outer',
