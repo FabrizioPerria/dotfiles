@@ -1,4 +1,7 @@
-if not vim.g.vscode then
+return {
+"theprimeagen/refactoring.nvim",
+
+config = function()
     require('refactoring').setup({
         -- prompt for return type
         prompt_func_return_type = {
@@ -15,4 +18,6 @@ if not vim.g.vscode then
             java = true,
         },
     })
-end
+end,
+enabled = vim.g.vscode==0,
+}

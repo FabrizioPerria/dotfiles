@@ -1,23 +1,48 @@
-if not vim.g.vscode then
+return {
+    'VonHeikemen/lsp-zero.nvim',
+    dependencies = {
+        -- LSP Support
+        'neovim/nvim-lspconfig',
+        'williamboman/mason.nvim',
+        'williamboman/mason-lspconfig.nvim',
+        'Issafalcon/lsp-overloads.nvim',
+
+        -- Autocompletion
+        'hrsh7th/nvim-cmp',
+        'hrsh7th/cmp-buffer',
+        'hrsh7th/cmp-path',
+        'saadparwaiz1/cmp_luasnip',
+        'hrsh7th/cmp-nvim-lsp',
+        'hrsh7th/cmp-nvim-lua',
+
+        -- Snippets
+        'L3MON4D3/LuaSnip',
+        'rafamadriz/friendly-snippets',
+
+        'onsails/lspkind.nvim',
+        "ray-x/lsp_signature.nvim",
+    },
+
+config = function()
     vim.lsp.set_log_level("off")
     local lsp = require("lsp-zero")
 
     lsp.preset("recommended")
     lsp.setup_servers({ "csharp_ls", "bashls", 'cmake' })
-    lsp.ensure_installed({
-        -- 'clangd',
-        'cmake',
-        'bashls',
-        'cmake',
-        'pyright',
-        'zk',
-        'lua_ls',
-        'vimls',
-        'efm',
-    })
+    -- lsp.ensure_installed({
+    --     -- 'clangd',
+    --     'cmake',
+    --     'bashls',
+    --     'cmake',
+    --     'pyright',
+    --     'zk',
+    --     'lua_ls',
+    --     'vimls',
+    --     'efm',
+    -- })
 
     -- Fix Undefined global 'vim'
-    lsp.nvim_workspace()
+    -- lsp.nvim_workspace()
     local lspc = require("lspconfig")
     lspc.cmake.setup {
         cmd = { '/opt/homebrew/bin/cmake-language-server' },
@@ -145,4 +170,6 @@ if not vim.g.vscode then
             border = "rounded"
         }
     })
-end
+end,
+    enabled = vim.g.vscode == 0
+}

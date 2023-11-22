@@ -1,4 +1,3 @@
-if not vim.g.vscode then
     local slide = {
         fps = 50,
         name = 'slide',
@@ -12,6 +11,8 @@ if not vim.g.vscode then
             return true
         end
     }
-
-    require("cellular-automaton").register_animation(slide)
-end
+    return {
+        "eandrju/cellular-automaton.nvim",     
+        enabled = vim.g.vscode == 0,
+        config = function() require("cellular-automaton").register_animation(slide) end
+    }
