@@ -31,16 +31,12 @@ if not vim.g.vscode then
     end
 
     local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
-    local telescope = require('telescope')
-    local projects = telescope.extensions.project.project
-    local undo = telescope.extensions.undo.undo
-    local refactoring = require('refactoring')
-    local tbi = require("telescope.builtin")
-    local diffview = require('diffview.actions')
-    local harpoonmark = require('harpoon.mark')
-    local harpoonui = require('harpoon.ui')
-    local dap = require('dap')
-    local telescopeBI = require('telescope.builtin')
+    local refactoring    = require('refactoring')
+    local diffview       = require('diffview.actions')
+    local harpoonmark    = require('harpoon.mark')
+    local harpoonui      = require('harpoon.ui')
+    local dap            = require('dap')
+    local tbi            = require("telescope.builtin")
 
     wk.register({
         ['<F3>'] = { ':Telescope dap variables<CR>', 'List variables', mode = { 'n' } },
@@ -70,14 +66,18 @@ if not vim.g.vscode then
                 ['g'] = { tbi.git_files, 'Fuzzy file search in git repository', mode = { 'n' } },
                 ['r'] = { tbi.registers, 'Peek Register contents', mode = { 'n', 'v' } },
                 ['s'] = { function() tbi.live_grep({ search_dir = '%:p:h' }) end, 'Grep search', mode = { 'n' } },
-                ['v'] = { ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>',
-                    'Show file browser', silent = false, mode = { 'n' } },
+                ['v'] = {
+                    ':Telescope file_browser hidden=true noignore=true path=%:p:h select_buffer=true<CR>',
+                    'Show file browser',
+                    silent = false,
+                    mode = { 'n' }
+                },
                 ['k'] = { tbi.keymaps, 'Show keymaps', mode = { 'n' } },
                 ['h'] = { tbi.help_tags, 'Find man pages for vim commands', mode = { 'n' } },
-                ['p'] = { projects, 'Show marked projects', silent = false, mode = { 'n' } },
+                ['p'] = { ':Telescope project<CR>', 'Show marked projects', silent = false, mode = { 'n' } },
             },
 
-            ['u'] = { undo, "Undo menu", mode = { 'n', 'x' } },
+            ['u'] = { ':Telescope undo<CR>', "Undo menu", mode = { 'n', 'x' } },
 
             ["g"] = {
                 [""] = { tbi.git_status, ' ', silent = false, mode = { "n" } },
@@ -166,41 +166,68 @@ if not vim.g.vscode then
             ['.'] = { require("actions-preview").code_actions, 'Code Actions', mode = { 'n' } },
             [";"] = { vim.lsp.buf.hover, 'Hover', mode = { "n", "x" } },
             ['v'] = {
-                ['S'] = { function()
-                    telescopeBI.lsp_dynamic_workspace_symbols({
-                        symbol_width = 60,
-                        symbol_type_width = 30,
-                        fname_width = 50
-                    })
-                end, "Show current Workspace Symbols", mode = { 'n' } },
-                ['s'] = { function()
-                    telescopeBI.lsp_document_symbols({
-                        symbol_width = 60,
-                        symbol_type_width = 30,
-                        fname_width = 80
-                    })
-                end, "Show symbols in document", mode = { 'n' } },
-                ['r'] = { function() telescopeBI.lsp_references({ fname_width = 80 }) end, "Show references", mode = {
-                    'n' } },
-                ['d'] = { function() telescopeBI.lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
-                    "Go to definition", mode = { 'n' } },
-                ['t'] = { function() telescopeBI.lsp_type_definitions({ fname_width = 80 }) end, "Go to type definition", mode = {
-                    'n' } },
-                ['i'] = { function() telescopeBI.lsp_implementations({ fname_width = 80 }) end, "Go to implementation", mode = {
-                    'n' } },
+                ['S'] = {
+                    function()
+                        tbi.lsp_dynamic_workspace_symbols({
+                            symbol_width = 60,
+                            symbol_type_width = 30,
+                            fname_width = 50
+                        })
+                    end,
+                    "Show current Workspace Symbols",
+                    mode = { 'n' }
+                },
+                ['s'] = {
+                    function()
+                        tbi.lsp_document_symbols({
+                            symbol_width = 60,
+                            symbol_type_width = 30,
+                            fname_width = 80
+                        })
+                    end,
+                    "Show symbols in document",
+                    mode = { 'n' }
+                },
+                ['r'] = {
+                    function() tbi.lsp_references({ fname_width = 80 }) end,
+                    "Show references",
+                    mode = {
+                        'n' }
+                },
+                ['d'] = {
+                    function() tbi.lsp_definitions({ jump_type = 'vsplit', fname_width = 80 }) end,
+                    "Go to definition",
+                    mode = { 'n' }
+                },
+                ['t'] = {
+                    function() tbi.lsp_type_definitions({ fname_width = 80 }) end,
+                    "Go to type definition",
+                    mode = {
+                        'n' }
+                },
+                ['i'] = {
+                    function() tbi.lsp_implementations({ fname_width = 80 }) end,
+                    "Go to implementation",
+                    mode = {
+                        'n' }
+                },
                 ['rn'] = { vim.lsp.buf.rename, "rename symbol", mode = { 'n' } },
-                ['e'] = { telescopeBI.diagnostics, "Show diagnostics", mode = { 'n' } },
+                ['e'] = { tbi.diagnostics, "Show diagnostics", mode = { 'n' } },
             },
             -- vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, remap = false, desc = 'Next diagnostic' })
             -- vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, remap = false, desc = 'Prev diagnostic' })
-            ['dd'] = { function()
-                if vim.diagnostic.is_disabled() then
-                    vim.diagnostic.enable()
-                else
-                    vim.diagnostic
-                        .disable()
-                end
-            end, 'Toggle diagnostics', mode = { 'n', 'x' } },
+            ['dd'] = {
+                function()
+                    if vim.diagnostic.is_disabled() then
+                        vim.diagnostic.enable()
+                    else
+                        vim.diagnostic
+                            .disable()
+                    end
+                end,
+                'Toggle diagnostics',
+                mode = { 'n', 'x' }
+            },
         },
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
         [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },
@@ -226,19 +253,41 @@ else
             ["f"] = {
                 [""] = { function() vscode.call("editor.action.formatDocument") end, 'Format file', mode = { 'n' } },
                 ['f'] = { function() vscode.call("workbench.action.quickOpen") end, 'Fuzzy file search', mode = { 'n' } },
-                ['b'] = { function() vscode.call("workbench.action.showAllEditors") end, 'Show buffers', silent = false, mode = {
-                    'n' } },
-                ['g'] = { function() vscode.call("workbench.view.scm") end, 'Fuzzy file search in git repository', mode = {
-                    'n' } },
+                ['b'] = {
+                    function() vscode.call("workbench.action.showAllEditors") end,
+                    'Show buffers',
+                    silent = false,
+                    mode = {
+                        'n' }
+                },
+                ['g'] = {
+                    function() vscode.call("workbench.view.scm") end,
+                    'Fuzzy file search in git repository',
+                    mode = {
+                        'n' }
+                },
                 ['s'] = { function() vscode.call("livegrep.search") end, 'Grep search', mode = { 'n' } },
-                ['v'] = { function() vscode.call("workbench.explorer.fileView.focus") end, 'Show file browser', silent = false, mode = {
-                    'n' } },
+                ['v'] = {
+                    function() vscode.call("workbench.explorer.fileView.focus") end,
+                    'Show file browser',
+                    silent = false,
+                    mode = {
+                        'n' }
+                },
                 ['p'] = {
-                    [''] = { function() vscode.call("projectManager.listFavoriteProjects#sideBarFavorites") end,
-                        'Show marked projects', silent = false, mode = {
-                        'n' } },
-                    ['a'] = { function() vscode.call("projectManager.addToFavorites") end, "Add to projects", mode = {
-                        'n' } }
+                    [''] = {
+                        function() vscode.call("projectManager.listFavoriteProjects#sideBarFavorites") end,
+                        'Show marked projects',
+                        silent = false,
+                        mode = {
+                            'n' }
+                    },
+                    ['a'] = {
+                        function() vscode.call("projectManager.addToFavorites") end,
+                        "Add to projects",
+                        mode = {
+                            'n' }
+                    }
                 }
             },
 
