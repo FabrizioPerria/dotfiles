@@ -2,6 +2,20 @@
 
 local vscode = vim.g.vscode == 1
 --
+local packerpath = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+print(packerpath)
+if not vim.loop.fs_stat(packerpath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--depth=1",
+    "https://github.com/wbthomason/packer.nvim",
+    packerpath,
+  })
+end
+
+--vim.opt.rtp:prepend(packerpath)
+
 -- Only required if you have packer configured as `opt`
 vim.cmd.packadd('packer.nvim')
 
