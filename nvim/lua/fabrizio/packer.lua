@@ -40,34 +40,36 @@ function M.setup()
         -- Packer can manage itself
         use 'wbthomason/packer.nvim'
 
-        use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/plenary.nvim' } }, disable = vscode }
-        use { "nvim-telescope/telescope-file-browser.nvim", requires = { { 'nvim-telescope/telescope.nvim' }, }, disable =
-            vscode }
-        use { "nvim-telescope/telescope-fzf-native.nvim", requires = { { 'nvim-telescope/telescope.nvim' } }, run = { 'make' }, disable =
-            vscode }
-        use { 'nvim-telescope/telescope-ui-select.nvim', requires = { { 'nvim-telescope/telescope.nvim' } }, disable = vscode }
-        use { 'nvim-telescope/telescope-project.nvim', requires = { { 'nvim-telescope/telescope.nvim' } }, disable = vscode }
-        use { 'debugloop/telescope-undo.nvim', requires = { { 'nvim-telescope/telescope.nvim' } }, disable = vscode }
-        use { 'nvim-telescope/telescope-packer.nvim', requires = { { 'nvim-telescope/telescope.nvim' } }, disable = vscode }
-        use { "nvim-telescope/telescope-dap.nvim", requires = { { 'nvim-telescope/telescope.nvim' } }, disable = vscode }
+        use { 'nvim-telescope/telescope.nvim',
+            requires = {
+                'nvim-lua/plenary.nvim',
+                'nvim-telescope/telescope-file-browser.nvim',
+                { "nvim-telescope/telescope-fzf-native.nvim", run = { 'make' } },
+                'nvim-telescope/telescope-ui-select.nvim',
+                'nvim-telescope/telescope-project.nvim',
+                'debugloop/telescope-undo.nvim',
+                'nvim-telescope/telescope-packer.nvim',
+                "nvim-telescope/telescope-dap.nvim"
+            },
+            disable = vscode
+        }
 
         use({
             'nvim-treesitter/nvim-treesitter',
             run = function()
                 local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
                 ts_update()
-            end
+            end,
+            requires = {
+                'nvim-treesitter/nvim-treesitter-textobjects',
+                "nvim-treesitter/nvim-treesitter-context",
+                'nvim-treesitter/playground'
+            }
         })
-        use({
-            'nvim-treesitter/nvim-treesitter-textobjects',
-            requires = { { 'nvim-treesitter/nvim-treesitter', }, { 'nvim-treesitter/playground' } },
-            after = "nvim-treesitter",
-        })
-        use({ "nvim-treesitter/nvim-treesitter-context" });
 
         use {
             'VonHeikemen/lsp-zero.nvim',
-            branch = 'v1.x',
+            branch = 'v3.x',
 
             requires = {
                 -- LSP Support
@@ -77,7 +79,7 @@ function M.setup()
                 { 'Issafalcon/lsp-overloads.nvim' },
 
                 -- Autocompletion
-                { 'hrsh7th/nvim-cmp' },
+                { 'llllvvuu/nvim-cmp',                 branch = 'feat/above' },
                 { 'hrsh7th/cmp-buffer' },
                 { 'hrsh7th/cmp-path' },
                 { 'saadparwaiz1/cmp_luasnip' },
@@ -87,20 +89,29 @@ function M.setup()
                 -- Snippets
                 { 'L3MON4D3/LuaSnip' },
                 { 'rafamadriz/friendly-snippets' },
+
+                -- UI
+                { 'onsails/lspkind.nvim' },
+                { "ray-x/lsp_signature.nvim" },
+
+                -- Copilot
+                { 'zbirenbaum/copilot.lua' },
+                { 'zbirenbaum/copilot-cmp' }
             },
             disable = vscode
         }
-        use({ 'zbirenbaum/copilot.lua', disable = vscode })
-        use({ 'onsails/lspkind.nvim', disable = vscode })
-        use({ "ray-x/lsp_signature.nvim", disable = vscode })
 
         use({
             "mfussenegger/nvim-dap",
-            requires = { { 'theHamsta/nvim-dap-virtual-text' }, { 'rcarriga/nvim-dap-ui' }, },
+            requires = {
+                { 'theHamsta/nvim-dap-virtual-text' },
+                { 'rcarriga/nvim-dap-ui' },
+                { 'jay-babu/mason-nvim-dap.nvim' },
+                { "mfussenegger/nvim-dap-python" }
+            },
             disable = vscode
         })
-        use({ 'jay-babu/mason-nvim-dap.nvim', disable = vscode })
-        use({ "mfussenegger/nvim-dap-python", disable = vscode })
+
 
         use({ "tpope/vim-fugitive", disable = vscode })
         use({ "lewis6991/gitsigns.nvim", disable = vscode })
@@ -129,6 +140,7 @@ function M.setup()
         use({ "folke/tokyonight.nvim", disable = vscode })
         use({ 'startup-nvim/startup.nvim', disable = vscode })
         use({ 'prichrd/netrw.nvim', disable = vscode })
+
         if packer_bootstrap then
             print "Restart Neovim required after installation!"
             require("packer").sync()

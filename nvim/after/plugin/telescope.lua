@@ -88,7 +88,7 @@ if not vim.g.vscode then
                     '--type',
                     'f',
                     '--hidden',
-                    '--no-ignore',
+                    -- '--no-ignore',
                     '--strip-cwd-prefix',
                     '--exclude',
                     'node_modules',
