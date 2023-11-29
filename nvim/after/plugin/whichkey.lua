@@ -5,7 +5,6 @@ vim.keymap.set('n', 'J', 'mzJ`z', { noremap = true })
 if not vim.g.vscode then
     vim.keymap.set('n', '<leader>s', ':%s///gI<Left><Left><Left><Left>')
     vim.keymap.set('x', '<leader>s', ':s///gI<Left><Left><Left><Left>')
-    -- vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, { desc = "Signature help", buffer = bufnr, remap = false })
     local function match_path()
         local projects = require("telescope._extensions.project.utils").get_projects('recent')
         for _, project in pairs(projects) do
@@ -39,6 +38,7 @@ if not vim.g.vscode then
     local tbi            = require("telescope.builtin")
 
     wk.register({
+        ["<C-s>"] = { vim.lsp.buf.signature_help, "Signature help", mode = { 'i', 'n' } },
         ['<F3>'] = { ':Telescope dap variables<CR>', 'List variables', mode = { 'n' } },
         ['<F4>'] = { ':Telescope dap list_breakpoints<CR>', 'List breakpoints', mode = { 'n' } },
         ['<F5>'] = { ':DapContinue<CR>', "Run/Continue Debug", mode = { 'n' } },
@@ -162,6 +162,15 @@ if not vim.g.vscode then
                 [','] = { [[ 20<C-w>< ]], "Decrease split's width", mode = { 'n' } },
                 ['.'] = { [[ 20<C-w>> ]], "Increase split's width", mode = { 'n' } },
             },
+            ["="] = { function()
+                local buf = vim.api.nvim_get_current_buf()
+                local row = vim.api.nvim_win_get_cursor(0)[1]
+                local sep =
+                "===================================================================================================="
+                vim.api.nvim_buf_set_lines(buf, row, row, false, { sep })
+                vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+                vim.api.nvim_command('CommentToggle')
+            end, "Insert Separator" },
             ['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } },
             ['.'] = { require("actions-preview").code_actions, 'Code Actions', mode = { 'n' } },
             [";"] = { vim.lsp.buf.hover, 'Hover', mode = { "n", "x" } },
@@ -333,7 +342,20 @@ else
             },
             ["y"] = { [["+y]], 'copy selection to system clipboard', mode = { 'n', 'x' } },
             ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
-            ['/'] = { function() vscode.call("editor.action.commentLine") end, 'Comment selection', mode = { 'n', 'x' } }
+            ['/'] = { function() vscode.call("editor.action.commentLine") end, 'Comment selection', mode = { 'n', 'x' } },
+            ['='] = {
+                function()
+                    local buf = vim.api.nvim_get_current_buf()
+                    local row = vim.api.nvim_win_get_cursor(0)[1]
+                    local sep =
+                    "===================================================================================================="
+                    vim.api.nvim_buf_set_lines(buf, row, row, false, { sep })
+                    vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+                    vscode.action('editor.action.commentLine')
+                end,
+                'Comment selection',
+                mode = { 'n' }
+            },
         },
 
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },

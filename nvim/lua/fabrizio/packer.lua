@@ -79,7 +79,7 @@ function M.setup()
                 { 'Issafalcon/lsp-overloads.nvim' },
 
                 -- Autocompletion
-                { 'llllvvuu/nvim-cmp',                 branch = 'feat/above' },
+                { 'llllvvuu/nvim-cmp',                branch = 'feat/above' },
                 { 'hrsh7th/cmp-buffer' },
                 { 'hrsh7th/cmp-path' },
                 { 'saadparwaiz1/cmp_luasnip' },
@@ -111,7 +111,6 @@ function M.setup()
             },
             disable = vscode
         })
-
 
         use({ "tpope/vim-fugitive", disable = vscode })
         use({ "lewis6991/gitsigns.nvim", disable = vscode })

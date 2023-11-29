@@ -16,7 +16,7 @@ if not vim.g.vscode then
             pattern = { '*.c', '*.cpp', '*.h', '*.hpp', 'CMakeLists.txt' },
             group = refresh,
             -- command = 'nnoremap <buffer> <leader><leader> :w<CR>:vsplit<bar>term ./doit.sh<CR>'
-            command = 'nnoremap <buffer> <leader><leader> :wa<CR>:FloatermNew --autoclose=0 ./doit.sh<CR>'
+            command = 'nnoremap <buffer> <leader><leader> :wa<CR>:FloatermNew --autoclose=0 ./build.sh<CR>'
         }
     )
     vim.api.nvim_create_autocmd(
@@ -28,7 +28,7 @@ if not vim.g.vscode then
         }
     )
 
-    vim.api.nvim_create_autocmd("BufWritePre", { callback = function() vim.lsp.buf.format() end, })
+    -- vim.api.nvim_create_autocmd("BufWritePre", { callback = function() vim.lsp.buf.format() end, })
 
     vim.api.nvim_create_autocmd("TermOpen", {
         callback = function()
