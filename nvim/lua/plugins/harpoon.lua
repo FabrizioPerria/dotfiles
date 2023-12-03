@@ -1,19 +1,21 @@
 return {
   "ThePrimeagen/harpoon",
   keys = {
-    { "<leader>h1", "<cmd> lua require('harpoon.ui').nav_file(1)<cr>", mode = { "n" } },
-    { "<leader>h2", "<cmd> lua require('harpoon.ui').nav_file(2)<cr>", mode = { "n" } },
-    { "<leader>h3", "<cmd> lua require('harpoon.ui').nav_file(3)<cr>", mode = { "n" } },
-    { "<leader>h4", "<cmd> lua require('harpoon.ui').nav_file(4)<cr>", mode = { "n" } },
-    { "<leader>h5", "<cmd> lua require('harpoon.ui').nav_file(5)<cr>", mode = { "n" } },
-    { "<leader>h6", "<cmd> lua require('harpoon.ui').nav_file(6)<cr>", mode = { "n" } },
-    { "<leader>h7", "<cmd> lua require('harpoon.ui').nav_file(7)<cr>", mode = { "n" } },
-    { "<leader>h8", "<cmd> lua require('harpoon.ui').nav_file(8)<cr>", mode = { "n" } },
-    { "<leader>h9", "<cmd> lua require('harpoon.ui').nav_file(9)<cr>", mode = { "n" } },
-    { "<leader>ha", "<cmd> lua require('harpoon.mark').add_file<cr>", mode = { "n" } },
-    { "<leader>hs", "<cmd> lua require('harpoon.ui').toggle_quick_menu<cr>", mode = { "n" } },
-    { "<leader>hp", "<cmd> lua require('harpoon.ui').nav_prev<cr>", mode = { "n" } },
-    { "<leader>hn", "<cmd> lua require('harpoon.ui').nav_next<cr>", mode = { "n" } },
+    { "<leader>h1", "<cmd> lua require('harpoon'):list():select(1)<cr>", mode = { "n" } },
+    { "<leader>h2", "<cmd> lua require('harpoon'):list():select(2)<cr>", mode = { "n" } },
+    { "<leader>h3", "<cmd> lua require('harpoon'):list():select(3)<cr>", mode = { "n" } },
+    { "<leader>h4", "<cmd> lua require('harpoon'):list():select(4)<cr>", mode = { "n" } },
+    { "<leader>h5", "<cmd> lua require('harpoon'):list():select(5)<cr>", mode = { "n" } },
+    { "<leader>h6", "<cmd> lua require('harpoon'):list():select(6)<cr>", mode = { "n" } },
+    { "<leader>h7", "<cmd> lua require('harpoon'):list():select(7)<cr>", mode = { "n" } },
+    { "<leader>h8", "<cmd> lua require('harpoon'):list():select(8)<cr>", mode = { "n" } },
+    { "<leader>h9", "<cmd> lua require('harpoon'):list():select(9)<cr>", mode = { "n" } },
+    { "<leader>ha", "<cmd> lua require('harpoon'):list():append()<cr>", mode = { "n" } },
+    {
+      "<leader>hs",
+      "<cmd> lua require('harpoon').ui:toggle_quick_menu(require('harpoon'):list())<cr>",
+      mode = { "n" },
+    },
   },
   opts = {
     global_settings = {
@@ -25,4 +27,7 @@ return {
       mark_branch = false,
     },
   },
+  config = function()
+    require("harpoon"):setup()
+  end,
 }

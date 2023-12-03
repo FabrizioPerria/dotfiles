@@ -6,6 +6,7 @@ return {
     "nvim-telescope/telescope-file-browser.nvim",
     "nvim-telescope/telescope-ui-select.nvim",
     "nvim-telescope/telescope-project.nvim",
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     "debugloop/telescope-undo.nvim",
     "nvim-telescope/telescope-packer.nvim",
     "nvim-telescope/telescope-dap.nvim",
@@ -14,26 +15,26 @@ return {
   keys = {
     {
       "<leader>ff",
-      "<cmd>lua require('telescope.builtin').find_files<cr>",
+      "<cmd>Telescope find_files<cr>",
       desc = "Fuzzy file search",
       mode = { "n" },
     },
-    { "<leader>g", "<cmd>lua require('telescope.builtin').git_status<cr>", desc = " Git status", mode = { "n" } },
+    { "<leader>g", "<cmd>Telescope git_status<cr>", desc = " Git status", mode = { "n" } },
     {
       "<leader>fb",
-      "<cmd>lua require('telescope.builtin').buffers<cr>",
+      "<cmd>Telescope buffers<cr>",
       desc = "Show buffers",
       mode = { "n" },
     },
     {
       "<leader>fg",
-      "<cmd>lua require('telescope.builtin').git_files<cr>",
+      "<cmd>Telescope git_files<cr>",
       desc = "Fuzzy file search in git repository",
       mode = { "n" },
     },
     {
       "<leader>fr",
-      "<cmd>lua require('telescope.builtin').registers<cr>",
+      "<cmd>Telescope registers<cr>",
       "Peek Register contents",
       mode = { "n", "v" },
     },
@@ -51,13 +52,13 @@ return {
     },
     {
       "<leader>fk",
-      "<cmd>lua require('telescope.builtin').keymaps<cr>",
+      "<cmd>Telescope keymaps<cr>",
       desc = "Show keymaps",
       mode = { "n" },
     },
     {
       "<leader>fh",
-      "<cmd>lua require('telescope.builtin').help_tags<cr>",
+      "<cmd>Telescope help_tags<cr>",
       desc = "Find man pages for vim commands",
       mode = { "n" },
     },
@@ -142,7 +143,7 @@ return {
     },
     {
       "<leader>ve",
-      "<cmd>lua require('telescope.builtin').diagnostics<cr>",
+      "<cmd>Telescope diagnostics<cr>",
       desc = "Show diagnostics",
       mode = { "n" },
     },
@@ -168,16 +169,16 @@ return {
       path_display = { "truncate" },
       mappings = {
         i = {
-          ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
-          ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
-          ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
-          ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
+          --  ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
+          --  ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
+          --  ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
+          --  ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
         },
         n = {
-          ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
-          ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
-          ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
-          ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
+          --  ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
+          --  ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
+          --  ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
+          --  ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
         },
       },
       vimgrep_arguments = {
@@ -196,30 +197,30 @@ return {
       buffers = {
         mappings = {
           n = {
-            ["d"] = require("telescope.actions").delete_buffer,
+            --    ["d"] = require("telescope.actions").delete_buffer,
           },
           i = {
-            ["<A-d>"] = require("telescope.actions").delete_buffer,
+            --    ["<A-d>"] = require("telescope.actions").delete_buffer,
           },
         },
       },
       git_status = {
         mappings = {
           n = {
-            ["d"] = function(prompt_bufnr)
-              local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-              os.execute("git checkout -- " .. selection.value)
-              require("telescope.actions")._close(prompt_bufnr, true)
-              require("telescope.builtin").git_status()
-            end,
+            --   ["d"] = function(prompt_bufnr)
+            --     local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+            --     os.execute("git checkout -- " .. selection.value)
+            --     require("telescope.actions")._close(prompt_bufnr, true)
+            --     require("telescope.builtin").git_status()
+            --   end,
           },
           i = {
-            ["<A-d>"] = function(prompt_bufnr)
-              local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-              os.execute("git checkout -- " .. selection.value)
-              require("telescope.actions")._close(prompt_bufnr, true)
-              require("telescope.builtin").git_status()
-            end,
+            --   ["<A-d>"] = function(prompt_bufnr)
+            --     local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+            --     os.execute("git checkout -- " .. selection.value)
+            --     require("telescope.actions")._close(prompt_bufnr, true)
+            --     require("telescope.builtin").git_status()
+            --   end,
           },
         },
       },
@@ -256,6 +257,7 @@ return {
     local telescope = require("telescope")
     telescope.setup(opts)
     telescope.load_extension("file_browser")
+    telescope.load_extension("fzf")
     telescope.load_extension("refactoring")
     telescope.load_extension("ui-select")
     telescope.load_extension("undo")

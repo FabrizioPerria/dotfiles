@@ -1,9 +1,10 @@
 return {
   "terrortylor/nvim-comment",
+  cmd = "CommentToggle",
   keys = {
-    { "<leader>/", "<cmd>CommentToggle<cr>", desc = "Comment selection", mode = { "n", "x" } },
+    { "<leader>/", "<cmd>CommentToggle<cr>", desc = "Comment selection", mode = { "n", "x" }, remap = true },
     {
-      "<leader=",
+      "<leader>=",
       function()
         local buf = vim.api.nvim_get_current_buf()
         local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -17,4 +18,12 @@ return {
       mode = { "n", "x" },
     },
   },
+  opts = {
+    marker_padding = true,
+    comment_empty = false,
+    comment_empty_trim_whitespace = true,
+  },
+  config = function(_, opts)
+    require("nvim_comment").setup(opts)
+  end,
 }

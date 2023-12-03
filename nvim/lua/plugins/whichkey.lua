@@ -12,30 +12,6 @@ local configFunction = function(_, opts)
     end
 
     wk.register({
-      ["<F3>"] = { "<cmd>Telescope dap variables<cr>", "List variables", mode = { "n" } },
-      ["<F4>"] = { "<cmd>Telescope dap list_breakpoints<cr>", "List breakpoints", mode = { "n" } },
-      ["<F5>"] = { "<cmd>DapContinue<cr>", "Run/Continue Debug", mode = { "n" } },
-      ["<F6>"] = { "<cmd>Telescope dap frames<cr>", "List frames", mode = { "n" } },
-      ["<F8>"] = {
-        "<cmd>lua require('dap').set_breakpoint(vim.fn.input('Condition: '))<cr>",
-        "Conditional Breakpoint",
-        mode = { "n" },
-      },
-      ["<F9>"] = { "<cmd>DapToggleBreakpoint<cr>", "Toggle Breakpoint", mode = { "n" } },
-      ["<F10>"] = { "<cmd>DapStepOver<cr>", "Debug step over", mode = { "n" } },
-      ["<F11>"] = { "<cmd>DapStepInto<cr>", "Debug step into", mode = { "n" } },
-      ["<C-F11>"] = { "<cmd>DapStepOut<cr>", "Debug step out", mode = { "n" } },
-      ["<F12>"] = {
-        "<cmd>DapTerminate<cr><cmd>lua require('dapui').close()<cr>",
-        "Stop and quit debug",
-        mode = { "n" },
-      },
-      ["<s-F5>"] = {
-        "<cmd>DapTerminate<cr><cmd>lua require('dapui').close()<cr>",
-        "Stop and quit debug",
-        mode = { "n" },
-      },
-
       ["<leader>"] = {
 
         ["g"] = {
@@ -74,37 +50,6 @@ local configFunction = function(_, opts)
           ["q"] = { "<cmd>tabclose<cr>", "Move to next tab", silent = false, mode = { "n" } },
         },
         ["."] = { "<cmd>lua require('actions-preview').code_actions<cr>", "Code Actions", mode = { "n" } },
-      },
-      [";"] = {
-        require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_next,
-        "next match",
-        mode = { "n", "x", "o" },
-      },
-      [","] = {
-        require("nvim-treesitter.textobjects.repeatable_move").repeat_last_move_previous,
-        "previous match",
-        mode = { "n", "x", "o" },
-      },
-
-      ["f"] = {
-        "<cmd>lua require('nvim-treesitter.textobjects.repeatable_move').builtin_f<cr>",
-        " ",
-        mode = { "n", "x", "o" },
-      },
-      ["F"] = {
-        "<cmd>lua require('nvim-treesitter.textobjects.repeatable_move').builtin_F<cr>",
-        " ",
-        mode = { "n", "x", "o" },
-      },
-      ["t"] = {
-        "<cmd>lua require('nvim-treesitter.textobjects.repeatable_move').builtin_t<cr>",
-        " ",
-        mode = { "n", "x", "o" },
-      },
-      ["T"] = {
-        "<cmd>lua require('nvim-treesitter.textobjects.repeatable_move').builtin_T<cr>",
-        " ",
-        mode = { "n", "x", "o" },
       },
     })
   else
