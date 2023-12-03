@@ -32,8 +32,7 @@ if not vim.g.vscode then
     local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
     local refactoring    = require('refactoring')
     local diffview       = require('diffview.actions')
-    local harpoonmark    = require('harpoon.mark')
-    local harpoonui      = require('harpoon.ui')
+    local harpoon = require('harpoon')
     local dap            = require('dap')
     local tbi            = require("telescope.builtin")
 
@@ -123,17 +122,17 @@ if not vim.g.vscode then
             },
 
             ["h"] = {
-                ["a"] = { harpoonmark.add_file, 'Add file' },
-                ["s"] = { harpoonui.toggle_quick_menu, 'Show files' },
-                ["1"] = { function() harpoonui.nav_file(1) end, 'Open mark 1' },
-                ["2"] = { function() harpoonui.nav_file(2) end, 'Open mark 2' },
-                ["3"] = { function() harpoonui.nav_file(3) end, 'Open mark 3' },
-                ["4"] = { function() harpoonui.nav_file(4) end, 'Open mark 4' },
-                ["5"] = { function() harpoonui.nav_file(5) end, 'Open mark 5' },
-                ["6"] = { function() harpoonui.nav_file(6) end, 'Open mark 6' },
-                ["7"] = { function() harpoonui.nav_file(7) end, 'Open mark 7' },
-                ["8"] = { function() harpoonui.nav_file(8) end, 'Open mark 8' },
-                ["9"] = { function() harpoonui.nav_file(9) end, 'Open mark 9' },
+                ["a"] = { function() harpoon:list():append() end, 'Add file' },
+                ["s"] = { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, 'Show files' },
+                ["1"] = { function() harpoon:list():select(1) end, 'Open mark 1' },
+                ["2"] = { function() harpoon:list():select(2) end, 'Open mark 2' },
+                ["3"] = { function() harpoon:list():select(3) end, 'Open mark 3' },
+                ["4"] = { function() harpoon:list():select(4) end, 'Open mark 4' },
+                ["5"] = { function() harpoon:list():select(5) end, 'Open mark 5' },
+                ["6"] = { function() harpoon:list():select(6) end, 'Open mark 6' },
+                ["7"] = { function() harpoon:list():select(7) end, 'Open mark 7' },
+                ["8"] = { function() harpoon:list():select(8) end, 'Open mark 8' },
+                ["9"] = { function() harpoon:list():select(9) end, 'Open mark 9' },
             },
             ["t"] = {
                 ['n'] = { ':tabedit ', 'Open file in new tab', silent = false, mode = { 'n' } },
