@@ -40,33 +40,6 @@ function M.setup()
         -- Packer can manage itself
         use 'wbthomason/packer.nvim'
 
-        use { 'nvim-telescope/telescope.nvim',
-            requires = {
-                'nvim-lua/plenary.nvim',
-                'nvim-telescope/telescope-file-browser.nvim',
-                { "nvim-telescope/telescope-fzf-native.nvim", run = { 'make' } },
-                'nvim-telescope/telescope-ui-select.nvim',
-                'nvim-telescope/telescope-project.nvim',
-                'debugloop/telescope-undo.nvim',
-                'nvim-telescope/telescope-packer.nvim',
-                "nvim-telescope/telescope-dap.nvim"
-            },
-            disable = vscode
-        }
-
-        use({
-            'nvim-treesitter/nvim-treesitter',
-            run = function()
-                local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-                ts_update()
-            end,
-            requires = {
-                'nvim-treesitter/nvim-treesitter-textobjects',
-                "nvim-treesitter/nvim-treesitter-context",
-                'nvim-treesitter/playground'
-            }
-        })
-
         use {
             'VonHeikemen/lsp-zero.nvim',
             branch = 'v3.x',
@@ -101,44 +74,19 @@ function M.setup()
             disable = vscode
         }
 
-        use({
-            "mfussenegger/nvim-dap",
-            requires = {
-                { 'theHamsta/nvim-dap-virtual-text' },
-                { 'rcarriga/nvim-dap-ui' },
-                { 'jay-babu/mason-nvim-dap.nvim' },
-                { "mfussenegger/nvim-dap-python" }
-            },
-            disable = vscode
-        })
-
         use({ "tpope/vim-fugitive", disable = vscode })
         use({ "lewis6991/gitsigns.nvim", disable = vscode })
         use({ "junegunn/gv.vim", disable = vscode })
         use({ 'f-person/git-blame.nvim', disable = vscode })
         use({ "sindrets/diffview.nvim", disable = vscode })
 
-        use({ "theprimeagen/harpoon", disable = vscode })
-        use({ "theprimeagen/refactoring.nvim", disable = vscode })
-        use({ "folke/todo-comments.nvim", disable = vscode })
-        use({ "folke/which-key.nvim" })
-        use({ "kylechui/nvim-surround" })
-        use({ "m4xshen/autoclose.nvim" })
-        use({ "christoomey/vim-tmux-navigator", disable = vscode })
-        use({ "eandrju/cellular-automaton.nvim", disable = vscode })
-        use({ "terrortylor/nvim-comment", disable = vscode })
         use({ "aznhe21/actions-preview.nvim", disable = vscode })
-        use({ 'voldikss/vim-floaterm', disable = vscode })
 
-        use({ "folke/trouble.nvim", disable = vscode })
         use({ "seblj/nvim-tabline", disable = vscode })
         use({ "lukas-reineke/indent-blankline.nvim", disable = vscode })
         use({ "nvim-lualine/lualine.nvim", disable = vscode })
         use({ "nvim-tree/nvim-web-devicons", disable = vscode })
-        use({ "norcalli/nvim-colorizer.lua", disable = vscode })
-        use({ "folke/tokyonight.nvim", disable = vscode })
-        use({ 'startup-nvim/startup.nvim', disable = vscode })
-        use({ 'prichrd/netrw.nvim', disable = vscode })
+)
 
         if packer_bootstrap then
             print "Restart Neovim required after installation!"
