@@ -165,7 +165,7 @@ return {
         end,
         clangd = function()
           require("lspconfig").clangd.setup({
-            cmd = { "/opt/homebrew/opt/llvm/bin/clangd", "--background-index" },
+            cmd = { "/opt/homebrew/opt/llvm/bin/clangd", "--offset-encoding=utf-16", "--background-index" },
             filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp" },
             root_dir = function(fname)
               return require("lspconfig").util.root_pattern("compile_commands.json", "compile_flags.txt", ".git")(fname)
