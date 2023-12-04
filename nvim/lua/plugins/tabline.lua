@@ -1,5 +1,6 @@
 return {
   "seblj/nvim-tabline",
+  vscode = false,
   opts = {
     no_name = "[No Name]", -- Name for buffers with no name
     modified_icon = "", -- Icon for showing modified buffer

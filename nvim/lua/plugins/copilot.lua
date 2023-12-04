@@ -1,5 +1,6 @@
 return {
   "zbirenbaum/copilot.lua",
+  vscode = false,
   opts = {
     panel = { enabled = false },
     suggestion = {
@@ -20,4 +21,3 @@ return {
     require("copilot").setup(opts)
   end,
 }
-

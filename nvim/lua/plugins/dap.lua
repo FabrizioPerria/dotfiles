@@ -1,6 +1,6 @@
 return {
   "mfussenegger/nvim-dap",
-  "mfussenegger/nvim-dap",
+  vscode = false,
   dependencies = {
     { "theHamsta/nvim-dap-virtual-text" },
     { "rcarriga/nvim-dap-ui" },

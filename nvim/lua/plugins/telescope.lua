@@ -1,6 +1,7 @@
 return {
   "nvim-telescope/telescope.nvim",
-  tag = "0.1.5",
+  -- tag = "0.1.5",
+  vscode = false,
   dependencies = {
     "nvim-lua/plenary.nvim",
     "nvim-telescope/telescope-file-browser.nvim",
@@ -13,6 +14,7 @@ return {
     "folke/todo-comments.nvim",
   },
   keys = {
+    { "<leader>/", vim.NIL },
     {
       "<leader>ff",
       "<cmd>Telescope find_files<cr>",
@@ -147,6 +149,10 @@ return {
       desc = "Show diagnostics",
       mode = { "n" },
     },
+    { "<leader>gB", "<cmd>Telescope git_branches<cr>", " ", silent = false, mode = { "n" } },
+    { "<leader>gs", "<cmd>Telescope git_stash<cr>", " ", silent = false, mode = { "n" } },
+    { "<leader>gf", "<cmd>Telescope git_files<cr>", " ", silent = false, mode = { "n" } },
+    { "<leader>gl", "<cmd>Telescope git_commits<cr>", " ", silent = false, mode = { "n" } },
   },
   opts = {
     extensions = {
@@ -169,16 +175,16 @@ return {
       path_display = { "truncate" },
       mappings = {
         i = {
-          --  ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
-          --  ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
-          --  ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
-          --  ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
+          ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
+          ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
+          ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
+          ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
         },
         n = {
-          --  ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
-          --  ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
-          --  ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
-          --  ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
+          ["<C-k>"] = require("telescope.actions").preview_scrolling_up,
+          ["<C-j>"] = require("telescope.actions").preview_scrolling_down,
+          ["<C-h>"] = require("telescope.actions").preview_scrolling_left,
+          ["<C-l>"] = require("telescope.actions").preview_scrolling_right,
         },
       },
       vimgrep_arguments = {
@@ -197,30 +203,30 @@ return {
       buffers = {
         mappings = {
           n = {
-            --    ["d"] = require("telescope.actions").delete_buffer,
+            ["d"] = require("telescope.actions").delete_buffer,
           },
           i = {
-            --    ["<A-d>"] = require("telescope.actions").delete_buffer,
+            ["<A-d>"] = require("telescope.actions").delete_buffer,
           },
         },
       },
       git_status = {
         mappings = {
           n = {
-            --   ["d"] = function(prompt_bufnr)
-            --     local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-            --     os.execute("git checkout -- " .. selection.value)
-            --     require("telescope.actions")._close(prompt_bufnr, true)
-            --     require("telescope.builtin").git_status()
-            --   end,
+            ["d"] = function(prompt_bufnr)
+              local selection = require("telescope.actions.state").get_selected_entry()
+              os.execute("git checkout -- " .. selection.value)
+              require("telescope.actions").close(prompt_bufnr)
+              require("telescope.builtin").git_status()
+            end,
           },
           i = {
-            --   ["<A-d>"] = function(prompt_bufnr)
-            --     local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
-            --     os.execute("git checkout -- " .. selection.value)
-            --     require("telescope.actions")._close(prompt_bufnr, true)
-            --     require("telescope.builtin").git_status()
-            --   end,
+            ["<A-d>"] = function(prompt_bufnr)
+              local selection = require("telescope.actions.state").get_selected_entry()
+              os.execute("git checkout -- " .. selection.value)
+              require("telescope.actions").close(prompt_bufnr)
+              require("telescope.builtin").git_status()
+            end,
           },
         },
       },

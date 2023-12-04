@@ -43,22 +43,7 @@ if not vim.g.vscode then
 
     vim.cmd.colorscheme('tokyonight-moon')
 
-    require("ibl").setup {
-        indent = {
-            highlight = highlight,
-            -- char = { "⎜" },
-        },
-        scope = {
-            enabled = true,
-            priority = 2000,
-            highlight = highlight,
-            char = { "▎" },
-        },
-        whitespace = {
-            highlight = hi_whitespace,
-            remove_blankline_trail = false
-        }
-    }
+}
 
 )
 end

@@ -1,5 +1,6 @@
 return {
   "ThePrimeagen/harpoon",
+  vscode = false,
   keys = {
     { "<leader>h1", "<cmd> lua require('harpoon'):list():select(1)<cr>", mode = { "n" } },
     { "<leader>h2", "<cmd> lua require('harpoon'):list():select(2)<cr>", mode = { "n" } },

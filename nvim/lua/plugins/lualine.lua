@@ -4,6 +4,7 @@ end
 
 return {
   "nvim-lualine/lualine.nvim",
+  vscode = false,
   opts = {
     sections = {
       lualine_c = {

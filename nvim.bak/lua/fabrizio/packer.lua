@@ -41,51 +41,16 @@ function M.setup()
         use 'wbthomason/packer.nvim'
 
         use {
-            'VonHeikemen/lsp-zero.nvim',
-            branch = 'v3.x',
-
             requires = {
                 -- LSP Support
-                { 'neovim/nvim-lspconfig' },
-                { 'williamboman/mason.nvim' },
-                { 'williamboman/mason-lspconfig.nvim' },
-                { 'Issafalcon/lsp-overloads.nvim' },
-
-                -- Autocompletion
-                { 'llllvvuu/nvim-cmp',                branch = 'feat/above' },
-                { 'hrsh7th/cmp-buffer' },
-                { 'hrsh7th/cmp-path' },
-                { 'saadparwaiz1/cmp_luasnip' },
-                { 'hrsh7th/cmp-nvim-lsp' },
-                { 'hrsh7th/cmp-nvim-lua' },
-
-                -- Snippets
-                { 'L3MON4D3/LuaSnip' },
-                { 'rafamadriz/friendly-snippets' },
-
-                -- UI
-                { 'onsails/lspkind.nvim' },
-                { "ray-x/lsp_signature.nvim" },
 
                 -- Copilot
-                { 'zbirenbaum/copilot.lua' },
-                { 'zbirenbaum/copilot-cmp' }
             },
             disable = vscode
         }
 
-        use({ "tpope/vim-fugitive", disable = vscode })
-        use({ "lewis6991/gitsigns.nvim", disable = vscode })
-        use({ "junegunn/gv.vim", disable = vscode })
-        use({ 'f-person/git-blame.nvim', disable = vscode })
-        use({ "sindrets/diffview.nvim", disable = vscode })
 
-        use({ "aznhe21/actions-preview.nvim", disable = vscode })
 
-        use({ "seblj/nvim-tabline", disable = vscode })
-        use({ "lukas-reineke/indent-blankline.nvim", disable = vscode })
-        use({ "nvim-lualine/lualine.nvim", disable = vscode })
-        use({ "nvim-tree/nvim-web-devicons", disable = vscode })
 )
 
         if packer_bootstrap then

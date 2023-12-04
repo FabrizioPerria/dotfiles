@@ -1,5 +1,6 @@
 return {
   "christoomey/vim-tmux-navigator",
+  vscode = false,
   keys = {
     { "<C-h>", "<cmd>TmuxNavigateLeft<cr>", desc = "Got to the left pane" },
     { "<C-j>", "<cmd>TmuxNavigateDown<cr>", desc = "Got to the down pane" },

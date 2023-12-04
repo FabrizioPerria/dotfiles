@@ -2,57 +2,7 @@ local configFunction = function(_, opts)
   local wk = require("which-key")
   wk.setup(opts)
 
-  if not vim.g.vscode then
-    local function DiffViewToggle()
-      if next(require("diffview.lib").views) == nil then
-        vim.cmd("DiffviewOpen")
-      else
-        vim.cmd("DiffviewClose")
-      end
-    end
-
-    wk.register({
-      ["<leader>"] = {
-
-        ["g"] = {
-          ["co"] = { ':Git commit -S -m ""<Left>', " ", mode = { "n" }, silent = false },
-          ["g"] = { ":Git pull --rebase", " ", silent = false, mode = { "n" } },
-          ["p"] = { ":Git push -u origin ", " ", silent = false, mode = { "n" } },
-          ["m"] = { ":Git merge ", " ", silent = false, mode = { "n" } },
-          ["L"] = {
-            "<cmd>vert Git log --show-signature | vertical resize 100<cr>",
-            " ",
-            silent = false,
-            mode = { "n" },
-          },
-          ["t"] = { "<cmd>GV<cr>", " ", silent = false, mode = { "n" } },
-          ["a"] = { "<cmd>Gwrite<cr>", " ", silent = false, mode = { "n" } },
-          ["-"] = { "<cmd>Gread<cr>", " ", silent = false, mode = { "n" } },
-          ["ch"] = { ":Git checkout ", " ", silent = false, mode = { "n" } },
-          ["B"] = { "<cmd>lua require('telescope.builtin').git_branches<cr>", " ", silent = false, mode = { "n" } },
-          ["s"] = { "<cmd>lua require('telescope.builtin').git_stash<cr>", " ", silent = false, mode = { "n" } },
-          ["sa"] = { "<cmd>Git stash<cr>", " ", silent = false, mode = { "n" } },
-          ["sp"] = { "<cmd>Git stash pop<cr>", " ", silent = false, mode = { "n" } },
-          ["f"] = { "<cmd>lua require('telescope.builtin').git_files<cr>", " ", silent = false, mode = { "n" } },
-          ["l"] = { "<cmd>lua require('telescope.builtin').git_commits<cr>", " ", silent = false, mode = { "n" } },
-          ["d"] = { DiffViewToggle, " ", mode = { "n" } },
-          ["<Left>"] = { "<cmd>lua require('diffview.actions').diffget('ours')<cr>", " ", mode = { "n", "x" } },
-          ["<Right>"] = { "<cmd>lua require('diffview.actions').diffget('theirs')<cr>", " ", mode = { "n", "x" } },
-          ["<Down>"] = { "<cmd>lua require('diffview.actions').diffput('local')<cr>", " ", mode = { "n", "x" } },
-          ["<Up>"] = { "<C-j>u", " ", mode = { "n", "x" } },
-          ["b"] = { "<cmd>GitBlameToggle<cr>", "", silent = false, mode = { "n", "x" } },
-        },
-
-        ["t"] = {
-          ["n"] = { ":tabedit ", "Open file in new tab", silent = false, mode = { "n" } },
-          ["<Left>"] = { "<cmd>tabprev<cr>", "Move to previous tab", silent = false, mode = { "n" } },
-          ["<Right>"] = { "<cmd>tabnext<cr>", "Move to next tab", silent = false, mode = { "n" } },
-          ["q"] = { "<cmd>tabclose<cr>", "Move to next tab", silent = false, mode = { "n" } },
-        },
-        ["."] = { "<cmd>lua require('actions-preview').code_actions<cr>", "Code Actions", mode = { "n" } },
-      },
-    })
-  else
+  if vim.g.vscode then
     local vscode = require("vscode-neovim")
     wk.register({
       ["J"] = { "<cmd>m '>+1<cr>gv=gv<cr>", "Move selected block up", mode = { "x" } },
@@ -425,24 +375,6 @@ end
 
 return {
   "folke/which-key.nvim",
-  event = "VeryLazy",
-  dependencies = {
-    "nvim-telescope/telescope.nvim",
-    "nvim-telescope/telescope-file-browser.nvim",
-    "nvim-telescope/telescope-fzf-native.nvim",
-    "nvim-telescope/telescope-ui-select.nvim",
-    "nvim-telescope/telescope-project.nvim",
-    "debugloop/telescope-undo.nvim",
-    "nvim-telescope/telescope-packer.nvim",
-    "nvim-telescope/telescope-dap.nvim",
-    "theprimeagen/refactoring.nvim",
-    "mfussenegger/nvim-dap",
-    "nvim-treesitter/nvim-treesitter",
-    "nvim-treesitter/nvim-treesitter-context",
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    "sindrets/diffview.nvim",
-    "nvim-lua/plenary.nvim",
-  },
   opts = {
     plugins = { spelling = true },
     defaults = {},
