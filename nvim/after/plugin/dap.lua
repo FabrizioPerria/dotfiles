@@ -89,4 +89,5 @@ if not vim.g.vscode then
             program = "${file}", -- This configuration will launch the current file if used.
         },
     }
+    vim.g.dap_virtual_text = true
 end

@@ -63,7 +63,6 @@ function M.setup()
             requires = {
                 'nvim-treesitter/nvim-treesitter-textobjects',
                 "nvim-treesitter/nvim-treesitter-context",
-                'nvim-treesitter/playground'
             }
         })
 
@@ -107,10 +106,23 @@ function M.setup()
                 { 'theHamsta/nvim-dap-virtual-text' },
                 { 'rcarriga/nvim-dap-ui' },
                 { 'jay-babu/mason-nvim-dap.nvim' },
-                { "mfussenegger/nvim-dap-python" }
+                { "mfussenegger/nvim-dap-python" },
+                { 'theHamsta/nvim-dap-virtual-text' }
             },
             disable = vscode
         })
+
+        use {
+            "nvim-neotest/neotest",
+            requires = {
+                "nvim-lua/plenary.nvim",
+                "nvim-neotest/neotest-plenary",
+                "antoinemadec/FixCursorHold.nvim",
+                "alfaix/neotest-gtest",
+                "nvim-neotest/neotest-python",
+                "Issafalcon/neotest-dotnet",
+            }
+        }
 
         use({ "tpope/vim-fugitive", disable = vscode })
         use({ "lewis6991/gitsigns.nvim", disable = vscode })
@@ -122,11 +134,8 @@ function M.setup()
         use({ "theprimeagen/refactoring.nvim", disable = vscode })
         use({ "folke/todo-comments.nvim", disable = vscode })
         use({ "folke/which-key.nvim" })
-        use({ "kylechui/nvim-surround" })
-        use({ "m4xshen/autoclose.nvim" })
         use({ "christoomey/vim-tmux-navigator", disable = vscode })
         use({ "eandrju/cellular-automaton.nvim", disable = vscode })
-        use({ "terrortylor/nvim-comment", disable = vscode })
         use({ "aznhe21/actions-preview.nvim", disable = vscode })
         use({ 'voldikss/vim-floaterm', disable = vscode })
 
@@ -137,8 +146,12 @@ function M.setup()
         use({ "nvim-tree/nvim-web-devicons", disable = vscode })
         use({ "norcalli/nvim-colorizer.lua", disable = vscode })
         use({ "folke/tokyonight.nvim", disable = vscode })
-        use({ 'startup-nvim/startup.nvim', disable = vscode })
-        use({ 'prichrd/netrw.nvim', disable = vscode })
+        use { 'nvimdev/dashboard-nvim' }
+
+        use 'echasnovski/mini.comment'
+        use 'echasnovski/mini.indentscope'
+        use 'echasnovski/mini.pairs'
+        use 'echasnovski/mini.surround'
 
         if packer_bootstrap then
             print "Restart Neovim required after installation!"

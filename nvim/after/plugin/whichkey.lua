@@ -32,7 +32,7 @@ if not vim.g.vscode then
     local ts_repeat_move = require "nvim-treesitter.textobjects.repeatable_move"
     local refactoring    = require('refactoring')
     local diffview       = require('diffview.actions')
-    local harpoon = require('harpoon')
+    local harpoon        = require('harpoon')
     local dap            = require('dap')
     local tbi            = require("telescope.builtin")
 
@@ -135,11 +135,24 @@ if not vim.g.vscode then
                 ["9"] = { function() harpoon:list():select(9) end, 'Open mark 9' },
             },
             ["t"] = {
-                ['n'] = { ':tabedit ', 'Open file in new tab', silent = false, mode = { 'n' } },
                 ['<Left>'] = { ':tabprev<CR>', 'Move to previous tab', silent = false, mode = { 'n' } },
                 ['<Right>'] = { ':tabnext<CR>', 'Move to next tab', silent = false, mode = { 'n' } },
                 ['q'] = { ':tabclose<CR>', 'Move to next tab', silent = false, mode = { 'n' } },
                 ['t'] = { ':TodoTelescope<CR>', 'Show todo list', mode = { 'n' } },
+                ['a'] = { "<cmd>lua require('neotest').run.attach()<cr>", "Attach" },
+                ['f'] = { "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>", "Run File" },
+                ['F'] = { "<cmd>lua require('neotest').run.run({vim.fn.expand('%'), strategy = 'dap'})<cr>", "Debug File" },
+                ['l'] = { "<cmd>lua require('neotest').run.run_last()<cr>", "Run Last" },
+                ['L'] = { "<cmd>lua require('neotest').run.run_last({ strategy = 'dap' })<cr>", "Debug Last" },
+                ['n'] = { "<cmd>lua require('neotest').run.run()<cr>", "Run Nearest" },
+                ['N'] = { "<cmd>lua require('neotest').run.run({strategy = 'dap'})<cr>", "Debug Nearest" },
+                ['o'] = { "<cmd>lua require('neotest').output.open({ enter = true })<cr>", "Output" },
+                ['S'] = { "<cmd>lua require('neotest').run.stop()<cr>", "Stop" },
+                ['s'] = { "<cmd>lua require('neotest').summary.toggle()<cr>", "Summary" },
+                -- ['p'] = { "<Plug>PlenaryTestFile", "PlenaryTestFile" },
+                ['v'] = { "<cmd>TestVisit<cr>", "Visit" },
+                ['w'] = { "<cmd>lua require('neotest').watch.toggle(vim.fn.expand('%'))<cr>", "Watch" },
+                ['x'] = { "<cmd>TestSuite<cr>", "Suite" },
             },
             ["c"] = {
                 ['a'] = {
@@ -167,10 +180,10 @@ if not vim.g.vscode then
                 local sep =
                 "===================================================================================================="
                 vim.api.nvim_buf_set_lines(buf, row, row, false, { sep })
-                vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-                vim.api.nvim_command('CommentToggle')
+                require("mini.comment").toggle_lines(row + 1, row + 1)
+                vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
             end, "Insert Separator" },
-            ['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } },
+            --['/'] = { ':CommentToggle<CR>', 'Comment selection', mode = { 'n', 'x' } },
             ['.'] = { require("actions-preview").code_actions, 'Code Actions', mode = { 'n' } },
             [";"] = { vim.lsp.buf.hover, 'Hover', mode = { "n", "x" } },
             ['v'] = {

@@ -1,12 +1,12 @@
 if not vim.g.vscode then
     local highlight = {
+        "RainbowCyan",
+        "RainbowGreen",
+        "RainbowBlue",
+        "RainbowViolet",
         "RainbowRed",
         "RainbowYellow",
-        "RainbowBlue",
         "RainbowOrange",
-        "RainbowGreen",
-        "RainbowViolet",
-        "RainbowCyan",
     }
 
     local hi_whitespace = {
@@ -57,8 +57,36 @@ if not vim.g.vscode then
         whitespace = {
             highlight = hi_whitespace,
             remove_blankline_trail = false
+        },
+        exclude = {
+            filetypes = { "packer", "dashboard", "help", "Outline", "Trouble" },
+            buftypes = { "terminal", "nofile" },
         }
     }
+
+    require('mini.indentscope').setup({
+        symbol = "▎",
+        -- symbol = "│",
+        options = { try_as_border = true },
+        highlight = highlight
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+        pattern = {
+            "help",
+            "alpha",
+            "dashboard",
+            "Trouble",
+            "trouble",
+            "mason",
+            "notify",
+            "toggleterm",
+            "lazyterm",
+        },
+        callback = function()
+            vim.b.miniindentscope_disable = true
+        end,
+    })
 
     vim.fn.sign_define('DapBreakpoint',
         { text = '', texthl = 'DapBreakpoint', linehl = 'DapBreakpoint', numhl = 'DapBreakpoint' })
