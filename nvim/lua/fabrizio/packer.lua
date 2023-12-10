@@ -101,6 +101,18 @@ function M.setup()
         }
 
         use({
+            "jackMort/ChatGPT.nvim",
+            config = function()
+                require("chatgpt").setup()
+            end,
+            requires = {
+                "MunifTanjim/nui.nvim",
+                "nvim-lua/plenary.nvim",
+                "nvim-telescope/telescope.nvim"
+            }
+        })
+
+        use({
             "mfussenegger/nvim-dap",
             requires = {
                 { 'theHamsta/nvim-dap-virtual-text' },
@@ -124,6 +136,12 @@ function M.setup()
             }
         }
 
+        use({
+            "kdheepak/lazygit.nvim",
+            requires = {
+                "nvim-lua/plenary.nvim",
+            },
+        })
         use({ "tpope/vim-fugitive", disable = vscode })
         use({ "lewis6991/gitsigns.nvim", disable = vscode })
         use({ "junegunn/gv.vim", disable = vscode })

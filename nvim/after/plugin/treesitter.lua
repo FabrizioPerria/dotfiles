@@ -22,10 +22,10 @@ require 'nvim-treesitter.configs'.setup {
     incremental_selection = {
         enable = true,
         keymaps = {
-            init_selection = "<c-space>",
-            node_incremental = "<c-space>",
-            scope_incremental = "<c-s>",
-            node_decremental = "<c-backspace>",
+            init_selection = "<C-space>",
+            node_incremental = "<C-space>",
+            scope_incremental = "<C-s>",
+            node_decremental = "<C-BS>",
         },
     },
     textobjects = {
@@ -45,6 +45,7 @@ require 'nvim-treesitter.configs'.setup {
                 ['al'] = '@loop.outer',
                 ['i/'] = '@comment.inner',
                 ['a/'] = '@comment.outer',
+                ['in'] = '@number.inner'
             },
         },
         move = {
@@ -57,6 +58,7 @@ require 'nvim-treesitter.configs'.setup {
                 [']f'] = '@function.outer',
                 [']i'] = '@conditional.outer',
                 [']l'] = '@loop.outer',
+                [']n'] = '@number.inner',
                 [']r'] = '@return.outer',
                 [']/'] = '@comment.outer',
             },
@@ -76,6 +78,7 @@ require 'nvim-treesitter.configs'.setup {
                 ['[f'] = '@function.outer',
                 ['[i'] = '@conditional.outer',
                 ['[l'] = '@loop.outer',
+                ['[n'] = '@number.inner',
                 ['[r'] = '@return.outer',
                 ['[/'] = '@comment.outer',
             },

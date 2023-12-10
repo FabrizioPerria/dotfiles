@@ -79,7 +79,8 @@ if not vim.g.vscode then
             ['u'] = { ':Telescope undo<CR>', "Undo menu", mode = { 'n', 'x' } },
 
             ["g"] = {
-                [""] = { tbi.git_status, ' ', silent = false, mode = { "n" } },
+                -- [""] = { tbi.git_status, ' ', silent = false, mode = { "n" } },
+                [""] = { ":LazyGit<CR>", ' ', silent = false, mode = { "n" } },
                 ["co"] = { ':Git commit -S -m ""<Left>', ' ', mode = { "n" }, silent = false },
                 ["g"] = { ":Git pull --rebase", ' ', silent = false, mode = { "n" } },
                 ["p"] = { ":Git push -u origin ", ' ', silent = false, mode = { "n" } },
@@ -235,8 +236,6 @@ if not vim.g.vscode then
                 ['rn'] = { vim.lsp.buf.rename, "rename symbol", mode = { 'n' } },
                 ['e'] = { tbi.diagnostics, "Show diagnostics", mode = { 'n' } },
             },
-            -- vim.keymap.set("n", "[d", vim.diagnostic.goto_next, { buffer = bufnr, remap = false, desc = 'Next diagnostic' })
-            -- vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, { buffer = bufnr, remap = false, desc = 'Prev diagnostic' })
             ['dd'] = {
                 function()
                     if vim.diagnostic.is_disabled() then
@@ -250,6 +249,10 @@ if not vim.g.vscode then
                 mode = { 'n', 'x' }
             },
         },
+
+        ["[d"] = { vim.diagnostic.goto_next, 'Next diagnostic', mode = { 'n' } },
+        ["]d"] = { vim.diagnostic.goto_prev, 'Prev diagnostic', mode = { 'n' } },
+
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
         [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },
 
