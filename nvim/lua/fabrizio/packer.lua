@@ -153,6 +153,7 @@ function M.setup()
 
         use({
             "theprimeagen/harpoon",
+            branch = 'harpoon2',
             disable = vscode,
             config = function()
                 require('harpoon'):setup()
