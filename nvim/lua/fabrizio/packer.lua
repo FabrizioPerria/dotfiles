@@ -105,6 +105,7 @@ function M.setup()
             config = function()
                 require("chatgpt").setup()
             end,
+            disable = vscode,
             requires = {
                 "MunifTanjim/nui.nvim",
                 "nvim-lua/plenary.nvim",
@@ -126,6 +127,7 @@ function M.setup()
 
         use {
             "nvim-neotest/neotest",
+            disable = vscode,
             requires = {
                 "nvim-lua/plenary.nvim",
                 "nvim-neotest/neotest-plenary",
@@ -138,6 +140,7 @@ function M.setup()
 
         use({
             "kdheepak/lazygit.nvim",
+            disable = vscode,
             requires = {
                 "nvim-lua/plenary.nvim",
             },
@@ -148,9 +151,21 @@ function M.setup()
         use({ 'f-person/git-blame.nvim', disable = vscode })
         use({ "sindrets/diffview.nvim", disable = vscode })
 
-        use({ "theprimeagen/harpoon", disable = vscode })
+        use({
+            "theprimeagen/harpoon",
+            disable = vscode,
+            config = function()
+                require('harpoon'):setup()
+            end
+        })
         use({ "theprimeagen/refactoring.nvim", disable = vscode })
-        use({ "folke/todo-comments.nvim", disable = vscode })
+        use({
+            "folke/todo-comments.nvim",
+            disable = vscode,
+            config = function()
+                require('todo-comments').setup()
+            end
+        })
         use({ "folke/which-key.nvim" })
         use({ "christoomey/vim-tmux-navigator", disable = vscode })
         use({ "eandrju/cellular-automaton.nvim", disable = vscode })
@@ -164,12 +179,28 @@ function M.setup()
         use({ "nvim-tree/nvim-web-devicons", disable = vscode })
         use({ "norcalli/nvim-colorizer.lua", disable = vscode })
         use({ "folke/tokyonight.nvim", disable = vscode })
-        use { 'nvimdev/dashboard-nvim' }
+        use { 'nvimdev/dashboard-nvim', disable = vscode }
 
-        use 'echasnovski/mini.comment'
-        use 'echasnovski/mini.indentscope'
-        use 'echasnovski/mini.pairs'
-        use 'echasnovski/mini.surround'
+        use({ 'echasnovski/mini.comment' })
+        use({ 'echasnovski/mini.indentscope' })
+        use({
+            'echasnovski/mini.pairs',
+            config = function()
+                require("mini.pairs").setup()
+            end
+        })
+        use({ 'echasnovski/mini.surround' })
+        use({
+            'FabrizioPerria/CodeBox.nvim',
+            disable = vscode,
+            requires = {
+                'nvim-lua/plenary.nvim',
+                'nvim-telescope/telescope.nvim',
+            },
+            config = function()
+                require("codebox").setup({})
+            end,
+        })
 
         if packer_bootstrap then
             print "Restart Neovim required after installation!"

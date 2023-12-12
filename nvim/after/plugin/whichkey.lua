@@ -163,7 +163,9 @@ if not vim.g.vscode then
                     ['sli'] = { ":CellularAutomaton slide<CR>", 'Slide', silent = false, mode = { "n" } },
                 },
                 ['d'] = { match_path, "Change current Directory", mode = { 'n' } },
-                ['o'] = { ':ColorizerToggle<CR>', 'Toggle colorizer', mode = { 'n', 'x' } }
+                ['o'] = { ':ColorizerToggle<CR>', 'Toggle colorizer', mode = { 'n', 'x' } },
+                ['B'] = { ':CodeBox<CR>', '', mode = { 'x' } },
+                ['b'] = { ':CodeUnbox<CR>', '', mode = { 'n' } },
             },
             ["y"] = { [["+y]], 'copy selection to system clipboard', mode = { 'n', 'x' } },
             ["Y"] = { [["+Y]], 'Copy current line to system clipboard', mode = { 'n' } },
