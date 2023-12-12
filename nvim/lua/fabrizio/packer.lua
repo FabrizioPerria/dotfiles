@@ -105,7 +105,7 @@ function M.setup()
             config = function()
                 require("chatgpt").setup()
             end,
-            disable = vscode,
+            disable = true,
             requires = {
                 "MunifTanjim/nui.nvim",
                 "nvim-lua/plenary.nvim",
@@ -127,7 +127,7 @@ function M.setup()
 
         use {
             "nvim-neotest/neotest",
-            disable = vscode,
+            disable = true,
             requires = {
                 "nvim-lua/plenary.nvim",
                 "nvim-neotest/neotest-plenary",
