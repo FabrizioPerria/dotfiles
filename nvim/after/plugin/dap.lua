@@ -38,8 +38,7 @@ if not vim.g.vscode then
             -- program = function()
             --     return vim.fn.input({
             --         prompt = 'Path to executable: ',
-            --         -- default = vim.fn.getcwd() .. '/',
-            --         default = '/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost',
+            --         default = vim.fn.getcwd() .. '/',
             --         completion = 'file',
             --     })
             -- end,

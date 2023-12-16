@@ -252,8 +252,8 @@ if not vim.g.vscode then
             },
         },
 
-        ["[d"] = { vim.diagnostic.goto_next, 'Next diagnostic', mode = { 'n' } },
-        ["]d"] = { vim.diagnostic.goto_prev, 'Prev diagnostic', mode = { 'n' } },
+        ["]d"] = { vim.diagnostic.goto_next, 'Next diagnostic', mode = { 'n' } },
+        ["[d"] = { vim.diagnostic.goto_prev, 'Prev diagnostic', mode = { 'n' } },
 
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
         [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },

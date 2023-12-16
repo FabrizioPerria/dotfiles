@@ -155,18 +155,9 @@ function M.setup()
             "theprimeagen/harpoon",
             branch = 'harpoon2',
             disable = vscode,
-            config = function()
-                require('harpoon'):setup()
-            end
         })
         use({ "theprimeagen/refactoring.nvim", disable = vscode })
-        use({
-            "folke/todo-comments.nvim",
-            disable = vscode,
-            config = function()
-                require('todo-comments').setup()
-            end
-        })
+        use({ "folke/todo-comments.nvim", disable = vscode, })
         use({ "folke/which-key.nvim" })
         use({ "christoomey/vim-tmux-navigator", disable = vscode })
         use({ "eandrju/cellular-automaton.nvim", disable = vscode })
@@ -184,12 +175,7 @@ function M.setup()
 
         use({ 'echasnovski/mini.comment' })
         use({ 'echasnovski/mini.indentscope' })
-        use({
-            'echasnovski/mini.pairs',
-            config = function()
-                require("mini.pairs").setup()
-            end
-        })
+        use({ 'echasnovski/mini.pairs', })
         use({ 'echasnovski/mini.surround' })
         use({
             'FabrizioPerria/CodeBox.nvim',
@@ -197,10 +183,7 @@ function M.setup()
             requires = {
                 'nvim-lua/plenary.nvim',
                 'nvim-telescope/telescope.nvim',
-            },
-            config = function()
-                require("codebox").setup({})
-            end,
+            }
         })
 
         if packer_bootstrap then
