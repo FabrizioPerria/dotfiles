@@ -1,7 +1,7 @@
-require("neotest").setup({
-    adapters = {
-        -- require("neotest-dotnet"),
-        require("neotest-gtest").setup({})
-        -- require("neotest-python")
-    }
-})
+-- require("neotest").setup({
+--     adapters = {
+--         -- require("neotest-dotnet"),
+--         require("neotest-gtest").setup({})
+--         -- require("neotest-python")
+--     }
+-- })

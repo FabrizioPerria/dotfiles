@@ -95,23 +95,25 @@ function M.setup()
 
                 -- Copilot
                 { 'zbirenbaum/copilot.lua' },
+                { 'gptlang/CopilotChat.nvim' },
                 { 'zbirenbaum/copilot-cmp' }
             },
             disable = vscode
         }
 
-        use({
-            "jackMort/ChatGPT.nvim",
-            config = function()
-                require("chatgpt").setup()
-            end,
-            disable = true,
-            requires = {
-                "MunifTanjim/nui.nvim",
-                "nvim-lua/plenary.nvim",
-                "nvim-telescope/telescope.nvim"
-            }
-        })
+        use({ 'gptlang/CopilotChat.nvim', disable = vscode })
+        -- use({
+        --     "jackMort/ChatGPT.nvim",
+        --     config = function()
+        --         require("chatgpt").setup()
+        --     end,
+        --     disable = true,
+        --     requires = {
+        --         "MunifTanjim/nui.nvim",
+        --         "nvim-lua/plenary.nvim",
+        --         "nvim-telescope/telescope.nvim"
+        --     }
+        -- })
 
         use({
             "mfussenegger/nvim-dap",
