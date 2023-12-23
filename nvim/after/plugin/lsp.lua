@@ -93,7 +93,17 @@ if not vim.g.vscode then
                         vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
                     end
                 }
-            end
+            end,
+            gopls = function()
+                require("lspconfig").gopls.setup {
+                    cmd = { "/opt/homebrew/bin/gopls" },
+                    filetypes = { "go", "gomod" },
+                    root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
+                    on_attach = function(client, bufnr)
+                        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+                    end
+                }
+            end,
         }
     })
 

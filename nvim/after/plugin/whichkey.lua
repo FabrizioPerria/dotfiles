@@ -58,6 +58,7 @@ if not vim.g.vscode then
         ["<C-u>"] = { "<C-u>zz", 'Scroll up and center', mode = { 'n', 'x' } },
 
         ['<leader>'] = {
+            ["cc"] = { ':CopilotChat ', 'Start Copilot Prompt', mode = { "n", "x" } },
             ["f"] = {
                 [""] = { vim.lsp.buf.format, 'Format file', mode = { 'n' } },
                 ['f'] = { tbi.find_files, 'Fuzzy file search', mode = { 'n' } },
