@@ -6,106 +6,127 @@ if not vim.g.vscode then
         },
     })
 
-    vim.lsp.set_log_level("off")
-    local lsp_zero = require("lsp-zero")
-    lsp_zero.set_preferences({ suggest_lsp_servers = true, })
-
-    lsp_zero.set_sign_icons({
-        error = "",
-        warn = "",
-        hint = "",
-        info = ""
+    vim.api.nvim_create_autocmd('LspAttach', {
+        desc = 'LSP keybindings',
+        callback = function(event)
+            local opts = { buffer = event.buf }
+            vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+            vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+            vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+            vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+            vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+            vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+            vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+        end
     })
 
-    lsp_zero.on_attach(function(client, bufnr)
-        if client.server_capabilities.signatureHelpProvider then
-            require('lsp-overloads').setup(client, {})
-        end
-    end)
-
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities.offsetEncoding = 'utf-8'
+    local lspconfig = require('lspconfig')
+    local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+    lsp_capabilities.offsetEncoding = 'utf-8'
 
     require('mason').setup({})
-    require('mason-lspconfig').setup({
+    require('mason-tool-installer').setup({
         ensure_installed = {
-            'clangd',
-            'cmake',
-            'bashls',
-            'cmake',
             'pyright',
-            'zk',
-            'lua_ls',
-            'vimls',
-            'efm',
-            'csharp_ls',
-            'grammarly',
-            -- 'clang-format',
-            -- 'codelldb',
-            -- 'cpptools',
-            -- 'debugpy',
-            -- 'glow',
-            -- 'netcoredbg',
-            -- 'prettier',
-            -- 'shfmt',
-            -- 'stylua',
+            'mypy',
+            'ruff',
+            'black',
+            'debugpy',
+
+            'clangd',
+            'clang-format',
+            'codelldb',
+            'cmake-language-server',
+
+            'gopls',
+
+            'stylua',
+
+            "json-lsp",
+            "jsonlint",
+            "jq",
+            "yaml-language-server",
+            "yamllint",
+            "yamlfmt",
+
+            "commitlint",
+            "gitlint",
+
+            "marksman",
+            "markdownlint",
+            "vale",
+            "write-good",
+            "cspell",
+            "misspell",
+            "proselint",
+
+            "bash-language-server",
+            "beautysh",
+            "shfmt",
+            "shellcheck",
+            "shellharden",
+
+            "ansible-language-server",
+            "css-lsp",
+            "codespell",
+            "dockerfile-language-server",
+            "dot-language-server",
+            "editorconfig-checker",
+            "html-lsp",
+
+            "csharp-language-server"
         },
         handlers = {
-            lsp_zero.default_setup,
-            bashls = function()
-                require("lspconfig").bashls.setup {
-                    filetypes = {
-                        'sh',
-                        'bash'
-                    }
-                }
-            end,
-            cmake = function()
-                require("lspconfig").cmake.setup {
-                    cmd = { '/opt/homebrew/bin/cmake-language-server' },
-                    filetypes = {
-                        'cmake',
-                        'CMakeLists.txt'
-                    }
-                }
-            end,
-            lua_ls = function()
-                require("lspconfig").lua_ls.setup {
-                    settings = {
-                        Lua = {
-                            diagnostics = {
-                                globals = { 'vim' }
-                            }
-                        }
-                    }
-                }
-            end,
-            clangd = function()
-                require("lspconfig").clangd.setup {
-                    capabilities = capabilities,
-                    cmd = { "/opt/homebrew/opt/llvm/bin/clangd", "--background-index" },
-                    filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp" },
-                    root_dir = function(fname)
-                        return require("lspconfig").util.root_pattern("compile_commands.json", "compile_flags.txt",
-                            ".git")(fname) or vim.fn.getcwd()
-                    end,
-                    on_attach = function(client, bufnr)
-                        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-                    end
-                }
-            end,
-            gopls = function()
-                require("lspconfig").gopls.setup {
-                    cmd = { "/opt/homebrew/bin/gopls" },
-                    filetypes = { "go", "gomod" },
-                    root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
-                    on_attach = function(client, bufnr)
-                        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-                    end
-                }
+            function(server)
+                lspconfig[server].setup({
+                    capabilities = lsp_capabilities,
+                })
             end,
         }
     })
+    require("lspconfig").bashls.setup {
+        filetypes = {
+            'sh',
+            'bash'
+        }
+    }
+    require("lspconfig").cmake.setup {
+        cmd = { '/opt/homebrew/bin/cmake-language-server' },
+        filetypes = {
+            'cmake',
+            'CMakeLists.txt'
+        }
+    }
+
+    require("lspconfig").lua_ls.setup {
+        settings = {
+            Lua = {
+                diagnostics = {
+                    globals = { 'vim' }
+                }
+            }
+        }
+    }
+    require("lspconfig").clangd.setup {
+        capabilities = lsp_capabilities,
+        cmd = { "/opt/homebrew/opt/llvm/bin/clangd", "--background-index" },
+        filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp" },
+        root_dir = function(fname)
+            return require("lspconfig").util.root_pattern("compile_commands.json", "compile_flags.txt",
+                ".git")(fname) or vim.fn.getcwd()
+        end,
+        on_attach = function(client, bufnr)
+            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        end
+    }
+    require("lspconfig").gopls.setup {
+        cmd = { "/opt/homebrew/bin/gopls" },
+        filetypes = { "go", "gomod" },
+        root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
+        on_attach = function(client, bufnr)
+            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+        end
+    }
 
     vim.g.copilot_no_tab_map = true
     vim.g.copilot_assume_mapped = true
@@ -131,6 +152,15 @@ if not vim.g.vscode then
             docs = {
                 auto_open = true,
             },
+        },
+
+        window = {
+            documentation = cmp.config.window.bordered(),
+        },
+        snippet = {
+            expand = function(args)
+                require('luasnip').lsp_expand(args.body)
+            end,
         },
 
         mapping = cmp.mapping.preset.insert({

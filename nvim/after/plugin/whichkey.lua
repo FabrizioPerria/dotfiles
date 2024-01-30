@@ -61,6 +61,7 @@ if not vim.g.vscode then
             ["cc"] = { ':CopilotChat ', 'Start Copilot Prompt', mode = { "n", "x" } },
             ["f"] = {
                 [""] = { vim.lsp.buf.format, 'Format file', mode = { 'n' } },
+                ['d'] = { ":TroubleToggle<CR>", "Trouble Toggle", mode = { 'n' } },
                 ['f'] = { tbi.find_files, 'Fuzzy file search', mode = { 'n' } },
                 ['b'] = { tbi.buffers, 'Show buffers', silent = false, mode = { 'n' } },
                 ['g'] = { tbi.git_files, 'Fuzzy file search in git repository', mode = { 'n' } },
@@ -239,22 +240,49 @@ if not vim.g.vscode then
                 ['rn'] = { vim.lsp.buf.rename, "rename symbol", mode = { 'n' } },
                 ['e'] = { tbi.diagnostics, "Show diagnostics", mode = { 'n' } },
             },
-            ['dd'] = {
-                function()
-                    if vim.diagnostic.is_disabled() then
-                        vim.diagnostic.enable()
-                    else
-                        vim.diagnostic
-                            .disable()
-                    end
-                end,
-                'Toggle diagnostics',
-                mode = { 'n', 'x' }
-            },
-        },
+            -- ['dd'] = {
+            --     function()
+            --         if vim.diagnostic.is_disabled() then
+            --             vim.diagnostic.enable()
+            --         else
+            --             vim.diagnostic
+            --                 .disable()
+            --         end
+            --     end,
+            --     'Toggle diagnostics',
+            --     mode = { 'n', 'x' }
+            -- },
 
-        ["]d"] = { vim.diagnostic.goto_next, 'Next diagnostic', mode = { 'n' } },
-        ["[d"] = { vim.diagnostic.goto_prev, 'Prev diagnostic', mode = { 'n' } },
+            ['dd'] = { "<cmd>TroubleToggle<CR>", '', mode = { 'n' } },
+        },
+        ["]d"] = {
+            function()
+                local trouble = require('trouble')
+                if not trouble.is_open() then
+                    trouble.open()
+                end
+
+                require("trouble").next({ skip_groups = true, jump = true })
+            end,
+            '',
+            mode = { 'n' }
+        },
+        ["[d"] = {
+            function()
+                local trouble = require('trouble')
+                if not trouble.is_open() then
+                    trouble.open()
+                end
+
+                require("trouble").previous({ skip_groups = true, jump = true })
+            end,
+            '',
+            mode = { 'n' }
+        },
+        -- ["]d"] = { vim.diagnostic.goto_next, 'Next diagnostic', mode = { 'n' } },
+        -- ["[d"] = { vim.diagnostic.goto_prev, 'Prev diagnostic', mode = { 'n' } },
+        -- ["]d"] = { require("trouble").next({ jump = true }) },
+        -- ["[d"] = { require("trouble").previous({ jump = true }) },
 
         [";"] = { ts_repeat_move.repeat_last_move_next, 'next match', mode = { "n", "x", "o" } },
         [","] = { ts_repeat_move.repeat_last_move_previous, 'previous match', mode = { "n", "x", "o" } },

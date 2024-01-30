@@ -67,12 +67,11 @@ function M.setup()
         })
 
         use {
-            'VonHeikemen/lsp-zero.nvim',
-            branch = 'v3.x',
+            'neovim/nvim-lspconfig',
 
             requires = {
+                'WhoIsSethDaniel/mason-tool-installer.nvim',
                 -- LSP Support
-                { 'neovim/nvim-lspconfig' },
                 { 'williamboman/mason.nvim' },
                 { 'williamboman/mason-lspconfig.nvim' },
                 { 'Issafalcon/lsp-overloads.nvim' },
