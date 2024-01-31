@@ -18,7 +18,7 @@ return {
       { "<F10>", ":DapStepOver<CR>", "Debug step over" },
       { "<F11>", ":DapStepInto<CR>", "Debug step into" },
       { "<C-F11>", ":DapStepOut<CR>", "Debug step out" },
-      { "<F12>", ':DapTerminate<CR>:lua require"dapui".close()<CR>' },
+      { "<F12>", ':DapTerminate<CR>:lua require"dapui".close()<CR>', "" },
     },
   },
 }

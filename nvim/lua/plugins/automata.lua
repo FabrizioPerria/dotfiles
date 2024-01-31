@@ -26,14 +26,17 @@ return {
     {
       "<leader>caslide",
       "<cmd>CellularAutomaton slide<CR>",
+      "",
     },
     {
       "<leader>cagol",
       "<cmd>CellularAutomaton game_of_life<CR>",
+      "",
     },
     {
       "<leader>cascr",
       "<cmd>CellularAutomaton scramble<CR>",
+      "",
     },
   },
 }
