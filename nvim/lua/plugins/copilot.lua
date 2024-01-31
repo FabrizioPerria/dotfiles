@@ -133,5 +133,4 @@ return {
   --   end,
   -- },
   -- {
-  { "gptlang/CopilotChat.nvim" },
 }

@@ -4,6 +4,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
+    keys = { "<leader>g", "<cmd>Lazygit<CR>" },
   },
   { "tpope/vim-fugitive" },
   { "junegunn/gv.vim" },
