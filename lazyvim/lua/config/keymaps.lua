@@ -12,6 +12,11 @@ vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>")
 vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "Y", "yy")
+vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]])
+vim.keymap.set({ "n" }, "<leader>Y", [["+Y]])
+
+vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz")
+vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz")
 --
 --  local function DiffViewToggle()
 --    if next(require("diffview.lib").views) == nil then
@@ -50,8 +55,6 @@ vim.keymap.set("n", "Y", "yy")
 --    ["<s-F5>"] = { ':DapTerminate<CR>:lua require"dapui".close()<CR>"', "Stop and quit debug", mode = { "n" } },
 --
 --
---    ["<C-d>"] = { "<C-d>zz", "Scroll down and center", mode = { "n", "x" } },
---    ["<C-u>"] = { "<C-u>zz", "Scroll up and center", mode = { "n", "x" } },
 --
 --    ["<leader>"] = {
 --      ["cc"] = { ":CopilotChat ", "Start Copilot Prompt", mode = { "n", "x" } },
@@ -100,19 +103,6 @@ vim.keymap.set("n", "Y", "yy")
 --        ["w"] = { "<cmd>lua require('neotest').watch.toggle(vim.fn.expand('%'))<cr>", "Watch" },
 --        ["x"] = { "<cmd>TestSuite<cr>", "Suite" },
 --      },
---      ["c"] = {
---        ["a"] = {
---          ["mir"] = { ":CellularAutomaton make_it_rain<CR>", "Make it rain", silent = false, mode = { "n" } },
---          ["gol"] = { ":CellularAutomaton game_of_life<CR>", "Game of life", silent = false, mode = { "n" } },
---          ["scr"] = { ":CellularAutomaton scramble<CR>", "Scramble", silent = false, mode = { "n" } },
---          ["sli"] = { ":CellularAutomaton slide<CR>", "Slide", silent = false, mode = { "n" } },
---        },
---        ["o"] = { ":ColorizerToggle<CR>", "Toggle colorizer", mode = { "n", "x" } },
---        ["B"] = { ":CodeBox<CR>", "", mode = { "x" } },
---        ["b"] = { ":CodeUnbox<CR>", "", mode = { "n" } },
---      },
---      ["y"] = { [["+y]], "copy selection to system clipboard", mode = { "n", "x" } },
---      ["Y"] = { [["+Y]], "Copy current line to system clipboard", mode = { "n" } },
 --      ["x"] = { "<cmd>!chmod +x %<CR>", "Make current file executable", silent = true, mode = { "n" } },
 --      ["w"] = {
 --        [""] = { match_path, "Change current Directory", mode = { "n" } },

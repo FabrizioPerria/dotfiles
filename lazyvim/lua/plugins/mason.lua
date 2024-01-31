@@ -14,7 +14,7 @@ return {
         "codelldb",
         "cmake-language-server",
 
-        "gopls",
+        -- "gopls",
 
         "stylua",
 
@@ -33,14 +33,14 @@ return {
         "vale",
         "write-good",
         "cspell",
-        "misspell",
+        -- "misspell",
         "proselint",
 
         "bash-language-server",
         "beautysh",
         "shfmt",
         "shellcheck",
-        "shellharden",
+        -- "shellharden",
 
         "ansible-language-server",
         "css-lsp",
@@ -48,9 +48,9 @@ return {
         "dockerfile-language-server",
         "dot-language-server",
         "editorconfig-checker",
-        "html-lsp",
+        -- "html-lsp",
 
-        "csharp-language-server",
+        -- "csharp-language-server",
       },
     },
   },

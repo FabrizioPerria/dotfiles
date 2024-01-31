@@ -42,35 +42,35 @@ return {
       return {}
     end,
   },
-  {
-    "hrsh7th/cmp-cmdline",
-    dependencies = { "hrsh7th/nvim-cmp", "hrsh7th/cmp-buffer", "hrsh7th/cmp-path", "L3MON4D3/LuaSnip" },
-    config = function()
-      require("cmp").setup.cmdline("/", {
-        mapping = require("cmp").mapping.preset.cmdline(),
-        sources = {
-          { name = "buffer" },
-          { name = "cmdline" },
-          { name = "nvim_lua" },
-          { name = "luasnip" },
-          { name = "path" },
-        },
-      })
-      require("cmp").setup.cmdline(":", {
-        mapping = require("cmp").mapping.preset.cmdline(),
-        sources = require("cmp").config.sources({
-          { name = "path" },
-        }, {
-          {
-            name = "cmdline",
-            option = {
-              ignore_cmds = { "Man", "!" },
-            },
-          },
-        }),
-      })
-    end,
-  }, --   "hrsh7th/nvim-cmp",
+  -- {
+  --   "hrsh7th/cmp-cmdline",
+  --   dependencies = { "hrsh7th/nvim-cmp", "hrsh7th/cmp-buffer", "hrsh7th/cmp-path", "L3MON4D3/LuaSnip" },
+  --   config = function()
+  --     require("cmp").setup.cmdline("/", {
+  --       mapping = require("cmp").mapping.preset.cmdline(),
+  --       sources = {
+  --         { name = "buffer" },
+  --         { name = "cmdline" },
+  --         { name = "nvim_lua" },
+  --         { name = "luasnip" },
+  --         { name = "path" },
+  --       },
+  --     })
+  --     require("cmp").setup.cmdline(":", {
+  --       mapping = require("cmp").mapping.preset.cmdline(),
+  --       sources = require("cmp").config.sources({
+  --         { name = "path" },
+  --       }, {
+  --         {
+  --           name = "cmdline",
+  --           option = {
+  --             ignore_cmds = { "Man", "!" },
+  --           },
+  --         },
+  --       }),
+  --     })
+  --   end,
+  -- }, --   "hrsh7th/nvim-cmp",
   --   dependencies = {
   --     "zbirenbaum/copilot-cmp",
   --     "onsails/lspkind.nvim",
