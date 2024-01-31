@@ -109,12 +109,74 @@ return {
       mode = { "n" },
     },
     { "<leader>tt", "<cmd>TodoTelescope<CR>", "Show todo list", mode = { "n" } },
+    {
+      "<leader>vS",
+      function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols({
+          symbol_width = 60,
+          symbol_type_width = 30,
+          fname_width = 50,
+        })
+      end,
+      "Show current Workspace Symbols",
+      mode = { "n" },
+    },
+    {
+      "<leader>vs",
+      function()
+        require("telescope.builtin").lsp_document_symbols({
+          symbol_width = 60,
+          symbol_type_width = 30,
+          fname_width = 80,
+        })
+      end,
+      "Show symbols in document",
+      mode = { "n" },
+    },
+    {
+      "<leader>vr",
+      function()
+        require("telescope.builtin").lsp_references({ fname_width = 80 })
+      end,
+      "Show references",
+      mode = {
+        "n",
+      },
+    },
+    {
+      "<leader>vd",
+      function()
+        require("telescope.builtin").lsp_definitions({ jump_type = "vsplit", fname_width = 80 })
+      end,
+      "Go to definition",
+      mode = { "n" },
+    },
+    {
+      "<leader>vt",
+      function()
+        require("telescope.builtin").lsp_type_definitions({ fname_width = 80 })
+      end,
+      "Go to type definition",
+      mode = {
+        "n",
+      },
+    },
+    {
+      "<leader>vi",
+      function()
+        require("telescope.builtin").lsp_implementations({ fname_width = 80 })
+      end,
+      "Go to implementation",
+      mode = {
+        "n",
+      },
+    },
+    { "<leader>vrn", vim.lsp.buf.rename, "rename symbol", mode = { "n" } },
+    { "<leader>ve", require("telescope.builtin").diagnostics, "Show diagnostics", mode = { "n" } },
   },
   opts = {
     extensions = {
-      ["ui-select"] = {
-        require("telescope.themes").get_dropdown({}),
-      },
+      { "<leader>vui-select", require("telescope.themes").get_dropdown({}) },
       file_browser = {
         hidden = true,
         hijack_netrw = true,
