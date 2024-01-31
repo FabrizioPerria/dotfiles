@@ -8,13 +8,13 @@ return {
       auto_preview = false,
       auto_fold = false,
       signs = {
-        error = " ",
-        warning = " ",
-        hint = " ",
+        error = " ",
+        warning = " ",
+        hint = " ",
         information = " ",
-        other = "﫠",
+        other = " ",
       },
-      use_lsp_diagnostic_signs = true,
+      -- use_lsp_diagnostic_signs = true,
     })
   end,
   keys = {
