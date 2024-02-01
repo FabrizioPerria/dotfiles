@@ -22,3 +22,13 @@ vim.keymap.set("n", "<leader>=", function()
   require("mini.comment").toggle_lines(row + 1, row + 1)
   vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
 end)
+
+local diagnostics_active = true
+vim.keymap.set("n", "<leader>dd", function()
+  diagnostics_active = not diagnostics_active
+  if diagnostics_active then
+    vim.diagnostic.show()
+  else
+    vim.diagnostic.hide()
+  end
+end)
