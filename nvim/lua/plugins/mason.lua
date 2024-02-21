@@ -14,7 +14,9 @@ return {
         "codelldb",
         "cmake-language-server",
 
-        -- "gopls",
+        "gopls",
+
+        "java-language-server",
 
         "stylua",
 
@@ -33,14 +35,14 @@ return {
         "vale",
         "write-good",
         "cspell",
-        -- "misspell",
+        "misspell",
         "proselint",
 
         "bash-language-server",
         "beautysh",
         "shfmt",
         "shellcheck",
-        -- "shellharden",
+        "shellharden",
 
         "ansible-language-server",
         "css-lsp",

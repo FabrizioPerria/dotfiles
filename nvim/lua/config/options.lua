@@ -49,3 +49,5 @@ vim.opt.fileformat = "unix"
 vim.opt.listchars = { eol = "_", tab = "→→", trail = "~", space = "·" }
 
 vim.opt.list = true
+
+vim.opt.mouse = ""
