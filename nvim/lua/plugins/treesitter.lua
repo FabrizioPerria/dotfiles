@@ -113,7 +113,7 @@ return {
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
               ["]a"] = "@parameter.outer",
-              ["]b"] = "@block.outer",
+              ["]o"] = "@block.outer",
               ["]c"] = "@class.outer",
               ["]f"] = "@function.outer",
               ["]i"] = "@conditional.outer",
@@ -124,7 +124,7 @@ return {
             },
             goto_next_end = {
               ["]A"] = "@parameter.outer",
-              ["]B"] = "@block.outer",
+              ["]O"] = "@block.outer",
               ["]C"] = "@class.outer",
               ["]F"] = "@function.outer",
               ["]I"] = "@conditional.outer",
@@ -133,7 +133,7 @@ return {
             },
             goto_previous_start = {
               ["[a"] = "@parameter.outer",
-              ["[b"] = "@block.outer",
+              ["[o"] = "@block.outer",
               ["[c"] = "@class.outer",
               ["[f"] = "@function.outer",
               ["[i"] = "@conditional.outer",
@@ -144,7 +144,7 @@ return {
             },
             goto_previous_end = {
               ["[A"] = "@parameter.outer",
-              ["[B"] = "@block.outer",
+              ["[O"] = "@block.outer",
               ["[C"] = "@class.outer",
               ["[F"] = "@function.outer",
               ["[I"] = "@conditional.outer",

@@ -18,6 +18,7 @@ return {
     })
   end,
   keys = {
+    { "<leader>xs", "<cmd>TroubleToggle<cr>", desc = "toggle Trouble" },
     {
       "[d",
       function()
