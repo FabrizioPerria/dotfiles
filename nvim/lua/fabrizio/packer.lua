@@ -3,6 +3,8 @@
 local vscode = vim.g.vscode == 1
 local M = {}
 --
+
+
 function M.setup()
     -- Indicate first time installation
     local packer_bootstrap = false
@@ -34,7 +36,7 @@ function M.setup()
         end
         vim.cmd "autocmd BufWritePost plugins.lua source <afile> | PackerCompile"
     end
-
+    packer_init()
     -- Plugins
     local function plugins(use)
         -- Packer can manage itself
