@@ -15,7 +15,7 @@ return {
     -- Import the copilot plugin
     { import = "lazyvim.plugins.extras.coding.copilot" },
     {
-        "jellydn/CopilotChat.nvim",
+        "CopilotC-Nvim/CopilotChat.nvim",
         -- Will be merged to main branch soon
         branch = "canary",
         opts = {
