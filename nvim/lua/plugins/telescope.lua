@@ -8,9 +8,10 @@ local function match_path()
         local s, _ = string.find(vim.fn.expand(vim.api.nvim_buf_get_name(0)), project.path)
         if s == 1 then
             vim.cmd(":cd " .. project.path)
-            break
+            return project.path
         end
     end
+    return require("telescope.utils").buffer_dir()
 end
 
 return {
@@ -30,7 +31,15 @@ return {
         { "<F3>", "<cmd>Telescope dap variables<CR>", "List variables", mode = { "n" } },
         { "<F4>", "<cmd>Telescope dap list_breakpoints<CR>", "List breakpoints", mode = { "n" } },
         { "<F6>", "<cmd>Telescope dap frames<CR>", "List frames", mode = { "n" } },
-        { "<leader>ff", "<cmd> Telescope find_files<CR>", "Fuzzy file search", mode = { "n" } },
+        {
+            "<leader>ff",
+            function()
+                -- require("telescope.builtin").find_files({ cwd = require("telescope.utils").buffer_dir() })
+                require("telescope.builtin").find_files({ cwd = match_path() })
+            end,
+            "Fuzzy file search",
+            mode = { "n" },
+        },
         {
             "<leader>fb",
             "<cmd> Telescope buffers<CR>",
@@ -285,6 +294,6 @@ return {
         require("telescope").load_extension("undo")
         require("telescope").load_extension("dap")
         require("telescope").load_extension("project")
-        require("telescope").load_extension("noice")
+        -- require("telescope").load_extension("noice")
     end,
 }
