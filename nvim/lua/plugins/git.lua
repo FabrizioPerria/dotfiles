@@ -8,28 +8,6 @@ end
 
 return {
     {
-        "tpope/vim-fugitive",
-        cmd = "Git",
-        keys = {
-            { "<leader>Gsa", "<cmd>Git stash<CR>", "git stash" },
-            { "<leader>Gsp", "<cmd>Git stash pop<CR>", "git stash pop" },
-            { "<leader>Gco", ':Git commit -S -m ""<Left>', "git commit" },
-            { "<leader>Gpr", ":Git pull --rebase ", "git pull (rebase)" },
-            { "<leader>GP", ":Git push origin ", "git push" },
-            { "<leader>Gm", ":Git merge ", "git merge" },
-            { "<leader>GL", ":vert Git log --show-signature | vertical resize 100<CR>", "git log" },
-            { "<leader>Gch", ":Git checkout ", "git checkout" },
-            { "<leader>Ga", "<cmd>Gwrite<CR>", "git add" },
-            { "<leader>G-", "<cmd>Gread<CR>", "git read" },
-        },
-    },
-    {
-        "junegunn/gv.vim",
-        keys = {
-            { "<leader>gv", "<cmd>GV<CR>", "git log (graph)" },
-        },
-    },
-    {
         "f-person/git-blame.nvim",
         config = function()
             vim.g.gitblame_enabled = false

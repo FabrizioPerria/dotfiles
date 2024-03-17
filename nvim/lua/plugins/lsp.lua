@@ -24,6 +24,9 @@ return {
                 clangd = function(_, opts)
                     opts.capabilities.offsetEncoding = { "utf-16" }
                 end,
+                gopls = function(_, opts)
+                    opts.capabilities.offsetEncoding = { "utf-16" }
+                end,
             },
         },
     },

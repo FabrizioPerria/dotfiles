@@ -9,6 +9,12 @@ if not vim.g.vscode then
         command = 'if expand("%:t") == "packer.lua" | nnoremap <buffer> <leader><leader> :w<CR>:so<CR>:PackerSync<CR> | else | nnoremap <buffer> <leader><leader> :w<CR>:so<CR> | endif',
     })
 
+    vim.api.nvim_create_autocmd({ "FileType" }, {
+        pattern = { "*" },
+        group = refresh,
+        command = "set formatoptions-=cro",
+    })
+
     vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
         pattern = { "*.c", "*.cpp", "*.h", "*.hpp", "CMakeLists.txt" },
         group = refresh,

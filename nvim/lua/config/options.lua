@@ -2,7 +2,7 @@
 -- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 -- Add any additional options here
 vim.opt.guicursor =
-  "n-v-c:block-blinkwait1000-blinkon100-blinkoff50,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff150,r-cr-o:hor20"
+    "n-v-c:block-blinkwait1000-blinkon100-blinkoff50,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff150,r-cr-o:hor20"
 vim.opt.cursorline = true
 
 vim.opt.nu = true
@@ -21,9 +21,9 @@ vim.opt.wrap = true
 vim.opt.swapfile = false
 vim.opt.backup = false
 if vim.fn.has("unix") then
-  vim.opt.undodir = vim.fn.getenv("HOME") .. "/.vim/undodir"
+    vim.opt.undodir = vim.fn.getenv("HOME") .. "/.vim/undodir"
 else
-  vim.opt.undodir = vim.fn.getenv("LOCALAPPDATA") .. "/.vim/undodir"
+    vim.opt.undodir = vim.fn.getenv("LOCALAPPDATA") .. "/.vim/undodir"
 end
 vim.opt.undofile = true
 
@@ -52,22 +52,23 @@ vim.opt.list = true
 
 vim.opt.mouse = ""
 
+vim.g.gitblame_delay = 2
 vim.fn.sign_define(
-  "DapBreakpoint",
-  { text = "", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
+    "DapBreakpoint",
+    { text = "", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
 )
 vim.fn.sign_define(
-  "DapBreakpointCondition",
-  { text = "ﳁ", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
+    "DapBreakpointCondition",
+    { text = "ﳁ", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
 )
 vim.fn.sign_define(
-  "DapBreakpointRejected",
-  { text = "", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
+    "DapBreakpointRejected",
+    { text = "", texthl = "DapBreakpoint", linehl = "DapBreakpoint", numhl = "DapBreakpoint" }
 )
 vim.fn.sign_define("DapLogPoint", {
-  text = "",
-  texthl = "DapLogPoint",
-  linehl = "DapLogPoint",
-  numhl = "DapLogPoint",
+    text = "",
+    texthl = "DapLogPoint",
+    linehl = "DapLogPoint",
+    numhl = "DapLogPoint",
 })
 vim.fn.sign_define("DapStopped", { text = "", texthl = "DapStopped", linehl = "DapStopped", numhl = "DapStopped" })

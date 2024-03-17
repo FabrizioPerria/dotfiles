@@ -7,7 +7,6 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
         sections = {
-            -- lualine_c = { {'filename', path=1} }
             lualine_c = {
                 { "GetCurrentWorkingDirectory()", icons_enabled = true, icon = "" },
                 { "filename", path = 1, icons_enabled = true, icon = "" },
