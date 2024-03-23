@@ -2,6 +2,10 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 vim.keymap.set("n", "J", "mzJ`z", { noremap = true })
+
+vim.keymap.set("n", "<leader>f", function()
+    vim.lsp.buf.format()
+end)
 --
 vim.keymap.set("n", "<leader>s", ":%s///gI<Left><Left><Left><Left>")
 vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>")
