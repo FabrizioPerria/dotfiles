@@ -31,7 +31,7 @@ local diagnostics_active = true
 vim.keymap.set("n", "<leader>dd", function()
     diagnostics_active = not diagnostics_active
     if diagnostics_active then
-        vim.diagnostic.show()
+        vim.diagnostic.enable()
     else
         vim.diagnostic.hide()
     end
