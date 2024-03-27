@@ -1,7 +1,3 @@
-local telescope = require("telescope")
-local actions = require("telescope.actions")
-local action_state = require("telescope.actions.state")
-
 local function match_path()
     local projects = require("telescope._extensions.project.utils").get_projects("recent")
     for _, project in pairs(projects) do
@@ -19,13 +15,14 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-telescope/telescope-file-browser.nvim",
-        { "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+        { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
         "nvim-telescope/telescope-ui-select.nvim",
         "nvim-telescope/telescope-project.nvim",
         "debugloop/telescope-undo.nvim",
         "nvim-telescope/telescope-packer.nvim",
         "nvim-telescope/telescope-dap.nvim",
     },
+    lazy = false,
     keys = {
         { "<leader>/", false },
         { "<F3>", "<cmd>Telescope dap variables<CR>", "List variables", mode = { "n" } },
@@ -181,115 +178,115 @@ return {
             },
         },
         { "<leader>vrn", vim.lsp.buf.rename, "rename symbol", mode = { "n" } },
-        { "<leader>ve", require("telescope.builtin").diagnostics, "Show diagnostics", mode = { "n" } },
-    },
-    opts = {
-        extensions = {
-            { "<leader>vui-select", require("telescope.themes").get_dropdown({}) },
-            file_browser = {
-                hidden = true,
-                hijack_netrw = true,
-                no_ignore = true,
-            },
-            fzf = {
-                fuzzy = true,
-                override_generic_sorter = true,
-                override_file_sorter = true,
-                case_mode = "smart_case",
-            },
-        },
-        defaults = {
-            path_display = { "truncate" },
-            mappings = {
-                i = {
-                    ["<C-k>"] = actions.preview_scrolling_up,
-                    ["<C-j>"] = actions.preview_scrolling_down,
-                    ["<C-h>"] = actions.preview_scrolling_left,
-                    ["<C-l>"] = actions.preview_scrolling_right,
-                },
-                n = {
-                    ["<C-k>"] = actions.preview_scrolling_up,
-                    ["<C-j>"] = actions.preview_scrolling_down,
-                    ["<C-h>"] = actions.preview_scrolling_left,
-                    ["<C-l>"] = actions.preview_scrolling_right,
-                },
-            },
-            vimgrep_arguments = {
-                "rg",
-                "--color=never",
-                "--no-heading",
-                "--with-filename",
-                "--line-number",
-                "--column",
-                "--smart-case",
-                "--hidden",
-            },
-            preview = { treesitter = true },
-        },
-        pickers = {
-            buffers = {
-                mappings = {
-                    n = {
-                        ["d"] = actions.delete_buffer,
-                    },
-                    i = {
-                        ["<A-d>"] = actions.delete_buffer,
-                    },
-                },
-            },
-            git_status = {
-                mappings = {
-                    n = {
-                        ["d"] = function(prompt_bufnr)
-                            local selection = action_state.get_selected_entry(prompt_bufnr)
-                            os.execute("git checkout -- " .. selection.value)
-                            actions._close(prompt_bufnr, true)
-                            require("telescope.builtin").git_status()
-                        end,
-                    },
-                    i = {
-                        ["<A-d>"] = function(prompt_bufnr)
-                            local selection = action_state.get_selected_entry(prompt_bufnr)
-                            os.execute("git checkout -- " .. selection.value)
-                            actions._close(prompt_bufnr, true)
-                            require("telescope.builtin").git_status()
-                        end,
-                    },
-                },
-            },
-            find_files = {
-                find_command = {
-                    "fd",
-                    ".",
-                    "--type",
-                    "f",
-                    "--hidden",
-                    -- '--no-ignore',
-                    "--strip-cwd-prefix",
-                    "--exclude",
-                    "node_modules",
-                    "--exclude",
-                    "Library",
-                    "--exclude",
-                    ".DS_Store",
-                    "--exclude",
-                    ".Trash",
-                    "--exclude",
-                    ".cache",
-                    "--exclude",
-                    ".git",
-                    "--exclude",
-                    ".local",
-                    "--exclude",
-                    ".nuget",
-                },
-            },
-        },
+        { "<leader>ve", function() require("telescope.builtin").diagnostics() end, "Show diagnostics", mode = { "n" } },
     },
     config = function()
+        require("telescope").setup({
+            extensions = {
+                -- { "<leader>vui-select", require("telescope.themes").get_dropdown({}) },
+                file_browser = {
+                    hidden = true,
+                    hijack_netrw = true,
+                    no_ignore = true,
+                },
+                fzf = {
+                    fuzzy = true,
+                    override_generic_sorter = true,
+                    override_file_sorter = true,
+                    case_mode = "smart_case",
+                },
+            },
+            defaults = {
+                path_display = { "truncate" },
+                mappings = {
+                    i = {
+                        ["<C-k>"] = require('telescope.actions').preview_scrolling_up,
+                        ["<C-j>"] = require('telescope.actions').preview_scrolling_down,
+                        ["<C-h>"] = require('telescope.actions').preview_scrolling_left,
+                        ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
+                    },
+                    n = {
+                        ["<C-k>"] = require('telescope.actions').preview_scrolling_up,
+                        ["<C-j>"] = require('telescope.actions').preview_scrolling_down,
+                        ["<C-h>"] = require('telescope.actions').preview_scrolling_left,
+                        ["<C-l>"] = require('telescope.actions').preview_scrolling_right,
+                    },
+                },
+                vimgrep_arguments = {
+                    "rg",
+                    "--color=never",
+                    "--no-heading",
+                    "--with-filename",
+                    "--line-number",
+                    "--column",
+                    "--smart-case",
+                    "--hidden",
+                },
+                preview = { treesitter = true },
+            },
+            pickers = {
+                buffers = {
+                    mappings = {
+                        n = {
+                            ["d"] = require('telescope.actions').delete_buffer,
+                        },
+                        i = {
+                            ["<A-d>"] = require('telescope.actions').delete_buffer,
+                        },
+                    },
+                },
+                git_status = {
+                    mappings = {
+                        n = {
+                            ["d"] = function(prompt_bufnr)
+                                local selection = require("telescope.actions.state").get_selected_entry(prompt_bufnr)
+                                os.execute("git checkout -- " .. selection.value)
+                                actions._close(prompt_bufnr, true)
+                                require("telescope.builtin").git_status()
+                            end,
+                        },
+                        i = {
+                            ["<A-d>"] = function(prompt_bufnr)
+                                local selection = require('telescope.actions.state').get_selected_entry(prompt_bufnr)
+                                os.execute("git checkout -- " .. selection.value)
+                                actions._close(prompt_bufnr, true)
+                                require("telescope.builtin").git_status()
+                            end,
+                        },
+                    },
+                },
+                find_files = {
+                    find_command = {
+                        "fd",
+                        ".",
+                        "--type",
+                        "f",
+                        "--hidden",
+                        -- '--no-ignore',
+                        "--strip-cwd-prefix",
+                        "--exclude",
+                        "node_modules",
+                        "--exclude",
+                        "Library",
+                        "--exclude",
+                        ".DS_Store",
+                        "--exclude",
+                        ".Trash",
+                        "--exclude",
+                        ".cache",
+                        "--exclude",
+                        ".git",
+                        "--exclude",
+                        ".local",
+                        "--exclude",
+                        ".nuget",
+                    },
+                },
+            },
+        })
         require("telescope").load_extension("fzf")
         require("telescope").load_extension("file_browser")
-        require("telescope").load_extension("refactoring")
+        -- require("telescope").load_extension("refactoring")
         require("telescope").load_extension("ui-select")
         require("telescope").load_extension("undo")
         require("telescope").load_extension("dap")

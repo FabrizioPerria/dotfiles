@@ -1,14 +1,18 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
-vim.keymap.set("n", "J", "mzJ`z", { noremap = true })
+vim.g.mapleader = " "
 
-vim.keymap.set("n", "<leader>f", function()
-    vim.lsp.buf.format()
-end)
+vim.keymap.set("n", "J", "mzJ`z", {
+    noremap = true
+})
+
 --
+vim.keymap.set("n", "<M-h>", "10<C-w><")
+vim.keymap.set("n", "<M-j>", "10<C-w>-")
+vim.keymap.set("n", "<M-k>", "10<C-w>+")
+vim.keymap.set("n", "<M-l>", "10<C-w>>")
+
 vim.keymap.set("n", "<leader>s", ":%s///gI<Left><Left><Left><Left>")
 vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>")
+
 
 vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv")

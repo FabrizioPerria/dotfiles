@@ -7,9 +7,26 @@ return {
         "mfussenegger/nvim-dap",
         dependencies = {
             "nvim-neotest/nvim-nio",
+            "leoluz/nvim-dap-go",
+            "mfussenegger/nvim-dap-python",
+            "rcarriga/nvim-dap-ui",
+            "theHamsta/nvim-dap-virtual-text",
         },
         config = function()
+            require("dap-go").setup()
+            require("dap-python").setup()
             local dap = require("dap")
+            local dapui = require("dapui")
+            dapui.setup()
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+                dapui.close()
+            end
             local codelldb = require("mason-registry").get_package("codelldb"):get_install_path() .. "/codelldb"
             dap.adapters.codelldb = {
                 type = "server",
@@ -37,21 +54,31 @@ return {
                 },
             }
             dap.configurations.cpp = dap.configurations.c
-            dap.adapters.python = {
-                type = "executable",
-                command = "./bin/python",
-                args = {
-                    "-m",
-                    "debugpy.adapter",
-                },
-            }
 
-            dap.configurations.python = {
+            local bash_apater_path = require("mason-registry").get_package("bash-debug-adapter"):get_install_path()
+            local bash_adapter = bash_apater_path .. "/bash-debug-adapter"
+            local bashdb_path = bash_apater_path .. "/extension/bashdb_dir"
+            dap.adapters.sh = {
+                type = "executable",
+                command = bash_adapter,
+            }
+            dap.configurations.sh = {
                 {
-                    type = "python3",
+                    name = "Launch Bash debugger",
+                    type = "sh",
                     request = "launch",
-                    name = "Launch file",
-                    program = "${file}", -- This configuration will launch the current file if used.
+                    program = "${file}",
+                    cwd = "${fileDirname}",
+                    pathBashdb = bashdb_path .. "/bashdb",
+                    pathBashdbLib = bashdb_path,
+                    pathBash = "bash",
+                    pathCat = "cat",
+                    pathMkfifo = "mkfifo",
+                    pathPkill = "pkill",
+                    env = {},
+                    args = {},
+                    -- showDebugOutput = true,
+                    -- trace = true,
                 },
             }
             vim.g.dap_virtual_text = true

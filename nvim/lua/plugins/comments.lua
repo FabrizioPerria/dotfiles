@@ -3,7 +3,6 @@ return {
     lazy = false,
     config = function()
         require("mini.comment").setup({
-            -- prefix = "//",
             padding = true,
             mappings = {
                 comment = "<Space>/",
