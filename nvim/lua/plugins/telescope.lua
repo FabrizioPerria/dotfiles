@@ -25,9 +25,9 @@ return {
     lazy = false,
     keys = {
         { "<leader>/", false },
-        { "<F3>", "<cmd>Telescope dap variables<CR>", "List variables", mode = { "n" } },
-        { "<F4>", "<cmd>Telescope dap list_breakpoints<CR>", "List breakpoints", mode = { "n" } },
-        { "<F6>", "<cmd>Telescope dap frames<CR>", "List frames", mode = { "n" } },
+        { "<F3>",      "<cmd>Telescope dap variables<CR>",        "List variables",   mode = { "n" } },
+        { "<F4>",      "<cmd>Telescope dap list_breakpoints<CR>", "List breakpoints", mode = { "n" } },
+        { "<F6>",      "<cmd>Telescope dap frames<CR>",           "List frames",      mode = { "n" } },
         {
             "<leader>ff",
             function()
@@ -66,8 +66,8 @@ return {
             silent = false,
             mode = { "n" },
         },
-        { "<leader>fk", "<cmd>Telescope keymaps<CR>", "Show keymaps", mode = { "n" } },
-        { "<leader>fh", "<cmd>Telescope help_tags<CR>", "Find man pages for vim commands", mode = { "n" } },
+        { "<leader>fk", "<cmd>Telescope keymaps<CR>",    "Show keymaps",                        mode = { "n" } },
+        { "<leader>fh", "<cmd>Telescope help_tags<CR>",  "Find man pages for vim commands",     mode = { "n" } },
         {
             "<leader>fp",
             "<cmd>Telescope project<CR>",
@@ -76,7 +76,7 @@ return {
             mode = { "n" },
         },
 
-        { "<leader>u", "<cmd>Telescope undo<CR>", "Undo menu", mode = { "n", "x" } },
+        { "<leader>u",  "<cmd>Telescope undo<CR>", "Undo menu",      mode = { "n", "x" } },
 
         {
             "<leader>gB",
@@ -114,7 +114,7 @@ return {
             "",
             mode = { "n" },
         },
-        { "<leader>tt", "<cmd>TodoTelescope<CR>", "Show todo list", mode = { "n" } },
+        { "<leader>tt", "<cmd>TodoTelescope<CR>",  "Show todo list", mode = { "n" } },
         {
             "<leader>vS",
             function()
@@ -177,7 +177,7 @@ return {
                 "n",
             },
         },
-        { "<leader>vrn", vim.lsp.buf.rename, "rename symbol", mode = { "n" } },
+        -- { "<leader>vrn", vim.lsp.buf.rename, "rename symbol", mode = { "n" } },
         { "<leader>ve", function() require("telescope.builtin").diagnostics() end, "Show diagnostics", mode = { "n" } },
     },
     config = function()
