@@ -36,8 +36,13 @@ RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTO
 RUN git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 RUN git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 RUN git clone --depth=1 https://github.com/wfxr/forgit.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/forgit
-# RUN git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
-RUN	git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
+
+RUN if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
+	git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
+elif command -v apt >/dev/null; then \
+	git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
+fi;
+
 COPY tmux/tmux.conf .config/tmux/tmux.conf
 RUN git clone --depth=1 https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 
@@ -63,21 +68,17 @@ RUN chown -R fabrizio /home/fabrizio/.config
 RUN locale-gen en_US.UTF-8
 
 USER fabrizio
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
 RUN ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
 COPY nvim .config/nvim
 RUN nvim --headless +qa
 RUN nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
-
 ENTRYPOINT [ "/bin/zsh", "-c", "tmux" ]
-# RUN echo '#!/bin/zsh\ntmux' > start.sh
-# RUN chmod +x start.sh
-
-# ENTRYPOINT [ "./start.sh" ]
 
 
 
