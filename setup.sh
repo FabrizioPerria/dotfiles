@@ -44,6 +44,9 @@ elif command -v apt >/dev/null; then
 	fi
 	ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
 	ln -s /usr/bin/batcat ${HOME}/.local/bin/bat
+	
+	pip3 install debugpy
+	sudo locale-gen en_US.UTF-8
 fi
 
 rm -rf ${HOME}/.oh-my-zsh
@@ -54,11 +57,11 @@ git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${Z
 git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/wfxr/forgit.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/forgit
 
-if [[ $(uname -m) == "arm64" -o $(uname -m) == "aarch64" ]]; then
-	git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
-elif command -v apt >/dev/null; then
-	git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa
-fi
+if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
+	git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
+elif command -v apt >/dev/null; then \
+	git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
+fi;
 
 rm -rf ${HOME}/.tmux
 git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
@@ -84,10 +87,6 @@ mkdir ${HOME}/.config/tmux
 cp -r tmux/* ${HOME}/.config/tmux
 
 ~/.tmux/plugins/tpm/scripts/install_plugins.sh
-
-pip3 install debugpy
-
-sudo locale-gen en_US.UTF-8
 
 nvim --headless +qa
 nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
