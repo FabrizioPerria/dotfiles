@@ -27,17 +27,17 @@ return {
                 vim.notify("CopilotChat - Updated remote plugins. Please restart Neovim.")
             end, 3000)
         end,
-        -- event = "VeryLazy",
+        lazy = true,
         keys = {
-            { "<leader>cc", ":CopilotChat ", desc = "CopilotChat " },
-            { "<leader>cce", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
-            { "<leader>cct", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
-            { "<leader>ccr", "<cmd>CopilotChatReview<cr>", desc = "CopilotChat - Review code" },
-            { "<leader>ccR", "<cmd>CopilotChatRefactor<cr>", desc = "CopilotChat - Refactor code" },
+            { "<leader>cc",  ":CopilotChat ",                 desc = "CopilotChat " },
+            { "<leader>cce", "<cmd>CopilotChatExplain<cr>",   desc = "CopilotChat - Explain code" },
+            { "<leader>cct", "<cmd>CopilotChatTests<cr>",     desc = "CopilotChat - Generate tests" },
+            { "<leader>ccr", "<cmd>CopilotChatReview<cr>",    desc = "CopilotChat - Review code" },
+            { "<leader>ccR", "<cmd>CopilotChatRefactor<cr>",  desc = "CopilotChat - Refactor code" },
             { "<leader>ccs", "<cmd>CopilotChatSummarize<cr>", desc = "CopilotChat - Summarize text" },
-            { "<leader>ccS", "<cmd>CopilotChatSpelling<cr>", desc = "CopilotChat - Correct spelling" },
-            { "<leader>ccw", "<cmd>CopilotChatWording<cr>", desc = "CopilotChat - Improve wording" },
-            { "<leader>ccc", "<cmd>CopilotChatConcise<cr>", desc = "CopilotChat - Make text concise" },
+            { "<leader>ccS", "<cmd>CopilotChatSpelling<cr>",  desc = "CopilotChat - Correct spelling" },
+            { "<leader>ccw", "<cmd>CopilotChatWording<cr>",   desc = "CopilotChat - Improve wording" },
+            { "<leader>ccc", "<cmd>CopilotChatConcise<cr>",   desc = "CopilotChat - Make text concise" },
             -- Those commands only available on canary branch
             {
                 "<leader>ccv",
@@ -55,6 +55,7 @@ return {
     },
     {
         "zbirenbaum/copilot.lua",
+        lazy = true,
         config = function()
             require("copilot").setup({
                 panel = { enabled = false },
@@ -76,24 +77,10 @@ return {
     },
     {
         "zbirenbaum/copilot-cmp",
+        lazy = true,
         dependencies = "copilot.lua",
-        opts = {},
         config = function(_, opts)
-            local copilot_cmp = require("copilot_cmp")
-            copilot_cmp.setup(opts)
-            -- attach cmp source whenever copilot attaches
-            -- fixes lazy-loading issues with the copilot cmp source
-            -- require("lazyvim.util").lsp.on_attach(function(client)
-            --     if client.name == "copilot" then
-            --         copilot_cmp._on_insert_enter({})
-            --     end
-            -- end)
+            require("copilot_cmp").setup(opts)
         end,
-    },
-    {
-        "L3MON4D3/LuaSnip",
-        keys = function()
-            return {}
-        end,
-    },
+    }
 }

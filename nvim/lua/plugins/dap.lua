@@ -83,7 +83,7 @@ return {
             }
             vim.g.dap_virtual_text = true
         end,
-
+        lazy = true,
         keys = {
             { "<F5>", ":DapContinue<CR>", "Run/Continue Debug" },
             {

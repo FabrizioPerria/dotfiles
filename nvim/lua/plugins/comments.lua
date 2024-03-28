@@ -1,6 +1,7 @@
 return {
     "echasnovski/mini.comment",
-    lazy = false,
+    lazy = true,
+    keys = {"<Space>/"},
     config = function()
         require("mini.comment").setup({
             padding = true,
@@ -8,8 +9,8 @@ return {
                 comment = "<Space>/",
                 comment_line = "<Space>/",
                 comment_visual = "<Space>/",
-                textobject = "gc",
-            },
+                textobject = "gc"
+            }
         })
-    end,
+    end
 }

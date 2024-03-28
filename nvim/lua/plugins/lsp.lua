@@ -3,6 +3,7 @@ return {
         "llllvvuu/nvim-cmp",
         dependencies = { "onsails/lspkind.nvim", "L3MON4D3/LuaSnip", "zbirenbaum/copilot.lua" },
         branch = "feat/above",
+        event = "VeryLazy",
         opts = function()
             local cmp = require("cmp")
             require("cmp").setup({
@@ -133,5 +134,6 @@ return {
                 },
             })
         end,
+        event = "VeryLazy",
     },
 }
