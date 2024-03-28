@@ -5,12 +5,12 @@ return { {
             symbol = "▎",
             options = {
                 try_as_border = true
-            }
+            },
         })
     end
 }, {
     "lukas-reineke/indent-blankline.nvim",
-    dependencies = { "nvim-treesitter/nvim-treesitter", "folke/tokyonight.nvim" },
+    dependencies = { "nvim-treesitter/nvim-treesitter", "folke/tokyonight.nvim", "nvimdev/dashboard-nvim" },
     config = function()
         local highlight = { "RainbowCyan", "RainbowGreen", "RainbowBlue", "RainbowViolet", "RainbowRed", "RainbowYellow",
             "RainbowOrange" }

@@ -8,6 +8,15 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     command = "set formatoptions-=cro"
 })
 
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "dashboard" },
+    group = refresh,
+    
+    command = "lua vim.b.miniindentscope_disable=true"
+})
+
+  
+
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.c", "*.cpp", "*.h", "*.hpp", "CMakeLists.txt" },
     group = refresh,
