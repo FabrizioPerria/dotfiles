@@ -31,6 +31,11 @@ return {
 
             logo = string.rep("\n", 4) .. logo .. "\n\n"
 
+            local open_config = function()
+                vim.cmd('e ~/.config')
+                vim.cmd('cd ~/.config')
+            end
+
             local opts = {
                 theme = "doom",
                 hide = {
@@ -46,10 +51,10 @@ return {
                         { action = "Telescope find_files", desc = " Find file", icon = "󰱼 ", key = "f" },
                         { action = "ene | startinsert", desc = " New file", icon = " ", key = "n" },
                         { action = "Telescope oldfiles", desc = " Recent files", icon = " ", key = "r" },
-                        { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "g" },
-                        { action = "e ~/.config", desc = " Config", icon = " ", key = "c" },
+                        { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "s" },
+                        { action = open_config, desc = " Config", icon = " ", key = "c" },
                         { action = 'Telescope project', desc = " Open Project", icon = " ", key = "p" },
-                        { action = 'Lazy', desc = " Lazy", icon = "💤 ", key = "l" },
+                        { action = 'Lazy', desc = " Lazy", icon = "✦", key = "l" },
                         { action = "qa", desc = " Quit", icon = " ", key = "q" },
                     },
                     footer = function()
