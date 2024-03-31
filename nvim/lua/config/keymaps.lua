@@ -1,5 +1,7 @@
 vim.g.mapleader = " "
 
+vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>")
+
 vim.keymap.set("n", "J", "mzJ`z", {
     noremap = true
 })
@@ -19,6 +21,7 @@ vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "Y", "yy")
 vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]])
 vim.keymap.set({ "n" }, "<leader>Y", [["+Y]])
+
 
 vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz")
 vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz")

@@ -29,7 +29,10 @@ return {
         end,
         lazy = true,
         keys = {
-            { "<leader>cc",  ":CopilotChat ",                 desc = "CopilotChat " },
+            { "<leader>c",   ":CopilotChatToggle<CR>",        desc = "CopilotChat Toggle prompt" },
+            { "<leader>cc",  ":CopilotChat ",                 desc = "CopilotChat Inline" },
+            { "<leader>cR",  ":CopilotChatReset<CR> ",        desc = "CopilotChat Reset prompt" },
+
             { "<leader>cce", "<cmd>CopilotChatExplain<cr>",   desc = "CopilotChat - Explain code" },
             { "<leader>cct", "<cmd>CopilotChatTests<cr>",     desc = "CopilotChat - Generate tests" },
             { "<leader>ccr", "<cmd>CopilotChatReview<cr>",    desc = "CopilotChat - Review code" },
@@ -39,18 +42,6 @@ return {
             { "<leader>ccw", "<cmd>CopilotChatWording<cr>",   desc = "CopilotChat - Improve wording" },
             { "<leader>ccc", "<cmd>CopilotChatConcise<cr>",   desc = "CopilotChat - Make text concise" },
             -- Those commands only available on canary branch
-            {
-                "<leader>ccv",
-                ":CopilotChatVsplitVisual",
-                mode = "x",
-                desc = "CopilotChat - Open in vertical split",
-            },
-            {
-                "<leader>ccx",
-                ":CopilotChatInPlace<cr>",
-                mode = "x",
-                desc = "CopilotChat - Run in-place code",
-            },
         },
     },
     {

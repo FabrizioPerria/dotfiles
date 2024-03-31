@@ -1,14 +1,16 @@
 return {
     "echasnovski/mini.comment",
-    lazy = true,
-    keys = {"<Space>/"},
+    -- lazy = true,
+    -- keys = {
+    --     {"<leader>/" },
+    -- },
     config = function()
         require("mini.comment").setup({
             padding = true,
             mappings = {
-                comment = "<Space>/",
-                comment_line = "<Space>/",
-                comment_visual = "<Space>/",
+                comment = "<leader>/",
+                comment_line = "<leader>/",
+                comment_visual = "<leader>/",
                 textobject = "gc"
             }
         })

@@ -49,6 +49,7 @@ return {
                         { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "g" },
                         { action = "e ~/.config", desc = " Config", icon = " ", key = "c" },
                         { action = 'Telescope project', desc = " Open Project", icon = " ", key = "p" },
+                        { action = 'Lazy', desc = " Lazy", icon = "💤 ", key = "l" },
                         { action = "qa", desc = " Quit", icon = " ", key = "q" },
                     },
                     footer = function()
@@ -57,8 +58,10 @@ return {
                         return {
                             '⚡ Neovim loaded in ' .. package_manager_stats.time .. ' ms',
                             '',
-                            '✔ ' .. package_manager_stats.loaded .. ' plugins loaded\t\t⏲ ' .. package_manager_stats.count .. ' plugins installed',
-                          }
+                            '✔ ' ..
+                            package_manager_stats.loaded ..
+                            ' plugins loaded\t\t⏲ ' .. package_manager_stats.count .. ' plugins installed',
+                        }
                     end,
                 },
             }

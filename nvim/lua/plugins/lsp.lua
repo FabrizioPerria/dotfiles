@@ -1,12 +1,81 @@
 return {
     {
+        "L3MON4D3/LuaSnip",
+        build = "make install_jsregexp",
+        dependencies = {
+            "rafamadriz/friendly-snippets",
+        },
+    },
+    {
+        "VonHeikemen/lsp-zero.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "neovim/nvim-lspconfig",
+            "llllvvuu/nvim-cmp",
+            -- 'hrsh7th/nvim-cmp',
+            'hrsh7th/cmp-nvim-lsp',
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "L3MON4D3/LuaSnip",
+        },
+        config = function()
+            local lsp_zero = require("lsp-zero").preset({
+                manage_nvim_cmp = {
+                    set_sources = "recommended",
+                    set_basic_mappings = true,
+                    set_extra_mappings = false,
+                    use_luasnip = true,
+                    set_format = true,
+                    documentation_window = true,
+                },
+            })
+            lsp_zero.on_attach(function(client, bufnr)
+                vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
+                vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+                vim.keymap.set("n", "<leader>f", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
+                lsp_zero.default_keymaps({
+                    buffer = bufnr,
+                    exclude = {
+                        "<F2>",
+                        "<F4>",
+                    },
+                })
+            end)
+
+            require("mason").setup({})
+            require("mason-lspconfig").setup({
+                handlers = {
+                    lsp_zero.default_setup,
+                },
+            })
+        end,
+        -- event = "VeryLazy",
+    },
+    {
         "llllvvuu/nvim-cmp",
-        dependencies = { "onsails/lspkind.nvim", "L3MON4D3/LuaSnip", "zbirenbaum/copilot.lua" },
         branch = "feat/above",
+        -- "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "onsails/lspkind.nvim",
+            'saadparwaiz1/cmp_luasnip',
+            "L3MON4D3/LuaSnip",
+            "zbirenbaum/copilot.lua",
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-nvim-lua",
+            "hrsh7th/cmp-cmdline"
+        },
         event = "VeryLazy",
+        config = function()
+            require("luasnip/loaders/from_vscode").lazy_load()
+        end,
         opts = function()
             local cmp = require("cmp")
             require("cmp").setup({
+                completion = {
+                    -- autocomplete = false
+                },
                 formatting = {
                     format = require("lspkind").cmp_format({
                         mode = "symbol_text",  -- show only symbol annotations
@@ -26,12 +95,21 @@ return {
                 },
                 window = {
                     documentation = cmp.config.window.bordered(),
+                    completion = cmp.config.window.bordered(),
+                },
+                sources = {
+                    { name = "luasnip" },
+                    { name = "path" },
+                    { name = "nvim_lsp" },
+                    { name = "buffer" },
+                    { name = "nvim_lua" },
                 },
                 snippet = {
                     expand = function(args)
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
+
                 mapping = cmp.mapping.preset.insert({
                     ["Up"] = cmp.mapping.select_prev_item({
                         behavior = cmp.SelectBehavior.Select,
@@ -42,7 +120,8 @@ return {
                     ["<CR>"] = cmp.mapping.confirm({
                         select = true,
                     }),
-                    ["<C-s>"] = cmp.mapping.complete({
+                    ["<S-Tab>"] = cmp.mapping.complete({
+                        -- ["<C-Space>"] = cmp.mapping.complete({
                         reason = cmp.ContextReason.Auto,
                     }),
                     ["<C-j>"] = cmp.mapping.scroll_docs(4),
@@ -62,78 +141,5 @@ return {
                 }),
             })
         end,
-    },
-    {
-        "VonHeikemen/lsp-zero.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "neovim/nvim-lspconfig",
-            "llllvvuu/nvim-cmp",
-            "hrsh7th/cmp-nvim-lsp",
-            "L3MON4D3/LuaSnip",
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-        },
-        config = function()
-            local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-            lsp_capabilities.offsetEncoding = "utf-16"
-            local lsp_zero = require("lsp-zero")
-            lsp_zero.on_attach(function(client, bufnr)
-                vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-                vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-                vim.keymap.set("n", "<leader>f", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
-                lsp_zero.default_keymaps({
-                    buffer = bufnr,
-                    exclude = {
-                        "<F2>",
-                        "<F4>",
-                    },
-                })
-            end)
-
-            require("mason").setup({})
-            require("mason-lspconfig").setup({
-                handlers = {
-                    lsp_zero.default_setup,
-                    -- clangd = function()
-                    --     require("lspconfig").clangd.setup {
-                    --         capabilities = lsp_capabilities,
-                    --         cmd = { "clangd", "--background-index" },
-                    --         filetypes = { "c", "cpp", "h", "hpp", "objc", "objcpp" },
-                    --         root_dir = function(fname)
-                    --             return require("lspconfig").util.root_pattern("compile_commands.json", "compile_flags.txt",
-                    --                 ".git")(fname) or vim.fn.getcwd()
-                    --         end,
-                    --         on_attach = function(client, bufnr)
-                    --             vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-                    --         end
-                    --     }
-                    -- end,
-                    -- gopls = function()
-                    --     require("lspconfig").gopls.setup {
-                    --         capabilities = lsp_capabilities,
-                    --         cmd = { "gopls" },
-                    --         filetypes = { "go", "gomod" },
-                    --         root_dir = require("lspconfig").util.root_pattern("go.mod", ".git"),
-                    --         on_attach = function(client, bufnr)
-                    --             vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-                    --         end,
-                    --         settings = {
-                    --             gopls = {
-                    --                 analyses = {
-                    --                     unusedparams = true,
-                    --                     shadow = true,
-                    --                 },
-                    --                 staticcheck = true,
-                    --                 completeUnimported = true,
-                    --                 usePlaceholders = true,
-                    --             },
-                    --         },
-                    --     }
-                    -- end
-                },
-            })
-        end,
-        event = "VeryLazy",
     },
 }

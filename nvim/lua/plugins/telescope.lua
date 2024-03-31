@@ -56,7 +56,7 @@ return {
         }
     },
     {
-        "nvim-telescope/telescope-undo.nvim",
+        "debugloop/telescope-undo.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
         lazy = true,
         keys = {
@@ -79,7 +79,7 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         lazy = false,
         keys = {
-            { "<leader>/",  false },
+            -- { "<leader>/",  false },
             { "<leader>ff", function() require("telescope.builtin").find_files({ cwd = match_path() }) end,                                                             "Fuzzy file search",                   mode = { "n" } },
             { "<leader>fb", "<cmd> Telescope buffers<CR>",                                                                                                              "Show buffers",                        silent = false,     mode = { "n" } },
             { "<leader>fg", "<cmd> Telescope git_files<CR>",                                                                                                            "Fuzzy file search in git repository", mode = { "n" } },
