@@ -66,12 +66,12 @@ return {
             })
         end,
     },
-    {
-        "zbirenbaum/copilot-cmp",
-        lazy = true,
-        dependencies = "copilot.lua",
-        config = function(_, opts)
-            require("copilot_cmp").setup(opts)
-        end,
-    }
+    -- {
+    --     "zbirenbaum/copilot-cmp",
+    --     lazy = true,
+    --     dependencies = "copilot.lua",
+    --     config = function(_, opts)
+    --         require("copilot_cmp").setup(opts)
+    --     end,
+    -- }
 }

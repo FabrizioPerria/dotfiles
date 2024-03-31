@@ -11,6 +11,7 @@ return { {
 }, {
     "lukas-reineke/indent-blankline.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "folke/tokyonight.nvim", "nvimdev/dashboard-nvim" },
+    event = "VeryLazy",
     config = function()
         local highlight = { "RainbowCyan", "RainbowGreen", "RainbowBlue", "RainbowViolet", "RainbowRed", "RainbowYellow",
             "RainbowOrange" }

@@ -1,6 +1,7 @@
 return {
     {
         "L3MON4D3/LuaSnip",
+        lazy = true,
         build = "make install_jsregexp",
         dependencies = {
             "rafamadriz/friendly-snippets",
@@ -18,6 +19,7 @@ return {
             "williamboman/mason-lspconfig.nvim",
             "L3MON4D3/LuaSnip",
         },
+        event = { "BufReadPre", "BufNewFile" },
         config = function()
             local lsp_zero = require("lsp-zero").preset({
                 manage_nvim_cmp = {
@@ -75,7 +77,8 @@ return {
             "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-cmdline"
         },
-        event = "VeryLazy",
+        -- event = "VeryLazy",
+        lazy = true,
         config = function()
             require("luasnip/loaders/from_vscode").lazy_load()
         end,
