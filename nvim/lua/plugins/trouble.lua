@@ -7,14 +7,14 @@ return {
             auto_close = true,
             auto_preview = false,
             auto_fold = false,
-            signs = {
-                error = " ",
-                warning = " ",
-                hint = " ",
-                information = " ",
-                other = " ",
-            },
-            -- use_lsp_diagnostic_signs = true,
+            -- signs = {
+            --     error = " ",
+            --     warn = " ",
+            --     hint = " ",
+            --     info = " ",
+            --     other = " ",
+            -- },
+            -- use_diagnostic_signs = false
         })
     end,
     keys = {

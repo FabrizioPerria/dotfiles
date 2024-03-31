@@ -48,6 +48,15 @@ return {
                     lsp_zero.default_setup,
                 },
             })
+            require('lspconfig').lua_ls.setup({
+                settings = {
+                    Lua = {
+                        diagnostics = {
+                            globals = { 'vim' }
+                        }
+                    }
+                }
+            })
         end,
         -- event = "VeryLazy",
     },

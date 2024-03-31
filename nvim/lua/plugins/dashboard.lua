@@ -54,7 +54,7 @@ return {
                         { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "s" },
                         { action = open_config, desc = " Config", icon = " ", key = "c" },
                         { action = 'Telescope project', desc = " Open Project", icon = " ", key = "p" },
-                        { action = 'Lazy', desc = " Lazy", icon = "✦", key = "l" },
+                        { action = 'Lazy', desc = "  Lazy", icon = "◉", key = "l" },
                         { action = "qa", desc = " Quit", icon = " ", key = "q" },
                     },
                     footer = function()
