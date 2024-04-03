@@ -88,6 +88,7 @@ cp -r tmux/* ${HOME}/.config/tmux
 
 ~/.tmux/plugins/tpm/scripts/install_plugins.sh
 
+rm -rf ~/.cache/nvim
 nvim --headless +qa
 nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
 
