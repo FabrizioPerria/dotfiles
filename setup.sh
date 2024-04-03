@@ -5,6 +5,7 @@ set -e
 if [[ -d ${HOME}/.config ]]; then
 	rm -rf ${HOME}/.config.backup
 	mv ${HOME}/.config ${HOME}/.config.backup
+ 	rm -rf ~/.cache/nvim
 fi
 
 if [[ -f ${HOME}/.zshrc ]]; then
