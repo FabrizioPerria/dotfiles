@@ -24,7 +24,7 @@ elif command -v apt >/dev/null; then
 	sudo apt update
 	sudo apt install -y software-properties-common apt-transport-https wget curl locales
 	sudo add-apt-repository ppa:neovim-ppa/unstable
-	curl -fsSL https://deb.nodesource.com/setup_21.x | bash 
+	curl -fsSL https://deb.nodesource.com/setup_21.x | sudo bash 
 	sudo apt update
 	sudo apt install -y nodejs zsh git tmux neovim sudo wget python3-neovim python3-dev python3-pip python3-venv fontconfig unzip ripgrep fd-find bat exa htop ncdu tree clang cmake build-essential jq git-lfs axel sshfs clangd
 
