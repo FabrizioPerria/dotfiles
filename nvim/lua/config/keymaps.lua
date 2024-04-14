@@ -20,6 +20,7 @@ vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>")
 vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv")
 vim.keymap.set("n", "Y", "yy")
+vim.keymap.set("n", "<leader>fe", ":E<CR>")
 vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]])
 vim.keymap.set({ "n" }, "<leader>Y", [["+Y]])
 
