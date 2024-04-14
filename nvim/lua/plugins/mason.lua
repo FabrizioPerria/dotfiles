@@ -36,6 +36,10 @@ return {
                     "cmake-language-server",
 
                     "gopls",
+                    "goimports",
+                    "gofumpt",
+                    "impl",
+                    "gomodifytags",
                     "delve",
 
                     -- "java-language-server",
