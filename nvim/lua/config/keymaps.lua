@@ -8,6 +8,7 @@ vim.keymap.set("n", "J", "mzJ`z", {
 
 --
 vim.keymap.set("n", "<M-h>", "10<C-w><")
+vim.keymap.set("n", "<leader>v", "<C-v>")
 vim.keymap.set("n", "<M-j>", "10<C-w>-")
 vim.keymap.set("n", "<M-k>", "10<C-w>+")
 vim.keymap.set("n", "<M-l>", "10<C-w>>")
