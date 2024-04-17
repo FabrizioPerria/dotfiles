@@ -18,6 +18,8 @@ return {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "L3MON4D3/LuaSnip",
+            "luckasRanarison/clear-action.nvim",
+            "aznhe21/actions-preview.nvim",
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
@@ -33,11 +35,11 @@ return {
             })
 
             lsp_zero.on_attach(function(client, bufnr)
-                vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<cr>', opts)
-                vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+                vim.keymap.set('n', '<leader>a', function() require("actions-preview").code_actions() end, opts)
+                vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
                 vim.keymap.set("n", "<leader>f", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
                 vim.keymap.set("n", "<leader>li", '<cmd>LspInfo<cr>', opts)
-                vim.keymap.set("n", "<leader>ll", '<cmd>LspRestart<cr>', opts)
+                vim.keymap.set("n", "<leader>lr", '<cmd>LspRestart<cr>', opts)
                 lsp_zero.default_keymaps({
                     buffer = bufnr,
                     exclude = {
