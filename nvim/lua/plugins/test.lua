@@ -1,5 +1,37 @@
 return {
     {
+        "vhyrro/luarocks.nvim",
+        priority = 1000,
+        config = true,
+        lazy = true,
+    },
+    {
+        "rest-nvim/rest.nvim",
+        ft = "http",
+        dependencies = {
+            "luarocks.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-telescope/telescope.nvim",
+        },
+        filetypes = { "http" },
+        keys = {
+            { "<leader>rr", "<cmd>Rest run<cr>",                  desc = "Run request under the cursor", },
+            { "<leader>rl", "<cmd>Rest run last<cr>",             desc = "Re-run latest request", },
+            { "<leader>re", "<cmd>Telescope rest select_env<cr>", desc = "Select environment file", },
+
+        },
+        config = function()
+            require("rest-nvim").setup({
+                result = {
+                    split = {
+                        stay_in_current_window_after_split = false,
+                    },
+                },
+            })
+            require('telescope').load_extension('rest')
+        end,
+    },
+    {
         "nvim-neotest/neotest",
         dependencies = {
             "nvim-neotest/nvim-nio",
@@ -12,6 +44,7 @@ return {
         },
         keys = {
             { "<leader>tt", function() require("neotest").run.run(vim.fn.expand("%")) end,                      desc = "Run File" },
+            { "<leader>td", "<cmd>lua require('dap-go').debug_test()<CR>",                                      desc = "Debug Nearest (Go)" },
             { "<leader>tT", function() require("neotest").run.run(vim.loop.cwd()) end,                          desc = "Run All Test Files" },
             { "<leader>tr", function() require("neotest").run.run() end,                                        desc = "Run Nearest" },
             { "<leader>ts", function() require("neotest").summary.toggle() end,                                 desc = "Toggle Summary" },
@@ -27,7 +60,7 @@ return {
                             test_table = true,
                         },
                         args = { "-count=1", "-timeout=60s" },
-                        recursive_run = true
+                        -- recursive_run = true
                     }),
                 }
             })

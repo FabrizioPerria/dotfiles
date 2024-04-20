@@ -4,6 +4,8 @@ return {
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
+                    "xml",
+                    "graphql",
                     "bash",
                     "c",
                     "cmake",
