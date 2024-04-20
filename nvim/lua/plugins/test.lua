@@ -40,7 +40,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            "alfaix/neotest-gtest"
+            "alfaix/neotest-gtest",
         },
         keys = {
             { "<leader>tt", function() require("neotest").run.run(vim.fn.expand("%")) end,                      desc = "Run File" },
@@ -55,13 +55,19 @@ return {
         config = function()
             require("neotest").setup({
                 adapters = {
+                    require("neotest-python")({
+                        dap = { justMyCode = false },
+                        runner = "pytest",
+                        python = "python3",
+                    }),
                     require("neotest-go")({
                         experimental = {
                             test_table = true,
                         },
                         args = { "-count=1", "-timeout=60s" },
-                        -- recursive_run = true
+                        recursive_run = true
                     }),
+                    require("neotest-gtest"),
                 }
             })
         end
