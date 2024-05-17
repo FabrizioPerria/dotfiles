@@ -32,6 +32,17 @@ return {
         end,
     },
     {
+        "nvim-telescope/telescope-live-grep-args.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
+        lazy = true,
+        config = function()
+            require("telescope").load_extension("live_grep_args")
+        end,
+        keys = {
+            { "<leader>fs", "<cmd>Telescope live_grep_args<CR>", "Grep search with arguments", mode = { "n" } },
+        },
+    },
+    {
         "nvim-telescope/telescope-project.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
         lazy = true,
@@ -80,11 +91,13 @@ return {
         lazy = false,
         keys = {
             -- { "<leader>/",  false },
+            { "<leader>.",  "<cmd>Telescope current_buffer_fuzzy_find<CR>",                                                                                             "Fuzzy search in current buffer",      mode = { "n" } },
+
             { "<leader>ff", function() require("telescope.builtin").find_files({ cwd = match_path() }) end,                                                             "Fuzzy file search",                   mode = { "n" } },
             { "<leader>fb", "<cmd> Telescope buffers<CR>",                                                                                                              "Show buffers",                        silent = false,     mode = { "n" } },
             { "<leader>fg", "<cmd> Telescope git_files<CR>",                                                                                                            "Fuzzy file search in git repository", mode = { "n" } },
             { "<leader>fr", "<cmd> Telescope registers<CR>",                                                                                                            "Peek Register contents",              mode = { "n", "v" } },
-            { "<leader>fs", function() require("telescope.builtin").live_grep({ search_dir = "%:p:h" }) end,                                                            "Grep search",                         mode = { "n" } },
+            -- { "<leader>fs", function() require("telescope.builtin").live_grep({ search_dir = "%:p:h" }) end,                                                            "Grep search",                         mode = { "n" } },
             { "<leader>fk", "<cmd>Telescope keymaps<CR>",                                                                                                               "Show keymaps",                        mode = { "n" } },
             { "<leader>fh", "<cmd>Telescope help_tags<CR>",                                                                                                             "Find man pages for vim commands",     mode = { "n" } },
             { "<leader>gB", "<cmd>Telescope git_branches<CR>",                                                                                                          " ",                                   silent = false,     mode = { "n" } },
