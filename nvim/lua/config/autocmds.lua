@@ -11,11 +11,11 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 vim.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { "dashboard" },
     group = refresh,
-    
+
     command = "lua vim.b.miniindentscope_disable=true"
 })
 
-  
+
 
 vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     pattern = { "*.c", "*.cpp", "*.h", "*.hpp", "CMakeLists.txt" },
@@ -34,5 +34,12 @@ vim.api.nvim_create_autocmd("TermOpen", {
     callback = function()
         vim.cmd("norm G")
         vim.cmd([[nnoremap <buffer> <Esc> :bd!<CR>]])
+    end
+})
+
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    pattern = { "quickfix", },
+    callback = function()
+        vim.cmd("set ma")
     end
 })
