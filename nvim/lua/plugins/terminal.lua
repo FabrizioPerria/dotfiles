@@ -2,6 +2,6 @@ return {
     "voldikss/vim-floaterm",
     cmd = "FloatermNew",
     keys = {
-        { "<leader>te", ":FloatermNew --autoclose=0<CR>" }
+        { "<leader>te", "<cmd>FloatermNew --autoclose=0<cr>", desc = "Open terminal" },
     },
 }

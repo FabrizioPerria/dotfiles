@@ -18,20 +18,22 @@ return {
         })
     end,
     keys = {
-        { "<leader>xs", "<cmd>TroubleToggle<cr>", desc = "toggle Trouble" },
+        { "<leader>xd", "<cmd>Trouble diagnostics toggle<cr>", desc = "toggle Trouble diagnostics" },
+        { "<leader>xq", "<cmd>Trouble qflist toggle<cr>",      desc = "toggle Trouble quickfix" },
+        { "<leader>xs", "<cmd>Trouble symbols toggle<cr>",     desc = "toggle Trouble symbols" },
         {
             "[d",
             function()
                 require("trouble").previous({ skip_groups = true, jump = true })
             end,
-            "previous item",
+            desc = "previous item",
         },
         {
             "]d",
             function()
                 require("trouble").next({ skip_groups = true, jump = true })
             end,
-            "next item",
+            desc = "next item",
         },
     },
 }

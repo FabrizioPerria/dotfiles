@@ -44,7 +44,7 @@ return {
     {
         "FabijanZulj/blame.nvim",
         keys = {
-            { "<leader>gB", "<cmd>ToggleBlame virtual<CR>", "toggle git blame - Full file" },
+            { "<leader>gB", "<cmd>ToggleBlame virtual<CR>", desc = "toggle git blame - Full file" },
         },
     },
     {
@@ -60,7 +60,7 @@ return {
             })
         end,
         keys = {
-            { "<leader>gb", "<cmd>GitBlameToggle<CR>", "toggle git blame - Single Line" },
+            { "<leader>gb", "<cmd>GitBlameToggle<CR>", desc = "toggle git blame - Single Line" },
         },
     },
     {
@@ -76,11 +76,11 @@ return {
             })
         end,
         keys = {
-            { "<leader>gd",        function() DiffViewToggle() end,                    "toggle diff" },
-            { "<leader>gd<Left>",  "<cmd>lua require('diffview').diffget('base')<CR>", "" },
-            { "<leader>gd<Right>", "<cmd>lua require('diffview').diffget('mine')<CR>", "" },
-            { "<leader>gd<Down>",  "<cmd>lua require('diffview').diffput('mine')<CR>", "" },
-            { "<leader>gd<Up>",    "<cmd>lua require('diffview').diffput('base')<CR>", "" },
+            { "<leader>gd",        function() DiffViewToggle() end,                    desc = "toggle diff" },
+            { "<leader>gd<Left>",  "<cmd>lua require('diffview').diffget('base')<CR>", desc = "" },
+            { "<leader>gd<Right>", "<cmd>lua require('diffview').diffget('mine')<CR>", desc = "" },
+            { "<leader>gd<Down>",  "<cmd>lua require('diffview').diffput('mine')<CR>", desc = "" },
+            { "<leader>gd<Up>",    "<cmd>lua require('diffview').diffput('base')<CR>", desc = "" },
         },
     },
 }

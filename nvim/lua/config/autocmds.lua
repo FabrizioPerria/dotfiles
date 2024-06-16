@@ -36,10 +36,3 @@ vim.api.nvim_create_autocmd("TermOpen", {
         vim.cmd([[nnoremap <buffer> <Esc> :bd!<CR>]])
     end
 })
-
-vim.api.nvim_create_autocmd("BufWinEnter", {
-    pattern = { "quickfix", },
-    callback = function()
-        vim.cmd("set ma")
-    end
-})

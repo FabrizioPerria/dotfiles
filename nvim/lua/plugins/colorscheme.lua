@@ -126,7 +126,7 @@ return {
             require("colorizer").setup()
         end,
         keys = {
-            { "<leader>C", ":ColorizerToggle<CR>", "Toggle Colorizer" }
+            { "<leader>C", ":ColorizerToggle<CR>", desc = "Toggle Colorizer" }
         }
     }
 }

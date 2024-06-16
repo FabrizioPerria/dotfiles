@@ -85,19 +85,19 @@ return {
         end,
         lazy = true,
         keys = {
-            { "<F5>", ":DapContinue<CR>", "Run/Continue Debug" },
+            { "<F5>",    ":DapContinue<CR>",                                 desc = "Run/Continue Debug" },
             {
                 "<F8>",
                 function()
                     require("dap").set_breakpoint(prompt())
                 end,
-                "Conditional Breakpoint",
+                desc = "Conditional Breakpoint",
             },
-            { "<F9>", ":DapToggleBreakpoint<CR>", "Toggle Breakpoint" },
-            { "<F10>", ":DapStepOver<CR>", "Debug step over" },
-            { "<F11>", ":DapStepInto<CR>", "Debug step into" },
-            { "<C-F11>", ":DapStepOut<CR>", "Debug step out" },
-            { "<F12>", ':DapTerminate<CR>:lua require"dapui".close()<CR>', "" },
+            { "<F9>",    ":DapToggleBreakpoint<CR>",                         desc = "Toggle Breakpoint" },
+            { "<F10>",   ":DapStepOver<CR>",                                 desc = "Debug step over" },
+            { "<F11>",   ":DapStepInto<CR>",                                 desc = "Debug step into" },
+            { "<C-F11>", ":DapStepOut<CR>",                                  desc = "Debug step out" },
+            { "<F12>",   ':DapTerminate<CR>:lua require"dapui".close()<CR>', desc = "Stop debugger" },
         },
     },
 }

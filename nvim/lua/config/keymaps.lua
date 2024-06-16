@@ -1,32 +1,33 @@
 vim.g.mapleader = " "
 
-vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>")
+vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>", { desc = "Lazy Dashboard" })
 
 vim.keymap.set("n", "J", "mzJ`z", {
-    noremap = true
+    noremap = true,
+    desc = "Join lines"
 })
 
 --
-vim.keymap.set("n", "<M-h>", "10<C-w><")
-vim.keymap.set("n", "<leader>v", "<C-v>")
-vim.keymap.set("n", "<M-j>", "10<C-w>-")
-vim.keymap.set("n", "<M-k>", "10<C-w>+")
-vim.keymap.set("n", "<M-l>", "10<C-w>>")
+vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Vertical split" })
 
-vim.keymap.set("n", "<leader>s", ":%s///gI<Left><Left><Left><Left>")
-vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>")
+vim.keymap.set("n", "<M-h>", "10<C-w><", { desc = "Resize window(To Left)" })
+vim.keymap.set("n", "<M-j>", "10<C-w>-", { desc = "Resize window(To Down)" })
+vim.keymap.set("n", "<M-k>", "10<C-w>+", { desc = "Resize window(To Up)" })
+vim.keymap.set("n", "<M-l>", "10<C-w>>", { desc = "Resize window(To Right)" })
+
+vim.keymap.set("n", "<leader>s", ":%s///gI<Left><Left><Left><Left>", { desc = "Search and replace" })
+vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>", { desc = "Search and replace" })
+
+vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
+vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
+vim.keymap.set("n", "Y", "yy", { desc = "Yank line" })
+vim.keymap.set("n", "<leader>fe", ":E<CR>", { desc = "Explore" })
+vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]], { desc = "Copy Selection to clipboard" })
+vim.keymap.set({ "n" }, "<leader>Y", [["+Y]], { desc = "Copy Line to clipboard" })
 
 
-vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv")
-vim.keymap.set("n", "Y", "yy")
-vim.keymap.set("n", "<leader>fe", ":E<CR>")
-vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]])
-vim.keymap.set({ "n" }, "<leader>Y", [["+Y]])
-
-
-vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz")
-vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz")
+vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz", { desc = "Scroll down" })
+vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 vim.keymap.set("n", "<leader>=", function()
     local buf = vim.api.nvim_get_current_buf()
     local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -34,7 +35,7 @@ vim.keymap.set("n", "<leader>=", function()
     vim.api.nvim_buf_set_lines(buf, row, row, false, { sep })
     require("mini.comment").toggle_lines(row + 1, row + 1)
     vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
-end)
+end, { desc = "Add separator" })
 
 local diagnostics_active = true
 vim.keymap.set("n", "<leader>dd", function()
@@ -44,4 +45,27 @@ vim.keymap.set("n", "<leader>dd", function()
     else
         vim.diagnostic.hide()
     end
-end)
+end, { desc = "Toggle diagnostics" })
+
+-- nnoremap <silent><C-Left> :<C-u>call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%^','bW')<CR>
+vim.keymap.set({ "i", "n" }, "<C-Left>", function()
+    vim.api.nvim_feedkeys(
+        "<cmd>call search(\'\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^\\','bW')<CR>", "n", true)
+end, { desc = "Move to previous word" })
+
+-- nnoremap <silent><C-Right> :<C-u>call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%$','W')<CR>
+vim.keymap.set({ "i", "n" }, "<C-Right>", function()
+    vim.api.nvim_feedkeys(
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>", "n", true)
+end, { desc = "Move to next word" })
+
+-- inoremap <silent><C-Left> <C-o>:call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%^','bW')<CR>
+vim.keymap.set({ "i", "n" }, "<C-Left>", function()
+    vim.api.nvim_feedkeys(
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^','bW')<CR>", "n", true)
+end, { desc = "Move to previous word" })
+-- inoremap <silent><C-Right> <C-o>:call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%$','W')<CR>
+vim.keymap.set({ "i", "n" }, "<C-Right>", function()
+    vim.api.nvim_feedkeys(
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>", "n", true)
+end, { desc = "Move to next word" })

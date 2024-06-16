@@ -36,8 +36,8 @@ return {
 
             lsp_zero.on_attach(function(client, bufnr)
                 vim.keymap.set('n', '<leader>a', function() require("actions-preview").code_actions() end, opts)
-                vim.keymap.set('n', '<leader>r', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-                vim.keymap.set("n", "<leader>f", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
+                vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
+                vim.keymap.set("n", "<leader>fo", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
                 vim.keymap.set("n", "<leader>li", '<cmd>LspInfo<cr>', opts)
                 vim.keymap.set("n", "<leader>lr", '<cmd>LspRestart<cr>', opts)
                 lsp_zero.default_keymaps({

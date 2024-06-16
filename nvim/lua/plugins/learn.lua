@@ -12,7 +12,7 @@ return {
             startVisible = false
         },
         keys = {
-            { "<leader>hh", "<cmd>lua require('precognition').toggle()<CR>", "Toggle hints", silent = false, mode = { "n" } },
+            { "<leader>hh", "<cmd>lua require('precognition').toggle()<CR>", desc = "Toggle hints", silent = false, mode = { "n" } },
         }
     }
 }
