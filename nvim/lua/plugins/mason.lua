@@ -24,7 +24,7 @@ return {
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    "pyright",
+                    "basedpyright",
                     "mypy",
                     "ruff",
                     "black",

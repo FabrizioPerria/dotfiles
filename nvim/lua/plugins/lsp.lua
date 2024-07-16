@@ -80,6 +80,15 @@ return {
             })
             require('lspconfig').gopls.setup({
                 settings = {
+                    basedpyright = {
+                        typeCheckingMode = "all",
+                        -- analysis = {
+                        --     diagnosticSeverityOverrides = {
+                        --         reportMissingParameterType = false,
+                        --         reportUnknownParameterType = false,
+                        --     },
+                        -- },
+                    },
                     gopls = {
                         gofumpt = true,
                         codelenses = {
