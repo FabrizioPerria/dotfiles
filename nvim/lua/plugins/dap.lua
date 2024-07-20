@@ -92,7 +92,7 @@ return {
                         if vim.fn.executable(cwd .. "/bin/python") == 1 then
                             return cwd .. "/bin/python"
                         else
-                            return "/usr/bin/python3"
+                            return vim.fn.exepath("python3") or vim.fn.exepath("python")
                         end
                     end,
                 },

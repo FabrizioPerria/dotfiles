@@ -69,3 +69,6 @@ vim.keymap.set({ "i", "n" }, "<C-Right>", function()
     vim.api.nvim_feedkeys(
         "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>", "n", true)
 end, { desc = "Move to next word" })
+
+vim.keymap.set('c', 'wsudo', "<cmd>lua require'config.utils'.sudo_write()<CR>",
+    { desc = "Save file as sudo", silent = true })

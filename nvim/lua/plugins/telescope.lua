@@ -12,6 +12,10 @@ end
 
 return {
     {
+        "nvim-lua/plenary.nvim",
+        lazy = false
+    },
+    {
         "nvim-telescope/telescope-file-browser.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
         lazy = false,
