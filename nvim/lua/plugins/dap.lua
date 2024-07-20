@@ -81,6 +81,22 @@ return {
                     -- trace = true,
                 },
             }
+            dap.configurations.python = {
+                {
+                    type = "python",
+                    request = "launch",
+                    name = "Launch file",
+                    program = "${file}",
+                    pythonPath = function()
+                        local cwd = vim.fn.getcwd()
+                        if vim.fn.executable(cwd .. "/bin/python") == 1 then
+                            return cwd .. "/bin/python"
+                        else
+                            return "/usr/bin/python3"
+                        end
+                    end,
+                },
+            }
             vim.g.dap_virtual_text = true
         end,
         lazy = true,
