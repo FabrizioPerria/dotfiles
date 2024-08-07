@@ -58,7 +58,14 @@ return {
                     require("neotest-python")({
                         dap = { justMyCode = false },
                         runner = "pytest",
-                        python = "python3",
+                        python = function()
+                            local cwd = vim.fn.getcwd()
+                            if vim.fn.executable(cwd .. "/bin/python") == 1 then
+                                return cwd .. "/bin/python"
+                            else
+                                return vim.fn.exepath("python3") or vim.fn.exepath("python")
+                            end
+                        end,
                     }),
                     require("neotest-go")({
                         experimental = {
