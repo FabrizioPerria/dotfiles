@@ -10,3 +10,5 @@ if [ "$(uname)" = "Darwin" ]; then
   bindkey -M viins '^\e' sudo-command-line
 fi
 source $ZSH/oh-my-zsh.sh
+
+fastfetch

@@ -60,7 +60,9 @@ return {
                 sync_install = false,
                 auto_install = true,
                 highlight = {
-                    enable = true,
+                    enable = function(lang, bufnr) -- Disable in files with more than 5K
+                        return vim.api.nvim_line_count(bufnr) <= 5000
+                    end,
                     additional_vim_regex_highlighting = false,
                 },
                 incremental_selection = {
