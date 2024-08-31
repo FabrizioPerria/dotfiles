@@ -1,0 +1,213 @@
+---
+- hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Install packages on macOS
+      homebrew:
+        name:
+          - python3
+          - tmux
+          - neovim
+          - fzf
+          - ripgrep
+          - fd
+          - llvm
+          - jq
+          - git-lfs
+          - exa
+          - ncdu
+          - bottom
+          - cmake
+          - unzip
+          - thefuck
+          - bat
+          - node
+          - wget
+        state: present
+      when: ansible_os_family == "Darwin"
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install required packages
+      apt:
+        name:
+          - software-properties-common
+          - apt-transport-https
+          - wget
+          - curl
+          - locales
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Add Neovim PPA
+      apt_repository:
+        repo: ppa:neovim-ppa/unstable
+      when: ansible_os_family == "Debian"
+
+    - name: Add NodeSource repository
+      shell: curl -fsSL https://deb.nodesource.com/setup_21.x | bash -
+      when: ansible_os_family == "Debian"
+
+    - name: Update apt cache again
+      apt:
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install packages on Ubuntu
+      apt:
+        name:
+          - nodejs
+          - zsh
+          - git
+          - tmux
+          - neovim
+          - sudo
+          - wget
+          - python3-neovim
+          - python3-dev
+          - python3-pip
+          - python3-venv
+          - fontconfig
+          - unzip
+          - ripgrep
+          - fzf
+          - fd-find
+          - bat
+          - exa
+          - htop
+          - ncdu
+          - tree
+          - clang
+          - cmake
+          - build-essential
+          - jq
+          - git-lfs
+          - axel
+          - sshfs
+          - clangd
+          - python3-debugpy
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Download fzf 
+      git:
+        repo: 'https://github.com/junegunn/fzf.git'
+        dest: '${HOME}/.fzf'
+        depth: 1
+    
+    - name: Install fzf
+      command: ${HOME}/.fzf/install --all --no-update-rc
+
+    - name: Create local bin directory
+      file:
+        path: ${HOME}/.local/bin
+        state: directory
+      when: ansible_os_family == "Debian"
+
+    - name: Create symlink for fd
+      file:
+        src: /usr/bin/fdfind
+        dest: ${HOME}/.local/bin/fd
+        state: link
+      when: ansible_os_family == "Debian"
+
+    - name: Create symlink for bat
+      file:
+        src: /usr/bin/batcat
+        dest: ${HOME}/.local/bin/bat
+        state: link
+      when: ansible_os_family == "Debian"
+
+    - name: Generate locale
+      locale_gen:
+        name: en_US.UTF-8
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Remove .oh-my-zsh
+      file:
+        path: "${HOME}/.oh-my-zsh"
+        state: absent
+
+    - name: Install oh-my-zsh
+      shell: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+    - name: Clone repositories
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+        depth: 1
+      loop:
+        - { repo: 'https://github.com/romkatv/powerlevel10k.git', dest: '${HOME}/.oh-my-zsh/custom/themes/powerlevel10k' }
+        - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting' }
+        - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions' }
+        - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
+        - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
+        - { repo: 'https://github.com/tmux-plugins/tpm', dest: '${HOME}/.tmux/plugins/tpm' }
+
+    - name: Clone zsh-exa for Darwin
+      git:
+        repo: 'https://github.com/RitchieS/zsh-exa.git'
+        dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa'
+        depth: 1
+      when: ansible_os_family == "Darwin"
+
+    - name: Clone zsh-exa for Debian
+      git:
+        repo: 'https://github.com/ptavares/zsh-exa.git'
+        dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa'
+        depth: 1
+      when: ansible_os_family == "Debian"
+
+    - name: Remove .config
+      file:
+        path: "${HOME}/.config"
+        state: absent
+
+    - name: Copy files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { src: '../fzf', dest: '${HOME}/.config/' }
+        - { src: '../nvim', dest: '${HOME}/.config/' }
+        - { src: '../shell', dest: '${HOME}/.config/' }
+        - { src: '../tmux', dest: '${HOME}/.config/' }
+
+    - name: Add extra_cmd to .zshrc
+      lineinfile:
+        path: "${HOME}/.zshrc"
+        line: ""
+        create: yes
+
+    - name: Add source commands to .zshrc
+      blockinfile:
+        path: "${HOME}/.zshrc"
+        block: |
+          source ${HOME}/.config/shell/aliases.zsh
+          source ${HOME}/.config/shell/exports.zsh
+          source ${HOME}/.config/shell/zsh.zsh
+          source ${HOME}/.config/shell/p10k.zsh
+          source ${HOME}/.config/shell/colors.zsh
+          source ${HOME}/.config/fzf/completion.sh
+          source ${HOME}/.config/fzf/keybindings.sh
+
+    - name: Run tmux plugin install script
+      command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+    - name: Remove nvim cache
+      file:
+        path: "${HOME}/.cache/nvim"
+        state: absent
+
+    - name: Run nvim commands
+      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+
+  environment:
+    LANG: en_US.UTF-8
+    LANGUAGE: en_US:en
+    LC_ALL: en_US.UTF-8
