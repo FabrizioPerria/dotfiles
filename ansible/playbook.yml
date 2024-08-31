@@ -119,7 +119,44 @@
         src: /usr/bin/batcat
         dest: ${HOME}/.local/bin/bat
         state: link
-      when: ansible_os_family == "Debian"
+      when: ansible_os_family == "Debian" 
+    
+    - name: Get os and arch
+      set_fact:
+        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+        os: "{{ 'linux' if ansible_system == 'Debian' else 'darwin' }}"
+        exa-ns: "{{ 'RitchieS' if ansible_os_family == 'Darwin' else 'ptavares' }}"
+
+    - name: Download Go
+      get_url:
+          url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
+          dest: /usr/local/go.tar.gz
+
+    - name: Extract Go
+      unarchive:
+          src: /usr/local/go.tar.gz
+          dest: /usr/local
+          remote_src: yes
+
+    - name: Remove Go tarball
+      file:
+        path: /usr/local/go.tar.gz
+        state: absent
+
+    - name: Set environment variables 
+      lineinfile:
+        path: ${HOME}/.zshrc
+        create: yes
+
+    - name: Install Go tools
+      become: true
+      environment:
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+      shell: |
+        /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
+        /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
 
     - name: Generate locale
       locale_gen:
@@ -148,20 +185,7 @@
         - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
         - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
         - { repo: 'https://github.com/tmux-plugins/tpm', dest: '${HOME}/.tmux/plugins/tpm' }
-
-    - name: Clone zsh-exa for Darwin
-      git:
-        repo: 'https://github.com/RitchieS/zsh-exa.git'
-        dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa'
-        depth: 1
-      when: ansible_os_family == "Darwin"
-
-    - name: Clone zsh-exa for Debian
-      git:
-        repo: 'https://github.com/ptavares/zsh-exa.git'
-        dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa'
-        depth: 1
-      when: ansible_os_family == "Debian"
+        - { repo: 'https://github.com/{{ exa-ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
 
     - name: Remove .config
       file:
@@ -178,12 +202,6 @@
         - { src: '../shell', dest: '${HOME}/.config/' }
         - { src: '../tmux', dest: '${HOME}/.config/' }
 
-    - name: Add extra_cmd to .zshrc
-      lineinfile:
-        path: "${HOME}/.zshrc"
-        line: ""
-        create: yes
-
     - name: Add source commands to .zshrc
       blockinfile:
         path: "${HOME}/.zshrc"
@@ -195,6 +213,8 @@
           source ${HOME}/.config/shell/colors.zsh
           source ${HOME}/.config/fzf/completion.sh
           source ${HOME}/.config/fzf/keybindings.sh
+          export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin
+        create: yes
 
     - name: Run tmux plugin install script
       command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
