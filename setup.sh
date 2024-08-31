@@ -6,7 +6,6 @@ extra_cmd=""
 if [[ $(uname) == "Darwin" ]]; then
     brew install --force python3 tmux neovim fzf ripgrep fd llvm jq git-lfs exa ncdu bottom cmake unzip thefuck bat node wget
 elif command -v apt >/dev/null; then
-
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
     if [[ ! -d ${HOME}/.local/bin ]]; then
         mkdir -p "${HOME}"/.local/bin
@@ -30,8 +29,8 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/t
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/themes/powerlevel10k
 git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/zsh-syntax-highlighting
 git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
-git clone --depth=1 https://github.com/wfxr/forgit.git "${ZSH_CUSTOM:-~/.oh-my-zsh/custom}"/plugins/forgit
-git clone --depth=1 https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/zsh-autoswitch-virtualenv
+git clone --depth=1 https://github.com/wfxr/forgit.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/forgit
+git clone --depth=1 https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/autoswitch_virtualenv
 
 if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then
     git clone --depth=1 https://github.com/RitchieS/zsh-exa.git "${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}"/plugins/zsh-exa
@@ -51,6 +50,7 @@ echo "source ${HOME}/.config/shell/colors.zsh" >>"${HOME}"/.zshrc
 echo "source ${HOME}/.config/fzf/completion.sh" >>"${HOME}"/.zshrc
 echo "source ${HOME}/.config/fzf/keybindings.sh" >>"${HOME}"/.zshrc
 
+rm -rf "${HOME}"/.config
 mkdir "${HOME}"/.config
 
 mkdir "${HOME}"/.config/fzf
