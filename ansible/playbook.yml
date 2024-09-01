@@ -2,6 +2,18 @@
 - hosts: localhost
   gather_facts: true
   tasks:
+
+    - name: Generate ed25519 GPG key pair
+      gpg_key:
+        name: "Fabrizio Perria"
+        email: "fabrizio.perria@gmail.com"
+        key_type: ed25519
+        state: present
+      register: gpg_key
+
+    - name: Display public key
+      debug:
+        msg: "{{ gpg_key.public_key }}"
     - name: Get os and arch
       set_fact:
         arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
@@ -310,6 +322,10 @@
         shell: /bin/zsh
       become: true
 
+    - name: Generate SSH key pair
+      openssh_keypair:
+        path: "${HOME}/.ssh/id_ed25519"
+        type: ed25519
 
   environment:
     LANG: en_US.UTF-8
