@@ -1,0 +1,289 @@
+---
+- hosts: localhost
+  gather_facts: true
+  tasks:
+    - name: Get os and arch
+      set_fact:
+        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+        os: "{{ 'linux' if ansible_os_family == 'Debian' else 'darwin' }}"
+        fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+        exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"
+
+    - name: Install packages on macOS
+      homebrew:
+        name:
+          - python3
+          - fastfetch
+          - tmux
+          - neovim
+          - fzf
+          - ripgrep
+          - fd
+          - llvm
+          - jq
+          - git-lfs
+          - exa
+          - ncdu
+          - bottom
+          - cmake
+          - unzip
+          - thefuck
+          - bat
+          - wget
+          - gnu-tar
+        state: present
+      when: ansible_os_family == "Darwin"
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install required packages
+      apt:
+        name:
+          - software-properties-common
+          - apt-transport-https
+          - wget
+          - curl
+          - locales
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Add Neovim PPA
+      apt_repository:
+        repo: ppa:neovim-ppa/unstable
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Update apt cache again
+      apt:
+        update_cache: yes
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install packages on Ubuntu
+      apt:
+        name:
+          - zsh
+          - git
+          - tmux
+          - neovim
+          - sudo
+          - python3-neovim
+          - python3-dev
+          - python3-pip
+          - python3-venv
+          - fontconfig
+          - unzip
+          - ripgrep
+          - fzf
+          - fd-find
+          - bat
+          - exa
+          - htop
+          - ncdu
+          - tree
+          - clang
+          - cmake
+          - build-essential
+          - net-tools
+          - traceroute
+          - jq
+          - git-lfs
+          - axel
+          - sshfs
+          - clangd
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Download the latest release of fastfetch
+      get_url:
+        url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb"
+        dest: "/tmp/fastfetch.deb"
+      when: ansible_os_family == "Debian"
+
+    - name: Install fastfetch deb
+      apt:
+        deb: "/tmp/fastfetch.deb"
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Download and install NVM
+      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+    - name: Load NVM and install Node.js
+      shell: >
+        . {{ ansible_env.HOME }}/.nvm/nvm.sh &&
+        nvm install --lts &&
+        nvm alias default lts/*
+      environment:
+        NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+      args:
+        executable: /bin/bash
+
+    - name: Download fzf 
+      git:
+        repo: 'https://github.com/junegunn/fzf.git'
+        dest: '${HOME}/.fzf'
+        depth: 1
+    
+    - name: Install fzf
+      command: ${HOME}/.fzf/install --all --no-update-rc
+
+    - name: Create local bin directory
+      file:
+        path: ${HOME}/.local/bin
+        state: directory
+      when: ansible_os_family == "Debian"
+
+    - name: Create symlink for fd
+      file:
+        src: /usr/bin/fdfind
+        dest: ${HOME}/.local/bin/fd
+        state: link
+      when: ansible_os_family == "Debian"
+    
+    - name: Create symlink for python
+      shell: rm -f $(dirname $(which python3))/python && ln -s $(which python3) $(dirname $(which python3))/python 
+      become: true
+    
+    - name: Create symlink for bat
+      file:
+        src: /usr/bin/batcat
+        dest: ${HOME}/.local/bin/bat
+        state: link
+      when: ansible_os_family == "Debian" 
+    
+    - name: Remove any existing Go installation
+      file:
+        path: /usr/local/go
+        state: absent
+      become: true
+
+    - name: Download Go
+      get_url:
+          url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
+          dest: /tmp/go.tar.gz
+
+    - name: Extract go.tar.gz
+      unarchive:
+        src: "/tmp/go.tar.gz"
+        dest: "/usr/local/"
+        remote_src: yes
+      become: true
+
+    - name: Remove Go tarball
+      file:
+        path: /tmp/go.tar.gz
+        state: absent
+
+    - name: Install Go tools
+      become: true
+      environment:
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+      shell: |
+        /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
+        /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+
+    - name: Generate locale
+      locale_gen:
+        name: en_US.UTF-8
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Remove .oh-my-zsh
+      file:
+        path: "${HOME}/.oh-my-zsh"
+        state: absent
+
+    - name: Install oh-my-zsh
+      shell: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+    - name: Clone repositories
+      git:
+        repo: "{{ item.repo }}"
+        dest: "{{ item.dest }}"
+        depth: 1
+      loop:
+        - { repo: 'https://github.com/romkatv/powerlevel10k.git', dest: '${HOME}/.oh-my-zsh/custom/themes/powerlevel10k' }
+        - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting' }
+        - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions' }
+        - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
+        - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
+        - { repo: 'https://github.com/tmux-plugins/tpm', dest: '${HOME}/.tmux/plugins/tpm' }
+        - { repo: 'https://github.com/{{ exa_ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
+
+    - name: Remove .config
+      file:
+        path: "${HOME}/.config"
+        state: absent
+
+    - name: Copy files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { src: '../fzf', dest: '${HOME}/.config/' }
+        - { src: '../nvim', dest: '${HOME}/.config/' }
+        - { src: '../shell', dest: '${HOME}/.config/' }
+        - { src: '../tmux', dest: '${HOME}/.config/' }
+
+    - name: Add source commands to .zshrc
+      blockinfile:
+        path: "${HOME}/.zshrc"
+        block: |
+          source ${HOME}/.config/shell/aliases.zsh
+          source ${HOME}/.config/shell/exports.zsh
+          source ${HOME}/.config/shell/zsh.zsh
+          source ${HOME}/.config/shell/p10k.zsh
+          source ${HOME}/.config/shell/colors.zsh
+          source ${HOME}/.config/fzf/completion.sh
+          source ${HOME}/.config/fzf/keybindings.sh
+          export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
+          export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
+        create: yes
+
+    - name: Run tmux plugin install script
+      command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+    - name: Remove nvim cache
+      file:
+        path: "${HOME}/.cache/nvim"
+        state: absent
+
+    - name: Run nvim commands
+      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+
+    - name: Set default shell to zsh
+      user:
+        name: "{{ansible_env.USER}}"
+        force: true
+        shell: /bin/zsh
+      become: true
+
+    - name: ensure fonts directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.fonts"
+        state: directory
+      when: ansible_os_family == "Debian"
+
+    - name: Download Hack
+      unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+        dest: "${HOME}/.fonts/"
+        remote_src: yes
+      when: ansible_os_family == "Debian"
+
+  environment:
+    LANG: en_US.UTF-8
+    LANGUAGE: en_US:en
+    LC_ALL: en_US.UTF-8
