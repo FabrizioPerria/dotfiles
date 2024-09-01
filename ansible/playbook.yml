@@ -2,6 +2,12 @@
 - hosts: localhost
   gather_facts: true
   tasks:
+    - name: Get os and arch
+      set_fact:
+        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+        os: "{{ 'linux' if ansible_system == 'Debian' else 'darwin' }}"
+        exa_ns: "{{ 'RitchieS' if ansible_os_family == 'Darwin' else 'ptavares' }}"
+
     - name: Install packages on macOS
       homebrew:
         name:
@@ -23,6 +29,7 @@
           - bat
           - node
           - wget
+          - gnu-tar
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -65,7 +72,6 @@
           - tmux
           - neovim
           - sudo
-          - wget
           - python3-neovim
           - python3-dev
           - python3-pip
@@ -83,6 +89,8 @@
           - clang
           - cmake
           - build-essential
+          - net-tools
+          - traceroute
           - jq
           - git-lfs
           - axel
@@ -121,32 +129,28 @@
         state: link
       when: ansible_os_family == "Debian" 
     
-    - name: Get os and arch
-      set_fact:
-        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-        os: "{{ 'linux' if ansible_system == 'Debian' else 'darwin' }}"
-        exa-ns: "{{ 'RitchieS' if ansible_os_family == 'Darwin' else 'ptavares' }}"
+    - name: Remove any existing Go installation
+      file:
+        path: /usr/local/go
+        state: absent
+      become: true
 
     - name: Download Go
       get_url:
           url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
-          dest: /usr/local/go.tar.gz
+          dest: ./go.tar.gz
 
     - name: Extract Go
       unarchive:
-          src: /usr/local/go.tar.gz
-          dest: /usr/local
-          remote_src: yes
+        src: ./go.tar.gz
+        dest: /usr/local
+        remote_src: yes
+      become: true
 
     - name: Remove Go tarball
       file:
-        path: /usr/local/go.tar.gz
+        path: ./go.tar.gz
         state: absent
-
-    - name: Set environment variables 
-      lineinfile:
-        path: ${HOME}/.zshrc
-        create: yes
 
     - name: Install Go tools
       become: true
@@ -185,7 +189,7 @@
         - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
         - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
         - { repo: 'https://github.com/tmux-plugins/tpm', dest: '${HOME}/.tmux/plugins/tpm' }
-        - { repo: 'https://github.com/{{ exa-ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
+        - { repo: 'https://github.com/{{ exa_ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
 
     - name: Remove .config
       file:
@@ -213,7 +217,7 @@
           source ${HOME}/.config/shell/colors.zsh
           source ${HOME}/.config/fzf/completion.sh
           source ${HOME}/.config/fzf/keybindings.sh
-          export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin
+          export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
         create: yes
 
     - name: Run tmux plugin install script
