@@ -4,14 +4,16 @@
   tasks:
     - name: Get os and arch
       set_fact:
-        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-        os: "{{ 'linux' if ansible_system == 'Debian' else 'darwin' }}"
-        exa_ns: "{{ 'RitchieS' if ansible_os_family == 'Darwin' else 'ptavares' }}"
+        arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+        os: "{{ 'linux' if ansible_os_family == 'Debian' else 'darwin' }}"
+        fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+        exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"
 
     - name: Install packages on macOS
       homebrew:
         name:
           - python3
+          - fastfetch
           - tmux
           - neovim
           - fzf
@@ -27,7 +29,6 @@
           - unzip
           - thefuck
           - bat
-          - node
           - wget
           - gnu-tar
         state: present
@@ -36,6 +37,7 @@
     - name: Update apt cache
       apt:
         update_cache: yes
+      become: true
       when: ansible_os_family == "Debian"
 
     - name: Install required packages
@@ -47,26 +49,24 @@
           - curl
           - locales
         state: present
+      become: true
       when: ansible_os_family == "Debian"
 
     - name: Add Neovim PPA
       apt_repository:
         repo: ppa:neovim-ppa/unstable
-      when: ansible_os_family == "Debian"
-
-    - name: Add NodeSource repository
-      shell: curl -fsSL https://deb.nodesource.com/setup_21.x | bash -
+      become: true
       when: ansible_os_family == "Debian"
 
     - name: Update apt cache again
       apt:
         update_cache: yes
+      become: true
       when: ansible_os_family == "Debian"
 
     - name: Install packages on Ubuntu
       apt:
         name:
-          - nodejs
           - zsh
           - git
           - tmux
@@ -96,9 +96,36 @@
           - axel
           - sshfs
           - clangd
-          - python3-debugpy
         state: present
+      become: true
       when: ansible_os_family == "Debian"
+
+    - name: Download the latest release of fastfetch
+      get_url:
+        url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb"
+        dest: "/tmp/fastfetch.deb"
+      when: ansible_os_family == "Debian"
+
+    - name: Install fastfetch deb
+      apt:
+        deb: "/tmp/fastfetch.deb"
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Download and install NVM
+      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+    - name: Load NVM and install Node.js
+      shell: >
+        . {{ ansible_env.HOME }}/.nvm/nvm.sh &&
+        nvm install --lts &&
+        nvm alias default lts/*
+      environment:
+        NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+      args:
+        executable: /bin/bash
 
     - name: Download fzf 
       git:
@@ -121,7 +148,11 @@
         dest: ${HOME}/.local/bin/fd
         state: link
       when: ansible_os_family == "Debian"
-
+    
+    - name: Create symlink for python
+      shell: rm -f $(dirname $(which python3))/python && ln -s $(which python3) $(dirname $(which python3))/python 
+      become: true
+    
     - name: Create symlink for bat
       file:
         src: /usr/bin/batcat
@@ -138,18 +169,18 @@
     - name: Download Go
       get_url:
           url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
-          dest: ./go.tar.gz
+          dest: /tmp/go.tar.gz
 
-    - name: Extract Go
+    - name: Extract go.tar.gz
       unarchive:
-        src: ./go.tar.gz
-        dest: /usr/local
+        src: "/tmp/go.tar.gz"
+        dest: "/usr/local/"
         remote_src: yes
       become: true
 
     - name: Remove Go tarball
       file:
-        path: ./go.tar.gz
+        path: /tmp/go.tar.gz
         state: absent
 
     - name: Install Go tools
@@ -218,6 +249,7 @@
           source ${HOME}/.config/fzf/completion.sh
           source ${HOME}/.config/fzf/keybindings.sh
           export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
+          export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
         create: yes
 
     - name: Run tmux plugin install script
@@ -230,6 +262,13 @@
 
     - name: Run nvim commands
       command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+
+    - name: Set default shell to zsh
+      user:
+        name: "{{ ansible_user }}"
+        shell: /usr/bin/zsh
+      become: true
+      when: ansible_os_family == "Debian"
 
   environment:
     LANG: en_US.UTF-8
