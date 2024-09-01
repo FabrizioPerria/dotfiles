@@ -265,9 +265,22 @@
 
     - name: Set default shell to zsh
       user:
-        name: "{{ ansible_user }}"
-        shell: /usr/bin/zsh
+        name: "{{ansible_env.USER}}"
+        force: true
+        shell: /bin/zsh
       become: true
+
+    - name: ensure fonts directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.fonts"
+        state: directory
+      when: ansible_os_family == "Debian"
+
+    - name: Download Hack
+      unarchive:
+        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+        dest: "${HOME}/.fonts/"
+        remote_src: yes
       when: ansible_os_family == "Debian"
 
   environment:
