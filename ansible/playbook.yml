@@ -31,6 +31,8 @@
           - bat
           - wget
           - gnu-tar
+          - alacritty
+          - fontconfig
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -96,7 +98,15 @@
           - axel
           - sshfs
           - clangd
+          - snapd
         state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install alacritty on Ubuntu
+      community.general.snap:
+        name: alacritty
+        classic: true
       become: true
       when: ansible_os_family == "Debian"
 
@@ -205,6 +215,11 @@
         path: "${HOME}/.oh-my-zsh"
         state: absent
 
+    - name: Remove .tmux
+      file:
+        path: "${HOME}/.tmux"
+        state: absent
+
     - name: Install oh-my-zsh
       shell: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
@@ -227,15 +242,40 @@
         path: "${HOME}/.config"
         state: absent
 
+    - name: ensure fonts directory
+      file:
+        path: "${HOME}/.fonts"
+        state: directory
+      when: ansible_os_family == 'Debian'
+
+    - name: Copy font files on ubuntu
+      copy:
+        src: "../NerdFonts/"
+        dest: "${HOME}/.fonts/"
+      when: ansible_os_family == 'Debian'
+
+    - name: Copy font files on mac
+      copy:
+        src: "../NerdFonts/"
+        dest: "/Library/Fonts/"
+      when: ansible_os_family == 'Darwin'
+
+    - name: Refresh font cache
+      shell: fc-cache -fv
+      become: true
+      when: ansible_os_family == 'Debian'
+
     - name: Copy files
       copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+        src: "{{ item }}"
+        dest: "${HOME}/.config/"
       loop:
-        - { src: '../fzf', dest: '${HOME}/.config/' }
-        - { src: '../nvim', dest: '${HOME}/.config/' }
-        - { src: '../shell', dest: '${HOME}/.config/' }
-        - { src: '../tmux', dest: '${HOME}/.config/' }
+        - '../fzf'
+        - '../nvim'
+        - '../shell'
+        - '../tmux'
+        - '../alacritty'
+        - '../fastfetch'
 
     - name: Add source commands to .zshrc
       blockinfile:
@@ -270,18 +310,6 @@
         shell: /bin/zsh
       become: true
 
-    - name: ensure fonts directory
-      file:
-        path: "{{ lookup('env', 'HOME') }}/.fonts"
-        state: directory
-      when: ansible_os_family == "Debian"
-
-    - name: Download Hack
-      unarchive:
-        src: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
-        dest: "${HOME}/.fonts/"
-        remote_src: yes
-      when: ansible_os_family == "Debian"
 
   environment:
     LANG: en_US.UTF-8
