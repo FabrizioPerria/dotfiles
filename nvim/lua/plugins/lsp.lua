@@ -1,5 +1,12 @@
 return {
     {
+        "nvim-java/nvim-java",
+        config = false,
+        dependencies = {
+            { "neovim/nvim-lspconfig", }
+        },
+    },
+    {
         "L3MON4D3/LuaSnip",
         lazy = true,
         build = "make install_jsregexp",
@@ -14,7 +21,7 @@ return {
             "neovim/nvim-lspconfig",
             "llllvvuu/nvim-cmp",
             -- 'hrsh7th/nvim-cmp',
-            'hrsh7th/cmp-nvim-lsp',
+            'hrsh8th/cmp-nvim-lsp',
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "L3MON4D3/LuaSnip",
@@ -53,14 +60,6 @@ return {
                 vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
                 vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
                 vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
-
-                -- lsp_zero.default_keymaps({
-                --     buffer = bufnr,
-                --     exclude = {
-                --         "<F2>",
-                --         "<F4>",
-                --     },
-                -- })
             end)
 
             require("mason").setup({})
@@ -69,6 +68,8 @@ return {
                     lsp_zero.default_setup,
                 },
             })
+            require('java').setup({})
+            require('lspconfig').java.setup({})
             require('lspconfig').lua_ls.setup({
                 settings = {
                     Lua = {

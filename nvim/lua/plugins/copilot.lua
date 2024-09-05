@@ -77,6 +77,11 @@ return {
         },
         config = function()
             require("copilot").setup({
+                filetypes = {
+                    yaml = true,
+                    yml = true,
+                    json = true,
+                },
                 panel = { enabled = false },
                 suggestion = {
                     enabled = true,

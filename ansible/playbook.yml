@@ -33,6 +33,8 @@
           - gnu-tar
           - alacritty
           - fontconfig
+          - openjdk
+          - gradle
         state: present
       when: ansible_os_family == "Darwin"
 
