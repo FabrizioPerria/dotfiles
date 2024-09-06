@@ -43,6 +43,8 @@ return {
                     "delve",
 
                     -- "java-language-server",
+                    "java-debug-adapter",
+                    "java-test",
 
                     "stylua",
                     "lua-language-server",

@@ -81,6 +81,7 @@ return {
                     yaml = true,
                     yml = true,
                     json = true,
+                    java = true,
                 },
                 panel = { enabled = false },
                 suggestion = {

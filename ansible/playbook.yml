@@ -290,8 +290,9 @@
           source ${HOME}/.config/shell/colors.zsh
           source ${HOME}/.config/fzf/completion.sh
           source ${HOME}/.config/fzf/keybindings.sh
-          export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
+          export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH:/usr/local/go/bin:$HOME/.local/bin"
           export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
+          export JAVA_HOME=/opt/homebrew/opt/openjdk@21/bin/
         create: yes
 
     - name: Run tmux plugin install script
