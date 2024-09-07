@@ -24,13 +24,12 @@ return {
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    -- "basedpyright",
                     "mypy",
                     "ruff",
                     "black",
                     "debugpy",
 
-                    -- "clangd",
+                    "clangd",
                     "clang-format",
                     "codelldb",
                     "cmake-language-server",
@@ -41,8 +40,6 @@ return {
                     "impl",
                     "gomodifytags",
                     "delve",
-
-                    -- "java-language-server",
 
                     "stylua",
                     "lua-language-server",
@@ -62,7 +59,6 @@ return {
                     "vale",
                     "write-good",
                     "cspell",
-                    -- "misspell",
                     "proselint",
 
                     "bash-language-server",
@@ -70,7 +66,6 @@ return {
                     "beautysh",
                     "shfmt",
                     "shellcheck",
-                    -- "shellharden",
 
                     "ansible-language-server",
                     "css-lsp",
@@ -78,9 +73,9 @@ return {
                     "dockerfile-language-server",
                     "dot-language-server",
                     "editorconfig-checker",
-                    -- "html-lsp",
 
-                    -- "csharp-language-server",
+                    "tsserver",
+                    "tailwindcss"
                 },
             })
         end,
