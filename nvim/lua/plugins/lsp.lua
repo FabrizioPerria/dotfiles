@@ -1,5 +1,8 @@
 return {
     {
+        "nvim-java/nvim-java"
+    },
+    {
         "L3MON4D3/LuaSnip",
         lazy = true,
         build = "make install_jsregexp",
@@ -64,11 +67,13 @@ return {
             end)
 
             require("mason").setup({})
+            require('java').setup()
             require("mason-lspconfig").setup({
                 handlers = {
                     lsp_zero.default_setup,
                 },
             })
+            require('lspconfig').jdtls.setup({})
             require('lspconfig').lua_ls.setup({
                 settings = {
                     Lua = {
