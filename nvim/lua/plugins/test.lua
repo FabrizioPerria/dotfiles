@@ -5,32 +5,32 @@ return {
         config = true,
         lazy = true,
     },
-    --    {
-    --        "rest-nvim/rest.nvim",
-    --        ft = "http",
-    --        dependencies = {
-    --            "luarocks.nvim",
-    --            "nvim-treesitter/nvim-treesitter",
-    --            "nvim-telescope/telescope.nvim",
-    --        },
-    --        filetypes = { "http" },
-    --        keys = {
-    --            { "<leader>rr", "<cmd>Rest run<cr>",                  desc = "Run request under the cursor", },
-    --            { "<leader>rl", "<cmd>Rest run last<cr>",             desc = "Re-run latest request", },
-    --            { "<leader>re", "<cmd>Telescope rest select_env<cr>", desc = "Select environment file", },
-    --
-    --        },
-    --        config = function()
-    --            require("rest-nvim").setup({
-    --                result = {
-    --                    split = {
-    --                        stay_in_current_window_after_split = false,
-    --                    },
-    --                },
-    --            })
-    --            require('telescope').load_extension('rest')
-    --        end,
-    --     },
+    {
+        "rest-nvim/rest.nvim",
+        ft = "http",
+        dependencies = {
+            "luarocks.nvim",
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-telescope/telescope.nvim",
+        },
+        filetypes = { "http" },
+        keys = {
+            { "<leader>rr", "<cmd>Rest run<cr>",                  desc = "Run request under the cursor", },
+            { "<leader>rl", "<cmd>Rest run last<cr>",             desc = "Re-run latest request", },
+            { "<leader>re", "<cmd>Telescope rest select_env<cr>", desc = "Select environment file", },
+
+        },
+        config = function()
+            require("rest-nvim").setup({
+                result = {
+                    split = {
+                        stay_in_current_window_after_split = false,
+                    },
+                },
+            })
+            require('telescope').load_extension('rest')
+        end,
+    },
     {
         "nvim-neotest/neotest",
         dependencies = {
