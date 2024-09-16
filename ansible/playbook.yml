@@ -70,6 +70,11 @@
       apt:
         name:
           - zsh
+          - i3
+          - picom
+          - polybar
+          - feh
+          - rofi
           - git
           - tmux
           - neovim
@@ -81,7 +86,6 @@
           - fontconfig
           - unzip
           - ripgrep
-          - fzf
           - fd-find
           - bat
           - exa
@@ -277,6 +281,18 @@
         - '../alacritty'
         - '../fastfetch'
 
+    - name: Copy files (linux only)
+      copy:
+        src: "{{ item }}"
+        dest: "${HOME}/.config/"
+      loop:
+        - '../i3'
+        - '../picom'
+        - '../polybar'
+        - '../feh'
+        - '../rofi'
+      when: ansible_os_family == 'Debian'
+
     - name: Add source commands to .zshrc
       blockinfile:
         path: "${HOME}/.zshrc"
@@ -311,7 +327,7 @@
         state: absent
 
     - name: Run nvim commands
-      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
 
     - name: Set default shell to zsh
       user:

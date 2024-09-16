@@ -3,19 +3,19 @@ FROM ubuntu:23.10
 RUN apt update
 RUN apt install -y software-properties-common apt-transport-https wget curl locales
 RUN add-apt-repository ppa:neovim-ppa/unstable
-RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash 
-RUN apt update
-RUN apt install -y nodejs zsh git tmux neovim sudo wget python3-neovim python3-dev python3-pip python3-venv fontconfig unzip ripgrep \
-    fzf ripgrep fd-find bat exa htop ncdu tree clang cmake build-essential jq git-lfs axel sshfs clangd python3-debugpy
 
-# RUN axel -n8 https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-arm64
-# RUN mv hadolint-Linux-arm64 /usr/bin/hadolint
+RUN apt update
+RUN apt install -y zsh git tmux neovim sudo python3-neovim python3-dev python3-pip python3-venv fontconfig unzip ripgrep \
+    fzf ripgrep fd-find bat exa htop ncdu tree clang cmake build-essential jq git-lfs axel sshfs clangd snapd
 
 RUN useradd -ms /bin/zsh -d /home/fabrizio fabrizio
 RUN echo "fabrizio:test" | chpasswd
 RUN usermod -aG sudo fabrizio
 
 RUN echo "fabrizio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+RUN axel -n8 https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb --output fastfetch.deb
+RUN dpkg -i fastfetch.deb
 
 RUN axel -n8 https://go.dev/dl/go1.22.1.linux-arm64.tar.gz --output=go.tar.gz
 RUN tar -C /usr/local -xzf go.tar.gz

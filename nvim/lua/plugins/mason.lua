@@ -28,6 +28,7 @@ return {
                     "ruff",
                     "black",
                     "debugpy",
+                    "python-lsp-server",
 
                     "clangd",
                     "clang-format",
