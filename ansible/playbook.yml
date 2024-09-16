@@ -167,6 +167,20 @@
       shell: rm -f $(dirname $(which python3))/python && ln -s $(which python3) $(dirname $(which python3))/python 
       become: true
     
+    - name: Create symlink for tmux (Mac)
+      file:
+        src: /opt/homebrew/bin/tmux
+        dest: /usr/local/bin/tmux
+        state: link
+      when: ansible_os_family == "Darwin"
+
+    - name: Create symlink for tmux (Linux)
+      file:
+        src: /usr/bin/tmux
+        dest: /usr/local/bin/tmux
+        state: link
+      when: ansible_os_family == "Debian"
+
     - name: Create symlink for bat
       file:
         src: /usr/bin/batcat
@@ -292,6 +306,14 @@
         - '../feh'
         - '../rofi'
       when: ansible_os_family == 'Debian'
+
+    - name: Copy files (mac only)
+      copy:
+        src: "{{ item }}"
+        dest: "${HOME}/.config/"
+      loop:
+        - '../aerospace'
+      when: ansible_os_family == 'Darwin'
 
     - name: Add source commands to .zshrc
       blockinfile:
