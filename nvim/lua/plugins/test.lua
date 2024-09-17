@@ -9,7 +9,7 @@ return {
         "rest-nvim/rest.nvim",
         ft = "http",
         dependencies = {
-            "luarocks.nvim",
+            "vhyrro/luarocks.nvim",
             "nvim-treesitter/nvim-treesitter",
             "nvim-telescope/telescope.nvim",
         },

@@ -33,6 +33,7 @@
           - gnu-tar
           - alacritty
           - fontconfig
+          - luarocks
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -83,6 +84,7 @@
     - name: Install packages on Ubuntu
       apt:
         name:
+          - luarocks
           - zsh
           - i3
           - picom
