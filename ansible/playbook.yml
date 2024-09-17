@@ -60,6 +60,20 @@
       become: true
       when: ansible_os_family == "Debian"
 
+    - name: Add Albert repository to sources list
+      apt_repository:
+        repo: 'deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_22.04/ /'
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Add the GPG key for the repository
+      apt_key:
+        url: https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_22.04/Release.key
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
     - name: Update apt cache again
       apt:
         update_cache: yes
@@ -74,7 +88,7 @@
           - picom
           - polybar
           - feh
-          - rofi
+          - albert
           - git
           - tmux
           - neovim
@@ -179,6 +193,7 @@
         src: /usr/bin/tmux
         dest: /usr/local/bin/tmux
         state: link
+      become: true
       when: ansible_os_family == "Debian"
 
     - name: Create symlink for bat
