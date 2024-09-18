@@ -87,10 +87,8 @@
           - luarocks
           - zsh
           - i3
-          - picom
           - polybar
           - feh
-          - albert
           - git
           - tmux
           - neovim
@@ -318,10 +316,8 @@
         dest: "${HOME}/.config/"
       loop:
         - '../i3'
-        - '../picom'
         - '../polybar'
         - '../feh'
-        - '../rofi'
       when: ansible_os_family == 'Debian'
 
     - name: Copy files (mac only)
@@ -366,7 +362,7 @@
         state: absent
 
     - name: Run nvim commands
-      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
 
     - name: Set default shell to zsh
       user:
