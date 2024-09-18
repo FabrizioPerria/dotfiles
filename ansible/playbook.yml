@@ -75,6 +75,7 @@
           - i3
           - polybar
           - feh
+          - rofi
           - git
           - tmux
           - neovim
@@ -303,7 +304,15 @@
       loop:
         - '../i3'
         - '../polybar'
+        - '../rofi'
         - '../feh'
+      when: ansible_os_family == 'Debian'
+
+    - name: Fix polybar launcher permission
+      file:
+        path: ${HOME}/.config/polybar/scripts/launch.sh
+        state: touch
+        mode: u+rx,g-wx,o-rwx
       when: ansible_os_family == 'Debian'
 
     - name: Copy files (mac only)

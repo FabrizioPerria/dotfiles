@@ -59,7 +59,7 @@ return {
             end)
 
             require("mason").setup({})
-            require('java').setup()
+            -- require('java').setup()
             require("mason-lspconfig").setup({
                 handlers = {
                     lsp_zero.default_setup,
