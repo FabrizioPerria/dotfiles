@@ -16,6 +16,7 @@ set $mod Mod1
 # font pango:monospace 14
 font pango:MesloLGS NF 14
 for_window [class="^.*"] border pixel 1
+gaps inner 10
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -24,6 +25,7 @@ for_window [class="^.*"] border pixel 1
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec_always --no-startup-id ~/.config/polybar/scripts/launch.sh
+exec_always --no-startup-id picom &
 exec_always --no-startup-id feh --bg-scale ~/.config/feh/music2-transformed.jpeg
 exec --no-startup-id dex --autostart --environment i3
 
@@ -56,7 +58,8 @@ bindsym $mod+q kill
 
 # start dmenu (a program launcher)
 # bindsym $mod+d exec --no-startup-id dmenu_run
-bindsym $mod+d exec --no-startup-id rofi -show dmenu
+bindsym $mod+space  exec --no-startup-id rofi -show drun
+bindsym $mod+Tab exec --no-startup-id rofi -show window
 
 # change focus
 bindsym $mod+j focus left

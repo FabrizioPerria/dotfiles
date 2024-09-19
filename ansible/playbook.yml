@@ -89,7 +89,7 @@
           - ripgrep
           - fd-find
           - bat
-          - exa
+          - eza
           - htop
           - ncdu
           - tree
