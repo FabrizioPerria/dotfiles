@@ -13,6 +13,7 @@
       homebrew:
         name:
           - python3
+          - bash
           - fastfetch
           - tmux
           - neovim
@@ -76,6 +77,7 @@
           - polybar
           - feh
           - rofi
+          - picom
           - git
           - tmux
           - neovim
@@ -173,6 +175,7 @@
         src: /opt/homebrew/bin/tmux
         dest: /usr/local/bin/tmux
         state: link
+      become: true
       when: ansible_os_family == "Darwin"
 
     - name: Create symlink for tmux (Linux)
@@ -306,6 +309,7 @@
         - '../polybar'
         - '../rofi'
         - '../feh'
+        - '../picom'
       when: ansible_os_family == 'Debian'
 
     - name: Fix polybar launcher permission
