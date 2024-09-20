@@ -12,6 +12,7 @@
     - name: Install packages on macOS
       homebrew:
         name:
+          - amethyst
           - python3
           - bash
           - fastfetch
@@ -224,7 +225,7 @@
         /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
         /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+        # /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
 
     - name: Generate locale
       locale_gen:
@@ -246,6 +247,9 @@
     - name: Install oh-my-zsh
       shell: bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
+    - name: tpm
+      shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
     - name: Clone repositories
       git:
         repo: "{{ item.repo }}"
@@ -257,7 +261,6 @@
         - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions' }
         - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
         - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
-        - { repo: 'https://github.com/tmux-plugins/tpm', dest: '${HOME}/.tmux/plugins/tpm' }
         - { repo: 'https://github.com/{{ exa_ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
 
     - name: Remove .config
