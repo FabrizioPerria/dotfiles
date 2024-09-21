@@ -6,7 +6,7 @@ return {
             require 'hex'.setup()
         end,
         keys = {
-            { "<leader>xxx", function() require 'hex'.toggle() end, desc = "Toggle hex view" }
+            { "<leader>0x", function() require 'hex'.toggle() end, desc = "Toggle hex view" }
         }
     }
 
