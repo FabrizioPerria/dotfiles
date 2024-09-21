@@ -20,7 +20,8 @@ history = 99999
 save_to_clipboard = true
 
 [shell]
-program = "/usr/local/bin/tmux"
+program= "zsh"
+args=[ "-l", "-c", "tmux attach || tmux" ]
 
 [font]
 size = 11

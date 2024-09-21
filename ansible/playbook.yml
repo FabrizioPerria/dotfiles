@@ -12,7 +12,7 @@
     - name: Install packages on macOS
       homebrew:
         name:
-          - amethyst
+          - aerospace
           - python3
           - bash
           - fastfetch
