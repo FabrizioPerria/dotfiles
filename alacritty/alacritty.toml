@@ -12,6 +12,7 @@ padding = { x = 2, y = 2 }
 # startup_mode = "Fullscreen"
 startup_mode = "Windowed"
 option_as_alt = "Both"
+opacity = 0.9
 
 [scrolling]
 history = 99999

@@ -323,7 +323,7 @@
       loop:
         - '../i3'
         - '../polybar'
-        - '../rofi'
+        - '../ulauncher'
         - '../feh'
         - '../picom'
       when: ansible_os_family == 'Debian'
