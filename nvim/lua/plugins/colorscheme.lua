@@ -81,6 +81,7 @@ return {
             vim.api.nvim_set_hl(0, "SpecialKey", {
                 fg = "#444444"
             })
+            vim.cmd [[highlight Normal guibg=none]]
             vim.fn.sign_define("DapBreakpoint", {
                 text = "",
                 texthl = "DapBreakpoint",
@@ -132,7 +133,7 @@ return {
             require("colorizer").setup()
         end,
         keys = {
-            { "<leader>C", ":ColorizerToggle<CR>", desc = "Toggle Colorizer" }
+            { "<leader>C", ":ColorizerToggle<CR>", desc = "Show Colors" }
         }
     }
 }
