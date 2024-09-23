@@ -57,9 +57,16 @@
       become: true
       when: ansible_os_family == "Debian"
 
+
     - name: Add Neovim PPA
       apt_repository:
         repo: ppa:neovim-ppa/unstable
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Add ulauncher PPA
+      apt_repository:
+        repo: ppa:agornostal/ulauncher
       become: true
       when: ansible_os_family == "Debian"
 
@@ -77,7 +84,7 @@
           - i3
           - polybar
           - feh
-          - rofi
+          - ulauncher
           - picom
           - git
           - tmux
