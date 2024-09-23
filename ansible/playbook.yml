@@ -39,6 +39,12 @@
         state: present
       when: ansible_os_family == "Darwin"
 
+    - name: Set timezone to Europe/Copenhagen
+      become: true
+      community.general.timezone:
+        name: Europe/Copenhagen
+      when: ansible_os_family == "Debian"
+
     - name: Update apt cache
       apt:
         update_cache: yes
