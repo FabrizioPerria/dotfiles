@@ -238,7 +238,7 @@
         /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
         /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-        # /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
 
     - name: Generate locale
       locale_gen:
