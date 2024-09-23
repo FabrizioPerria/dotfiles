@@ -71,6 +71,7 @@ return {
                     "ansible-language-server",
                     "css-lsp",
                     "codespell",
+                    "docker-compose-language-service",
                     "dockerfile-language-server",
                     "dot-language-server",
                     "editorconfig-checker",
