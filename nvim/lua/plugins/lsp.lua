@@ -11,13 +11,27 @@ return {
         },
     },
     {
-        "VonHeikemen/lsp-zero.nvim",
-        branch = "v3.x",
+        "nvimtools/none-ls.nvim",
+        event = "VeryLazy",
+        opts = function()
+            local null_ls = require("null-ls")
+
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.completion.spell,
+                    null_ls.builtins.formatting.prettierd,
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.isort,
+                },
+            })
+        end,
+    },
+    {
+        "neovim/nvim-lspconfig",
         dependencies = {
-            "neovim/nvim-lspconfig",
             "llllvvuu/nvim-cmp",
-            -- 'hrsh7th/nvim-cmp',
-            'hrsh7th/cmp-nvim-lsp',
+            "hrsh7th/cmp-nvim-lsp",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "L3MON4D3/LuaSnip",
@@ -26,60 +40,64 @@ return {
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
-            local lsp_zero = require("lsp-zero").preset({
-                manage_nvim_cmp = {
-                    set_sources = "recommended",
-                    set_basic_mappings = true,
-                    set_extra_mappings = false,
-                    use_luasnip = true,
-                    set_format = true,
-                    documentation_window = true,
-                },
-            })
-
-            lsp_zero.on_attach(function(client, bufnr)
+            local lsp_attach_custom = function(client, bufnr)
                 local opts = { buffer = bufnr }
-                vim.keymap.set('n', '<leader>a', function() require("actions-preview").code_actions() end, opts)
-                vim.keymap.set('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<cr>', opts)
-                vim.keymap.set("n", "<leader>fo", '<cmd> lua vim.lsp.buf.format()<cr>', opts)
-                vim.keymap.set("n", "<leader>li", '<cmd>LspInfo<cr>', opts)
-                vim.keymap.set("n", "<leader>lr", '<cmd>LspRestart<cr>', opts)
-                vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-                vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-                vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-                vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-                vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-                vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-                vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-                vim.keymap.set({ 'n', 'x' }, '<F3>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
+                vim.keymap.set("n", "<leader>a", function()
+                    require("actions-preview").code_actions()
+                end, opts)
+                vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+                vim.keymap.set("n", "<leader>fo", "<cmd> lua vim.lsp.buf.format()<cr>", opts)
+                vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", opts)
+                vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", opts)
+                vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
+                vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+                vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
+                vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+                vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+                vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+                vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
+                vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
 
-                vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
-                vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
-                vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
-            end)
+                vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
+                vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
+                vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+            end
 
-            require("mason").setup({})
+            local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+
             -- require('java').setup()
+            local lspconfig = require("lspconfig")
+            require("mason").setup({})
             require("mason-lspconfig").setup({
                 handlers = {
-                    lsp_zero.default_setup,
+                    function(server_name)
+                        lspconfig[server_name].setup({
+                            on_attach = lsp_attach_custom,
+                            capabilities = lsp_capabilities,
+                        })
+                    end,
                 },
             })
-            require('lspconfig').jdtls.setup({})
-            require('lspconfig').lua_ls.setup({
+            lspconfig.lua_ls.setup({
                 settings = {
                     Lua = {
                         diagnostics = {
-                            globals = { 'vim' }
-                        }
-                    }
-                }
+                            globals = { "vim" },
+                        },
+                    },
+                },
             })
-            require('lspconfig').gopls.setup({
+            lspconfig.basedpyright.setup({
                 settings = {
                     basedpyright = {
-                        typeCheckingMode = "all",
+                        analysis = {
+                            typeCheckingMode = "standard",
+                        },
                     },
+                },
+            })
+            lspconfig.gopls.setup({
+                settings = {
                     gopls = {
                         gofumpt = true,
                         codelenses = {
@@ -127,13 +145,13 @@ return {
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
             "onsails/lspkind.nvim",
-            'saadparwaiz1/cmp_luasnip',
+            "saadparwaiz1/cmp_luasnip",
             "L3MON4D3/LuaSnip",
             "zbirenbaum/copilot.lua",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lua",
-            "hrsh7th/cmp-cmdline"
+            "hrsh7th/cmp-cmdline",
         },
         -- event = "VeryLazy",
         lazy = true,

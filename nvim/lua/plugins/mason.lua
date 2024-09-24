@@ -13,22 +13,24 @@ return {
             })
         end,
     },
-    {
-        "williamboman/mason-lspconfig.nvim",
-        config = function()
-            require("mason-lspconfig").setup()
-        end,
-    },
+    -- {
+    --     "williamboman/mason-lspconfig.nvim",
+    --     config = function()
+    --         require("mason-lspconfig").setup()
+    --     end,
+    -- },
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    "mypy",
+                    -- "mypy",
                     "ruff",
                     "black",
+                    "isort",
                     "debugpy",
-                    "python-lsp-server",
+                    -- "python-lsp-server",
+                    "basedpyright",
 
                     "clangd",
                     "clang-format",
@@ -77,7 +79,9 @@ return {
                     "editorconfig-checker",
 
                     "tsserver",
-                    "tailwindcss"
+                    "tailwindcss",
+                    "eslint-lsp",
+                    "prettierd",
                 },
             })
         end,
