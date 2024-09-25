@@ -8,6 +8,7 @@ return {
         build = "make install_jsregexp",
         dependencies = {
             "rafamadriz/friendly-snippets",
+            "mireq/luasnip-snippets",
         },
     },
     {
@@ -157,12 +158,14 @@ return {
         lazy = true,
         config = function()
             require("luasnip/loaders/from_vscode").lazy_load()
+            require("luasnip/loaders/from_snipmate").lazy_load()
+            require("luasnip_snippets.common.snip_utils").setup()
         end,
         opts = function()
             local cmp = require("cmp")
             require("cmp").setup({
                 completion = {
-                    -- autocomplete = false
+                    -- autocomplete = false,
                 },
                 formatting = {
                     format = require("lspkind").cmp_format({
@@ -205,11 +208,11 @@ return {
                     ["Down"] = cmp.mapping.select_next_item({
                         behavior = cmp.SelectBehavior.Select,
                     }),
-                    ["<CR>"] = cmp.mapping.confirm({
+                    ["<Enter>"] = cmp.mapping.confirm({
+                        behavior = cmp.ConfirmBehavior.Replace,
                         select = true,
                     }),
                     ["<S-Tab>"] = cmp.mapping.complete({
-                        -- ["<C-Space>"] = cmp.mapping.complete({
                         reason = cmp.ContextReason.Auto,
                     }),
                     ["<C-j>"] = cmp.mapping.scroll_docs(4),
