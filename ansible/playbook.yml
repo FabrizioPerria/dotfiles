@@ -36,6 +36,7 @@
           - alacritty
           - fontconfig
           - luarocks
+          - axel
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -62,7 +63,6 @@
         state: present
       become: true
       when: ansible_os_family == "Debian"
-
 
     - name: Add Neovim PPA
       apt_repository:
@@ -106,7 +106,6 @@
           - fd-find
           - bat
           - eza
-          - htop
           - ncdu
           - tree
           - clang
@@ -158,12 +157,12 @@
       args:
         executable: /bin/bash
 
-    - name: Download fzf 
+    - name: Download fzf
       git:
-        repo: 'https://github.com/junegunn/fzf.git'
-        dest: '${HOME}/.fzf'
+        repo: "https://github.com/junegunn/fzf.git"
+        dest: "${HOME}/.fzf"
         depth: 1
-    
+
     - name: Install fzf
       command: ${HOME}/.fzf/install --all --no-update-rc
 
@@ -179,11 +178,11 @@
         dest: ${HOME}/.local/bin/fd
         state: link
       when: ansible_os_family == "Debian"
-    
+
     - name: Create symlink for python
-      shell: rm -f $(dirname $(which python3))/python && ln -s $(which python3) $(dirname $(which python3))/python 
+      shell: rm -f $(dirname $(which python3))/python && ln -s $(which python3) $(dirname $(which python3))/python
       become: true
-    
+
     - name: Create symlink for tmux (Mac)
       file:
         src: /opt/homebrew/bin/tmux
@@ -205,8 +204,8 @@
         src: /usr/bin/batcat
         dest: ${HOME}/.local/bin/bat
         state: link
-      when: ansible_os_family == "Debian" 
-    
+      when: ansible_os_family == "Debian"
+
     - name: Remove any existing Go installation
       file:
         path: /usr/local/go
@@ -215,8 +214,8 @@
 
     - name: Download Go
       get_url:
-          url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
-          dest: /tmp/go.tar.gz
+        url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
+        dest: /tmp/go.tar.gz
 
     - name: Extract go.tar.gz
       unarchive:
@@ -269,12 +268,30 @@
         dest: "{{ item.dest }}"
         depth: 1
       loop:
-        - { repo: 'https://github.com/romkatv/powerlevel10k.git', dest: '${HOME}/.oh-my-zsh/custom/themes/powerlevel10k' }
-        - { repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting' }
-        - { repo: 'https://github.com/zsh-users/zsh-autosuggestions', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions' }
-        - { repo: 'https://github.com/wfxr/forgit.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/forgit' }
-        - { repo: 'https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv' }
-        - { repo: 'https://github.com/{{ exa_ns }}/zsh-exa.git', dest: '${HOME}/.oh-my-zsh/custom/plugins/zsh-exa' }
+        - {
+            repo: "https://github.com/romkatv/powerlevel10k.git",
+            dest: "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k",
+          }
+        - {
+            repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
+          }
+        - {
+            repo: "https://github.com/zsh-users/zsh-autosuggestions",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
+          }
+        - {
+            repo: "https://github.com/wfxr/forgit.git",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
+          }
+        - {
+            repo: "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
+          }
+        - {
+            repo: "https://github.com/{{ exa_ns }}/zsh-exa.git",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-exa",
+          }
 
     - name: Remove .config
       file:
@@ -309,23 +326,23 @@
         src: "{{ item }}"
         dest: "${HOME}/.config/"
       loop:
-        - '../fzf'
-        - '../nvim'
-        - '../shell'
-        - '../tmux'
-        - '../alacritty'
-        - '../fastfetch'
+        - "../fzf"
+        - "../nvim"
+        - "../shell"
+        - "../tmux"
+        - "../alacritty"
+        - "../fastfetch"
 
     - name: Copy files (linux only)
       copy:
         src: "{{ item }}"
         dest: "${HOME}/.config/"
       loop:
-        - '../i3'
-        - '../polybar'
-        - '../ulauncher'
-        - '../feh'
-        - '../picom'
+        - "../i3"
+        - "../polybar"
+        - "../ulauncher"
+        - "../feh"
+        - "../picom"
       when: ansible_os_family == 'Debian'
 
     - name: Fix polybar launcher permission
@@ -340,7 +357,7 @@
         src: "{{ item }}"
         dest: "${HOME}/.config/"
       loop:
-        - '../aerospace'
+        - "../aerospace"
       when: ansible_os_family == 'Darwin'
 
     - name: Add source commands to .zshrc
