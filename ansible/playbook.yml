@@ -70,6 +70,22 @@
       become: true
       when: ansible_os_family == "Debian"
 
+    - name: Register the Regolith public key to local apt
+      ansible.builtin.apt_key:
+        url: https://regolith-desktop.org/regolith.key
+        state: present
+        keyring: /usr/share/keyrings/regolith-archive-keyring.gpg
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Add the Regolith repository to apt sources
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ arch }} signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{arch}} jammy main"
+        filename: "regolith"
+        state: present
+      become: true
+      when: ansible_os_family == "Debian"
+
     - name: Add ulauncher PPA
       apt_repository:
         repo: ppa:agornostal/ulauncher
@@ -88,9 +104,12 @@
           - luarocks
           - zsh
           - i3
+          - regolith-desktop
+          - regolith-session-flashback
+          - regolith-look-lascaille
+          - gnome-screenshot
           - i3lock-fancy
           - polybar
-          - feh
           - ulauncher
           - picom
           - git
@@ -123,6 +142,16 @@
         state: present
       become: true
       when: ansible_os_family == "Debian"
+
+    - name: Install Rustup
+      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "${HOME}/.cargo/bin/rustup"
+
+    - name: Install i3-autolayout
+      shell: ${HOME}/.cargo/bin/cargo install i3-autolayout
+      args:
+        creates: "${HOME}/.cargo/bin/i3-autolayout"
 
     - name: Install alacritty on Ubuntu
       community.general.snap:
@@ -212,11 +241,13 @@
         path: /usr/local/go
         state: absent
       become: true
+      when: ansible_os_family == "Darwin"
 
     - name: Download Go
       get_url:
         url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
         dest: /tmp/go.tar.gz
+      when: ansible_os_family == "Darwin"
 
     - name: Extract go.tar.gz
       unarchive:
@@ -224,11 +255,13 @@
         dest: "/usr/local/"
         remote_src: yes
       become: true
+      when: ansible_os_family == "Darwin"
 
     - name: Remove Go tarball
       file:
         path: /tmp/go.tar.gz
         state: absent
+      when: ansible_os_family == "Darwin"
 
     - name: Install Go tools
       become: true
@@ -239,6 +272,7 @@
         /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+      when: ansible_os_family == "Darwin"
 
     - name: Generate locale
       locale_gen:
@@ -339,7 +373,8 @@
         src: "{{ item }}"
         dest: "${HOME}/.config/"
       loop:
-        - "../i3"
+        # - "../i3"
+        # - "../regolith3"
         - "../polybar"
         - "../ulauncher"
         - "../feh"
@@ -403,11 +438,6 @@
         force: true
         shell: /bin/zsh
       become: true
-
-    - name: Generate SSH key pair
-      openssh_keypair:
-        path: "${HOME}/.ssh/id_ed25519"
-        type: ed25519
 
   environment:
     LANG: en_US.UTF-8
