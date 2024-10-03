@@ -26,7 +26,7 @@ gaps inner 5
 # Start XDG autostart .desktop files using dex. See also
 # https://wiki.archlinux.org/index.php/XDG_Autostart
 exec_always --no-startup-id picom --experimental-backend &
-exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
+# exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=ssh,secrets,pkcs11
 exec --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -97,7 +97,7 @@ bindsym $mod+f fullscreen toggle
 # change container layout (stacked, tabbed, toggle split)
 # bindsym $mod+s layout stacking
 # bindsym $mod+t layout tabbed
-bindsym $mod+e layout toggle split
+# bindsym $mod+e layout toggle split
 
 # bindcode $mod+Shift+w workspace back_and_forth
 # bindsym --release $mod+w workspace back_and_forth
@@ -116,25 +116,15 @@ bindsym $mod+a focus parent
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
 set $ws1 "1"
-set $i3l spiral 0.5 to workspace $ws1
 set $ws2 "2"
-set $i3l spiral 0.5 to workspace $ws2
 set $ws3 "3"
-set $i3l spiral 0.5 to workspace $ws3
 set $ws4 "4"
-set $i3l spiral 0.5 to workspace $ws4
 set $ws5 "5"
-set $i3l spiral 0.5 to workspace $ws5
 set $ws6 "6"
-set $i3l spiral 0.5 to workspace $ws6
 set $ws7 "7"
-set $i3l spiral 0.5 to workspace $ws7
 set $ws8 "8"
-set $i3l spiral 0.5 to workspace $ws8
 set $ws9 "9"
-set $i3l spiral 0.5 to workspace $ws9
 set $ws10 "10"
-set $i3l spiral 0.5 to workspace $ws10
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -177,16 +167,16 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym h resize shrink width 10 px or 10 ppt
-        bindsym j resize grow height 10 px or 10 ppt
-        bindsym k resize shrink height 10 px or 10 ppt
-        bindsym l resize grow width 10 px or 10 ppt
+        bindsym h resize shrink width 5 px or 5 ppt
+        bindsym j resize grow height 5 px or 5 ppt
+        bindsym k resize shrink height 5 px or 5 ppt
+        bindsym l resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
@@ -196,14 +186,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-# bar {
-#         status_command i3status
-# }
-exec_always --no-startup-id ~/.screenlayout/layout-office.sh
+# exec_always --no-startup-id ~/.screenlayout/layout-office.sh
 exec_always --no-startup-id ~/.config/polybar/scripts/launch.sh
 exec_always --no-startup-id ulauncher --hide-window &
-exec_always --no-startup-id feh --bg-fill ~/.config/feh/music2-transformed.jpeg
-# exec_always --no-startup-id i3-layouts &
 exec_always --no-startup-id i3-autolayout autolayout &
