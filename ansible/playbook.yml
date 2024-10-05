@@ -86,12 +86,6 @@
       become: true
       when: ansible_os_family == "Debian"
 
-    # - name: Add ulauncher PPA
-    #   apt_repository:
-    #     repo: ppa:agornostal/ulauncher
-    #   become: true
-    #   when: ansible_os_family == "Debian"
-
     - name: Update apt cache again
       apt:
         update_cache: yes
@@ -154,13 +148,6 @@
         classic: true
       become: true
       when: ansible_os_family == "Debian"
-
-    - name: update-alternatives for alacritty
-      community.general.alternatives:
-        name: x-terminal-emulator
-        path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
-        priority: 100
-      become: true
 
     - name: Download the latest release of fastfetch
       get_url:
@@ -374,6 +361,14 @@
         - "../feh"
       when: ansible_os_family == 'Debian'
 
+    - name: update-alternatives for alacritty
+      community.general.alternatives:
+        name: x-terminal-emulator
+        path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
+        priority: 100
+      when: ansible_os_family == "Debian"
+      become: true
+
     - name: Copy files (mac only)
       copy:
         src: "{{ item }}"
@@ -419,7 +414,7 @@
       environment:
         PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
         NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-      shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
+      shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +EnableGo +TSUpdateSync +MasonToolsInstallSync +qa"
 
     - name: Set default shell to zsh
       user:
