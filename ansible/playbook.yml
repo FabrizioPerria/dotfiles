@@ -358,7 +358,6 @@
         dest: "${HOME}/.config/"
       loop:
         - "../regolith3"
-        - "../feh"
       when: ansible_os_family == 'Debian'
 
     - name: update-alternatives for alacritty
@@ -368,6 +367,13 @@
         priority: 100
       when: ansible_os_family == "Debian"
       become: true
+
+    - name: setup wallpaper for regolith
+      blockinfile:
+        path: "${HOME}/.config/regolith3/Xresources"
+        block: |
+          regolith.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
+          regolith.lockscreen.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
 
     - name: Copy files (mac only)
       copy:
