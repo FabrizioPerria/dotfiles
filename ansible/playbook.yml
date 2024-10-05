@@ -137,40 +137,36 @@
           - sshfs
           - clangd
           - snapd
+          - cargo
         state: present
       become: true
       when: ansible_os_family == "Debian"
 
-    - name: Install Rustup
-      shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    # - name: Install Rustup
+    #   shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    #   args:
+    #     creates: "${HOME}/.cargo/bin/rustup"
+    #   when: ansible_os_family == "Debian"
+    #   become: true
+
+    - name: Clone i3-autolayout
+      git:
+        repo: https://github.com/fabrizioperria/i3-autolayout.git
+        dest: /tmp/.i3-autolayout
+        version: main
+      when: ansible_os_family == "Debian"
+
+    - name: Build i3-autolayout
+      shell: cargo build --release
       args:
-        creates: "${HOME}/.cargo/bin/rustup"
-      become: true
+        chdir: /tmp/.i3-autolayout
+      when: ansible_os_family == "Debian"
 
     - name: Install i3-autolayout
-      shell: ${HOME}/.cargo/bin/cargo install i3-autolayout
+      shell: ./setup.sh --install
       args:
-        creates: "${HOME}/.cargo/bin/i3-autolayout"
-      become: true
-
-    - name: link i3-autolayout to /usr/local/bin
-      file:
-        src: "${HOME}/.cargo/bin/i3-autolayout"
-        dest: /usr/local/bin/i3-autolayout
-        state: link
-      become: true
-
-    - name: Download systemd service file for i3-autolayout
-      get_url:
-        url: https://raw.githubusercontent.com/BiagioFesta/i3-autolayout/refs/heads/main/systemd/i3-autolayout.service
-        dest: /usr/lib/systemd/user/i3-autolayout.service
-      become: true
-
-    - name: Enable and start i3-autolayout service
-      systemd:
-        name: i3-autolayout
-        enabled: yes
-        state: started
+        chdir: /tmp/.i3-autolayout
+      when: ansible_os_family == "Debian"
       become: true
 
     - name: Install alacritty on Ubuntu
@@ -388,20 +384,10 @@
         src: "{{ item }}"
         dest: "${HOME}/.config/"
       loop:
-        # - "../i3"
         - "../regolith3"
-        # - "../polybar"
-        # - "../ulauncher"
         - "../feh"
         # - "../picom"
       when: ansible_os_family == 'Debian'
-
-    # - name: Fix polybar launcher permission
-    #   file:
-    #     path: ${HOME}/.config/polybar/scripts/launch.sh
-    #     state: touch
-    #     mode: u+rx,g-wx,o-rwx
-    #   when: ansible_os_family == 'Debian'
 
     - name: Copy files (mac only)
       copy:
@@ -447,7 +433,7 @@
     - name: Run nvim commands
       # environment:
       #   PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-      command: nvim --headless +EnablePython +TSUpdateSync +MasonToolsInstallSync +qa
+      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
 
     - name: Set default shell to zsh
       user:
