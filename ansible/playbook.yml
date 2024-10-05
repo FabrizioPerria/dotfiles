@@ -104,14 +104,12 @@
           - luarocks
           - zsh
           - i3
+          - picom
           - regolith-desktop
           - regolith-session-flashback
           - regolith-look-lascaille
           - gnome-screenshot
           - i3lock-fancy
-          - polybar
-          - ulauncher
-          - picom
           - git
           - tmux
           - neovim
@@ -147,11 +145,33 @@
       shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       args:
         creates: "${HOME}/.cargo/bin/rustup"
+      become: true
 
     - name: Install i3-autolayout
       shell: ${HOME}/.cargo/bin/cargo install i3-autolayout
       args:
         creates: "${HOME}/.cargo/bin/i3-autolayout"
+      become: true
+
+    - name: link i3-autolayout to /usr/local/bin
+      file:
+        src: "${HOME}/.cargo/bin/i3-autolayout"
+        dest: /usr/local/bin/i3-autolayout
+        state: link
+      become: true
+
+    - name: Download systemd service file for i3-autolayout
+      get_url:
+        url: https://raw.githubusercontent.com/BiagioFesta/i3-autolayout/refs/heads/main/systemd/i3-autolayout.service
+        dest: /usr/lib/systemd/user/i3-autolayout.service
+      become: true
+
+    - name: Enable and start i3-autolayout service
+      systemd:
+        name: i3-autolayout
+        enabled: yes
+        state: started
+      become: true
 
     - name: Install alacritty on Ubuntu
       community.general.snap:
@@ -241,13 +261,11 @@
         path: /usr/local/go
         state: absent
       become: true
-      when: ansible_os_family == "Darwin"
 
     - name: Download Go
       get_url:
         url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
         dest: /tmp/go.tar.gz
-      when: ansible_os_family == "Darwin"
 
     - name: Extract go.tar.gz
       unarchive:
@@ -255,13 +273,11 @@
         dest: "/usr/local/"
         remote_src: yes
       become: true
-      when: ansible_os_family == "Darwin"
 
     - name: Remove Go tarball
       file:
         path: /tmp/go.tar.gz
         state: absent
-      when: ansible_os_family == "Darwin"
 
     - name: Install Go tools
       become: true
@@ -272,7 +288,6 @@
         /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
         /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
-      when: ansible_os_family == "Darwin"
 
     - name: Generate locale
       locale_gen:
@@ -374,19 +389,19 @@
         dest: "${HOME}/.config/"
       loop:
         # - "../i3"
-        # - "../regolith3"
-        - "../polybar"
-        - "../ulauncher"
+        - "../regolith3"
+        # - "../polybar"
+        # - "../ulauncher"
         - "../feh"
-        - "../picom"
+        # - "../picom"
       when: ansible_os_family == 'Debian'
 
-    - name: Fix polybar launcher permission
-      file:
-        path: ${HOME}/.config/polybar/scripts/launch.sh
-        state: touch
-        mode: u+rx,g-wx,o-rwx
-      when: ansible_os_family == 'Debian'
+    # - name: Fix polybar launcher permission
+    #   file:
+    #     path: ${HOME}/.config/polybar/scripts/launch.sh
+    #     state: touch
+    #     mode: u+rx,g-wx,o-rwx
+    #   when: ansible_os_family == 'Debian'
 
     - name: Copy files (mac only)
       copy:
@@ -430,7 +445,9 @@
         state: absent
 
     - name: Run nvim commands
-      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+      # environment:
+      #   PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+      command: nvim --headless +EnablePython +TSUpdateSync +MasonToolsInstallSync +qa
 
     - name: Set default shell to zsh
       user:

@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 vim.api.nvim_create_autocmd({ "FileType" }, {
     pattern = { "dashboard" },
     group = refresh,
-
+    
     command = "lua vim.b.miniindentscope_disable=true"
 })
 
@@ -36,3 +36,52 @@ vim.api.nvim_create_autocmd("TermOpen", {
         vim.cmd([[nnoremap <buffer> <Esc> :bd!<CR>]])
     end
 })
+
+vim.api.nvim_create_user_command(
+"EnableGo", 
+function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            "gopls",
+            "goimports",
+            "gofumpt",
+            "impl",
+            "gomodifytags",
+            "delve",
+        }
+    })
+end, 
+{}
+)
+
+vim.api.nvim_create_user_command(
+"EnableClangd",
+function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            "clangd",
+            "clang-format",
+            "codelldb",
+        }
+    })
+end, 
+{}
+)
+
+vim.api.nvim_create_user_command(
+"EnablePython",
+function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            -- "mypy",
+            "ruff",
+            "black",
+            "isort",
+            "debugpy",
+            -- "python-lsp-server",
+            "basedpyright",
+        }
+    })
+end,
+{}
+)
