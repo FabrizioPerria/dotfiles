@@ -86,11 +86,11 @@
       become: true
       when: ansible_os_family == "Debian"
 
-    - name: Add ulauncher PPA
-      apt_repository:
-        repo: ppa:agornostal/ulauncher
-      become: true
-      when: ansible_os_family == "Debian"
+    # - name: Add ulauncher PPA
+    #   apt_repository:
+    #     repo: ppa:agornostal/ulauncher
+    #   become: true
+    #   when: ansible_os_family == "Debian"
 
     - name: Update apt cache again
       apt:
@@ -101,6 +101,7 @@
     - name: Install packages on Ubuntu
       apt:
         name:
+          - lua5.4
           - luarocks
           - zsh
           - i3
@@ -142,32 +143,10 @@
       become: true
       when: ansible_os_family == "Debian"
 
-    # - name: Install Rustup
-    #   shell: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    #   args:
-    #     creates: "${HOME}/.cargo/bin/rustup"
-    #   when: ansible_os_family == "Debian"
-    #   become: true
-
-    - name: Clone i3-autolayout
-      git:
-        repo: https://github.com/fabrizioperria/i3-autolayout.git
-        dest: /tmp/.i3-autolayout
-        version: main
-      when: ansible_os_family == "Debian"
-
-    - name: Build i3-autolayout
-      shell: cargo build --release
-      args:
-        chdir: /tmp/.i3-autolayout
-      when: ansible_os_family == "Debian"
-
     - name: Install i3-autolayout
-      shell: ./setup.sh --install
-      args:
-        chdir: /tmp/.i3-autolayout
-      when: ansible_os_family == "Debian"
+      shell: cargo install --root /usr i3-autolayout
       become: true
+      when: ansible_os_family == "Debian"
 
     - name: Install alacritty on Ubuntu
       community.general.snap:
@@ -175,6 +154,13 @@
         classic: true
       become: true
       when: ansible_os_family == "Debian"
+
+    - name: update-alternatives for alacritty
+      community.general.alternatives:
+        name: x-terminal-emulator
+        path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
+        priority: 100
+      become: true
 
     - name: Download the latest release of fastfetch
       get_url:
@@ -386,7 +372,6 @@
       loop:
         - "../regolith3"
         - "../feh"
-        # - "../picom"
       when: ansible_os_family == 'Debian'
 
     - name: Copy files (mac only)
@@ -431,9 +416,10 @@
         state: absent
 
     - name: Run nvim commands
-      # environment:
-      #   PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-      command: nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+      environment:
+        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+        NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+      shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
 
     - name: Set default shell to zsh
       user:

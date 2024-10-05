@@ -1,0 +1,1 @@
+exec_always --no-startup-id i3-autolayout autolayout

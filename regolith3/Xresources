@@ -1,9 +1,10 @@
 wm.bar.position: top
 regolith.look.path: /usr/share/regolith-look/lascaille
 wm.program.lock: /usr/bin/i3lock-fancy
-regolith.wallpaper.file: /home/fp/.config/feh/music2-transformed.jpeg
-regolith.lockscreen.wallpaper.file: /home/fp/.config/feh/music2-transformed.jpeg
+regolith.wallpaper.file: $HOME/.config/feh/music2-transformed.jpeg
+regolith.lockscreen.wallpaper.file: $HOME/.config/feh/music2-transformed.jpeg
 wm.gaps.focus_follows_mouse: true
+wm.program.compositor: $HOME/.config/regolith3/picom/init
 
 #define color_base03   #1F2430
 #define color_base02   #292B30
