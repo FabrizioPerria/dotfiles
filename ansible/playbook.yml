@@ -37,6 +37,7 @@
           - fontconfig
           - luarocks
           - axel
+          - lazygit
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -148,6 +149,31 @@
         classic: true
       become: true
       when: ansible_os_family == "Debian"
+
+    - name: Get the latest LazyGit version
+      shell: |
+        curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
+      register: lazygit_version
+      when: ansible_os_family == "Debian"
+
+    - name: Download LazyGit tarball
+      get_url:
+        url: "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_{{ lazygit_version.stdout }}_Linux_x86_64.tar.gz"
+        dest: "/tmp/lazygit.tar.gz"
+      when: lazygit_version.stdout is defined
+
+    - name: Extract LazyGit binary
+      unarchive:
+        src: "/tmp/lazygit.tar.gz"
+        dest: "/tmp/"
+        creates: "/tmp/lazygit"
+        remote_src: yes
+      when: lazygit_version.stdout is defined
+
+    - name: Install LazyGit
+      command: install /tmp/lazygit /usr/local/bin
+      become: true
+      when: lazygit_version.stdout is defined
 
     - name: Download the latest release of fastfetch
       get_url:
@@ -358,6 +384,14 @@
         dest: "${HOME}/.config/"
       loop:
         - "../regolith3"
+      when: ansible_os_family == 'Debian'
+
+    - name: Make bar scripts executable
+      file:
+        path: "${HOME}/.config/regolith3/i3xrocks/scripts"
+        recurse: yes
+        state: directory
+        mode: "u+x"
       when: ansible_os_family == 'Debian'
 
     - name: Make launch scripts executable
