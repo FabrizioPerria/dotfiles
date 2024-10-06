@@ -46,6 +46,7 @@ vim.api.nvim_create_user_command("EnableGo", function()
             "delve",
         },
     })
+    require("mason-tool-installer").check_install(false, true)
 end, {})
 
 vim.api.nvim_create_user_command("EnableClangd", function()
@@ -56,4 +57,20 @@ vim.api.nvim_create_user_command("EnableClangd", function()
             "codelldb",
         },
     })
+    require("mason-tool-installer").check_install(false, true)
+end, {})
+
+vim.api.nvim_create_user_command("EnablePython", function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            -- "mypy",
+            "ruff",
+            "black",
+            "isort",
+            "debugpy",
+            -- "python-lsp-server",
+            "basedpyright",
+        },
+    })
+    require("mason-tool-installer").check_install(false, true)
 end, {})

@@ -12,4 +12,4 @@ fi
 
 ansible-playbook ansible/playbook.yml --ask-become-pass
 
-gpg --full-generate-key
+# gpg --full-generate-key

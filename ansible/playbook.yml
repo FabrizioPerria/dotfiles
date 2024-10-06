@@ -360,6 +360,15 @@
         - "../regolith3"
       when: ansible_os_family == 'Debian'
 
+    - name: Make launch scripts executable
+      file:
+        path: "{{ item }}"
+        mode: "u+x"
+      loop:
+        - "${HOME}/.config/alacritty/launch"
+        - "${HOME}/.config/regolith3/picom/init"
+      when: ansible_os_family == 'Debian'
+
     - name: update-alternatives for alacritty
       community.general.alternatives:
         name: x-terminal-emulator
@@ -416,18 +425,18 @@
         path: "${HOME}/.local/state/nvim"
         state: absent
 
-    - name: Run nvim commands
-      environment:
-        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-        NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-      shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +EnableGo +TSUpdateSync +MasonToolsInstallSync +qa"
-
     - name: Set default shell to zsh
       user:
         name: "{{ansible_env.USER}}"
         force: true
         shell: /bin/zsh
       become: true
+
+    # - name: Run nvim commands
+    #   environment:
+    #     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    #     NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+    #   shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
 
   environment:
     LANG: en_US.UTF-8

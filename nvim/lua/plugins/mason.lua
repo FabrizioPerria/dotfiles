@@ -1,3 +1,43 @@
+vim.api.nvim_create_user_command("EnableGo", function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            "gopls",
+            "goimports",
+            "gofumpt",
+            "impl",
+            "gomodifytags",
+            "delve",
+        },
+    })
+    require("mason-tool-installer").check_install(false, true)
+end, {})
+
+vim.api.nvim_create_user_command("EnableClangd", function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            "clangd",
+            "clang-format",
+            "codelldb",
+        },
+    })
+    require("mason-tool-installer").check_install(false, true)
+end, {})
+
+vim.api.nvim_create_user_command("EnablePython", function()
+    require("mason-tool-installer").setup({
+        ensure_installed = {
+            -- "mypy",
+            "ruff",
+            "black",
+            "isort",
+            "debugpy",
+            -- "python-lsp-server",
+            "basedpyright",
+        },
+    })
+    require("mason-tool-installer").check_install(false, true)
+end, {})
+
 return {
     {
         "williamboman/mason.nvim",
@@ -31,6 +71,14 @@ return {
                     "debugpy",
                     -- "python-lsp-server",
                     "basedpyright",
+
+                    "gopls",
+                    "goimports",
+                    "gofumpt",
+                    "impl",
+                    "gomodifytags",
+                    "delve",
+
                     "cmake-language-server",
 
                     "stylua",
@@ -76,4 +124,3 @@ return {
         end,
     },
 }
-
