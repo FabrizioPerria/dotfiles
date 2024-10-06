@@ -9,10 +9,10 @@
         fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
         exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"
 
+
     - name: Install packages on macOS
       homebrew:
         name:
-          - aerospace
           - python3
           - bash
           - fastfetch
@@ -24,7 +24,7 @@
           - llvm
           - jq
           - git-lfs
-          - exa
+          - eza
           - ncdu
           - bottom
           - cmake
@@ -38,6 +38,14 @@
           - luarocks
           - axel
           - lazygit
+        state: present
+      when: ansible_os_family == "Darwin"
+
+    - name: Install packages on macOS cask
+      homebrew_cask:
+        name:
+          - nikitabobko/tap/aerospace
+          - alfred
         state: present
       when: ansible_os_family == "Darwin"
 
