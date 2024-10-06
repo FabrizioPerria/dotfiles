@@ -417,6 +417,7 @@
         block: |
           regolith.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
           regolith.lockscreen.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
+      when: ansible_os_family == "Debian"
 
     - name: Copy files (mac only)
       copy:
