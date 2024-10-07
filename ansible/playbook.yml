@@ -38,6 +38,7 @@
           - luarocks
           - axel
           - lazygit
+          - lazydocker
         state: present
       when: ansible_os_family == "Darwin"
 
@@ -157,6 +158,31 @@
         classic: true
       become: true
       when: ansible_os_family == "Debian"
+
+    - name: Get the latest LazyDocker version
+      shell: |
+        curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
+      register: lazydocker_version
+      when: ansible_os_family == "Debian"
+
+    - name: Download LazyDocker tarball
+      get_url:
+        url: "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_{{ lazydocker_version.stdout }}_Linux_x86_64.tar.gz"
+        dest: "/tmp/lazydocker.tar.gz"
+      when: lazydocker_version.stdout is defined
+
+    - name: Extract LazyDocker binary
+      unarchive:
+        src: "/tmp/lazydocker.tar.gz"
+        dest: "/tmp/"
+        creates: "/tmp/lazydocker"
+        remote_src: yes
+      when: lazydocker_version.stdout is defined
+
+    - name: Install LazyDocker
+      command: install /tmp/lazydocker /usr/local/bin
+      become: true
+      when: lazydocker_version.stdout is defined
 
     - name: Get the latest LazyGit version
       shell: |
