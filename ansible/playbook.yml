@@ -434,6 +434,8 @@
         - "../tmux"
         - "../alacritty"
         - "../fastfetch"
+        - "../lazygit"
+        - "../lazydocker"
 
     - name: Copy files (linux only)
       copy:
