@@ -9,7 +9,6 @@
         fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
         exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"
 
-
     - name: Install packages on macOS
       homebrew:
         name:
@@ -158,6 +157,30 @@
         classic: true
       become: true
       when: ansible_os_family == "Debian"
+
+    - name: Get the latest LazySQL version
+      shell: |
+        curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
+      register: lazysql_version
+
+    - name: Download LazySQL tarball
+      get_url:
+        url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_{{ ansible_os_family }}_{{ ansible_architecture }}.tar.gz"
+        dest: "/tmp/lazysql.tar.gz"
+      when: lazysql_version.stdout is defined
+
+    - name: Extract LazySQL binary
+      unarchive:
+        src: "/tmp/lazysql.tar.gz"
+        dest: "/tmp/"
+        creates: "/tmp/lazysql"
+        remote_src: yes
+      when: lazysql_version.stdout is defined
+
+    - name: Install LazySQL
+      command: install /tmp/lazysql /usr/local/bin
+      become: true
+      when: lazysql_version.stdout is defined
 
     - name: Get the latest LazyDocker version
       shell: |

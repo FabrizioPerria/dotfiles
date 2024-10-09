@@ -164,13 +164,14 @@ return {
         opts = function()
             local cmp = require("cmp")
             require("cmp").setup({
+                preselect = "none",
                 completion = {
-                    -- autocomplete = false,
+                    completeopt = "menu,menuone,noinsert,noselect",
                 },
                 formatting = {
                     format = require("lspkind").cmp_format({
-                        mode = "symbol_text",  -- show only symbol annotations
-                        maxwidth = 80,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                        mode = "symbol_text", -- show only symbol annotations
+                        maxwidth = 80, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
                         ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
                     }),
                 },
@@ -202,18 +203,15 @@ return {
                 },
 
                 mapping = cmp.mapping.preset.insert({
-                    ["Up"] = cmp.mapping.select_prev_item({
+                    ["<Up>"] = cmp.mapping.select_prev_item({
                         behavior = cmp.SelectBehavior.Select,
                     }),
-                    ["Down"] = cmp.mapping.select_next_item({
+                    ["<Down>"] = cmp.mapping.select_next_item({
                         behavior = cmp.SelectBehavior.Select,
                     }),
                     ["<Enter>"] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Replace,
-                        select = true,
-                    }),
-                    ["<S-Tab>"] = cmp.mapping.complete({
-                        reason = cmp.ContextReason.Auto,
+                        behavior = cmp.ConfirmBehavior.Insert,
+                        select = false,
                     }),
                     ["<C-j>"] = cmp.mapping.scroll_docs(4),
                     ["<C-k>"] = cmp.mapping.scroll_docs(-4),
@@ -222,6 +220,7 @@ return {
                     ["<C-e>"] = cmp.mapping.close(),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-Space>"] = cmp.mapping.complete(),
                     ["<Tab>"] = cmp.mapping(function(fallback)
                         if require("copilot.suggestion").is_visible() then
                             require("copilot.suggestion").accept()

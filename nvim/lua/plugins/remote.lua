@@ -9,19 +9,19 @@ return {
         },
         config = true,
     },
-    {
-        "crnvl96/lazydocker.nvim",
-        -- optional for floating window border decoration
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-        },
-        -- setting the keybinding for LazyGit with 'keys' is recommended in
-        -- order to load the plugin when the command is run for the first time
-        keys = {
-            { "<leader>d", "<cmd>LazyDocker<cr>", desc = "LazyGit" },
-        },
-        event = "VeryLazy",
-        opts = {}, -- automatically calls `require("lazydocker").setup()`
-    },
+    -- {
+    --     "crnvl96/lazydocker.nvim",
+    --     -- optional for floating window border decoration
+    --     dependencies = {
+    --         "nvim-lua/plenary.nvim",
+    --         "MunifTanjim/nui.nvim",
+    --     },
+    --     -- setting the keybinding for LazyGit with 'keys' is recommended in
+    --     -- order to load the plugin when the command is run for the first time
+    --     keys = {
+    --         { "<leader>d", "<cmd>LazyDocker<cr>", desc = "LazyGit" },
+    --     },
+    --     event = "VeryLazy",
+    --     opts = {}, -- automatically calls `require("lazydocker").setup()`
+    -- },
 }
