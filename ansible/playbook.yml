@@ -21,7 +21,7 @@
           - ripgrep
           - fd
           - llvm
-          - jq
+          - yq
           - git-lfs
           - eza
           - ncdu
@@ -135,7 +135,7 @@
           - build-essential
           - net-tools
           - traceroute
-          - jq
+          - yq
           - git-lfs
           - axel
           - sshfs
@@ -160,7 +160,7 @@
 
     - name: Get the latest LazySQL version
       shell: |
-        curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
+        curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" | rg -Po '"tag_name": "v\K[^"]*'
       register: lazysql_version
 
     - name: Download LazySQL tarball
@@ -184,7 +184,7 @@
 
     - name: Get the latest LazyDocker version
       shell: |
-        curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | grep -Po '"tag_name": "v\K[^"]*'
+        curl -s "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" | rg -Po '"tag_name": "v\K[^"]*'
       register: lazydocker_version
       when: ansible_os_family == "Debian"
 
