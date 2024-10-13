@@ -127,7 +127,7 @@
           - ripgrep
           - fd-find
           - bat
-          - exa
+          - eza
           - ncdu
           - tree
           - clang
@@ -391,8 +391,8 @@
             dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
           }
         - {
-            repo: "https://github.com/{{ exa_ns }}/zsh-exa.git",
-            dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-exa",
+            repo: "https://github.com/z-shell/zsh-eza.git",
+            dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-eza",
           }
 
     - name: Remove .config
