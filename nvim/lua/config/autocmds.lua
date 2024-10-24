@@ -22,11 +22,11 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
     command = "nnoremap <buffer> <leader><leader> :wa<CR>:FloatermNew --autoclose=0 ./build.sh<CR>",
 })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function()
-        vim.lsp.buf.format()
-    end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--     callback = function()
+--         vim.lsp.buf.format()
+--     end,
+-- })
 
 vim.api.nvim_create_autocmd("TermOpen", {
     callback = function()

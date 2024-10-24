@@ -27,7 +27,7 @@ vim.api.nvim_create_user_command("EnablePython", function()
     require("mason-tool-installer").setup({
         ensure_installed = {
             -- "mypy",
-            "ruff",
+            -- "ruff",
             "black",
             "isort",
             "debugpy",
@@ -43,6 +43,10 @@ return {
         "williamboman/mason.nvim",
         opts = function()
             require("mason").setup({
+                registries = {
+                    "github:nvim-java/mason-registry",
+                    "github:mason-org/mason-registry",
+                },
                 ui = {
                     icons = {
                         package_installed = "✓",
@@ -65,7 +69,7 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     -- "mypy",
-                    "ruff",
+                    -- "ruff",
                     "black",
                     "isort",
                     "debugpy",
@@ -115,7 +119,7 @@ return {
                     "editorconfig-checker",
 
                     "css-lsp",
-                    "tsserver",
+                    -- "tsserver",
                     "tailwindcss",
                     "eslint-lsp",
                     "prettierd",

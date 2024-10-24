@@ -40,6 +40,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
+            "fabrizioperria/neotest-jdtls",
             "alfaix/neotest-gtest",
         },
         keys = {
@@ -101,6 +102,7 @@ return {
         config = function()
             require("neotest").setup({
                 adapters = {
+                    require("neotest-jdtls"),
                     require("neotest-python")({
                         dap = { justMyCode = false },
                         runner = "pytest",
