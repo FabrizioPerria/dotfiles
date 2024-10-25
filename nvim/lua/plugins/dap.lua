@@ -14,7 +14,7 @@ return {
         },
         config = function()
             require("dap-go").setup()
-            require("dap-python").setup("~/.local/share/nvim/mason/packages/debugpy/venv/bin/python")
+            require("dap-python").setup(".venv/bin/python")
             local dap = require("dap")
             local dapui = require("dapui")
             dapui.setup()
@@ -102,20 +102,8 @@ return {
                     request = "launch",
                     name = "Launch file",
                     program = "${file}",
-                    pythonPath = function()
-                        local cwd = vim.fn.getcwd()
-                        if vim.fn.filereadable(cwd .. "/.venv") == 1 and vim.fn.isdirectory(cwd .. "/.venv") == 0 then
-                            return vim.fn.exepath("python")
-                            -- local read_venv = assert(io.open(cwd .. "/.venv", "r"))
-                            -- local venv_path = read_venv:read()
-                            -- read_venv:close()
-                            -- return os.getenv('$HOME') .. "/.virtualenvs/" .. venv_path .. "/bin/python"
-                        elseif vim.fn.executable(cwd .. "/bin/python") == 1 then
-                            return cwd .. "/bin/python"
-                        else
-                            return vim.fn.exepath("python") or vim.fn.exepath("python3")
-                        end
-                    end,
+                    pythonPath = "python",
+                    console = "integratedTerminal",
                 },
             }
             vim.g.dap_virtual_text = true
