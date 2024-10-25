@@ -1,10 +1,5 @@
 return {
     {
-        -- "nvim-java/nvim-java",
-        "fabrizioperria/nvim-java",
-        branch = "neotest-poc",
-    },
-    {
         "L3MON4D3/LuaSnip",
         lazy = true,
         build = "make install_jsregexp",
@@ -39,7 +34,7 @@ return {
                     null_ls.builtins.formatting.prettierd,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.isort,
-                    null_ls.builtins.diagnostics.pylint,
+                    -- null_ls.builtins.diagnostics.pylint,
                 },
             })
         end,
@@ -54,7 +49,8 @@ return {
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
-            "fabrizioperria/nvim-java"
+            "fabrizioperria/nvim-java",
+            --"nvim-java/nvim-java"
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
@@ -105,17 +101,34 @@ return {
                     },
                 },
             })
-            lspconfig.basedpyright.setup({
+            lspconfig.pyright.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
                 settings = {
-                    basedpyright = {
+                    pyright = {
+                        autoImportCompletion = true,
+                    },
+                    python = {
                         analysis = {
-                            typeCheckingMode = "standard",
+                            autoSearchPaths = true,
+                            diagnosticMode = "openFilesOnly",
+                            useLibraryCodeForTypes = true,
+                            typeCheckingMode = "off",
                         },
                     },
                 },
             })
+            -- lspconfig.basedpyright.setup({
+            --     on_attach = lsp_attach_custom,
+            --     capabilities = lsp_capabilities,
+            --     settings = {
+            --         basedpyright = {
+            --             analysis = {
+            --                 typeCheckingMode = "standard",
+            --             },
+            --         },
+            --     },
+            -- })
             lspconfig.gopls.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
@@ -191,8 +204,8 @@ return {
                 },
                 formatting = {
                     format = require("lspkind").cmp_format({
-                        mode = "symbol_text", -- show only symbol annotations
-                        maxwidth = 80, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                        mode = "symbol_text",  -- show only symbol annotations
+                        maxwidth = 80,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
                         ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
                     }),
                 },

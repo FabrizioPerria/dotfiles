@@ -32,7 +32,24 @@ return {
     --     end,
     -- },
     {
+        "fabrizioperria/neotest-jdtls",
+        ft = "java",
+        lazy = true,
+        dependencies = {
+            "nvim-neotest/neotest",
+        },
+        config = function()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-jdtls")
+                }
+            })
+        end,
+    },
+    {
         "nvim-neotest/neotest",
+        lazy = true,
+        event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",
@@ -40,7 +57,6 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            "fabrizioperria/neotest-jdtls",
             "alfaix/neotest-gtest",
         },
         keys = {
@@ -53,7 +69,15 @@ return {
             },
             {
                 "<leader>td",
-                "<cmd>lua require('dap-go').debug_test()<CR>",
+                function()
+                    if vim.fn.expand("%:e") == "go" then
+                        require("dap-go").debug_test()
+                    elseif vim.fn.expand("%:e") == "java" then
+                        require("java").test.debug_current_method()
+                    else
+                        require("neotest").run.debug(vim.fn.expand("%"))
+                    end
+                end,
                 desc = "Debug Nearest (Go)",
             },
             {
@@ -66,7 +90,7 @@ return {
             {
                 "<leader>tr",
                 function()
-                    require("neotest").run.run()
+                    require("neotest").run.run({ strategy = "dap" })
                 end,
                 desc = "Run Nearest",
             },
@@ -102,18 +126,8 @@ return {
         config = function()
             require("neotest").setup({
                 adapters = {
-                    require("neotest-jdtls"),
                     require("neotest-python")({
                         dap = { justMyCode = false },
-                        runner = "pytest",
-                        python = function()
-                            local cwd = vim.fn.getcwd()
-                            if vim.fn.executable(cwd .. "/bin/python") == 1 then
-                                return cwd .. "/bin/python"
-                            else
-                                return vim.fn.exepath("python3") or vim.fn.exepath("python")
-                            end
-                        end,
                     }),
                     require("neotest-go")({
                         experimental = {
