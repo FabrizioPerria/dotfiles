@@ -1,5 +1,5 @@
 ---
-- name: Install packages on macOS
+- name: Install packages
   homebrew:
     name:
       - python3
@@ -30,7 +30,7 @@
       - lazydocker
     state: present
 
-- name: Install packages on macOS cask
+- name: Install cask
   homebrew_cask:
     name:
       - nikitabobko/tap/aerospace
@@ -190,7 +190,7 @@
     path: "${HOME}/.config"
     state: absent
 
-- name: Copy font files on mac
+- name: Copy font files
   copy:
     src: "../NerdFonts/"
     dest: "/Library/Fonts/"
@@ -208,12 +208,6 @@
     - "../fastfetch"
     - "../lazygit"
     - "../lazydocker"
-
-- name: Copy files (mac only)
-  copy:
-    src: "{{ item }}"
-    dest: "${HOME}/.config/"
-  loop:
     - "../aerospace"
 
 - name: Add source commands to .zshrc

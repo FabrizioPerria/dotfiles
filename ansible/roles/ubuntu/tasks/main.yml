@@ -34,7 +34,7 @@
 
 - name: Add the Regolith repository to apt sources
   ansible.builtin.apt_repository:
-    repo: |
+    repo: >
       deb [arch={{ arch }}
       signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg]
       https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{arch}}
@@ -48,7 +48,7 @@
     update_cache: true
   become: true
 
-- name: Install packages on Ubuntu
+- name: Install packages
   apt:
     name:
       - lua5.4
@@ -98,20 +98,20 @@
   shell: cargo install --root /usr --features 'pcre2' ripgrep
   become: true
 
-- name: Install alacritty on Ubuntu
+- name: Install alacritty
   community.general.snap:
     name: alacritty
     classic: true
   become: true
 
-- name: Install yq on Ubuntu
+- name: Install yq
   community.general.snap:
     name: yq
     classic: true
   become: true
 
 - name: Get the latest LazySQL version
-  shell: |
+  shell: >
     curl -s
     "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" |
     rg -Po '"tag_name": "v\K[^"]*'
@@ -138,7 +138,7 @@
   when: lazysql_version.stdout is defined
 
 - name: Get the latest LazyDocker version
-  shell: |
+  shell: >
     curl -s
     "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" |
     rg -Po '"tag_name": "v\K[^"]*'
@@ -164,7 +164,7 @@
   when: lazydocker_version.stdout is defined
 
 - name: Get the latest LazyGit version
-  shell: |
+  shell: >
     curl -s
     "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" |
     grep -Po '"tag_name": "v\K[^"]*'
@@ -191,7 +191,7 @@
 
 - name: Download the latest release of fastfetch
   get_url:
-    url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb"
+    url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-{{ os }}-{{fastfetch_arch}}.deb"
     dest: "/tmp/fastfetch.deb"
 
 - name: Install fastfetch deb
@@ -200,7 +200,7 @@
   become: true
 
 - name: Download and install NVM
-  shell: |
+  shell: >
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh |
     bash
   args:
@@ -237,7 +237,7 @@
     state: link
 
 - name: Create symlink for python
-  shell: |
+  shell: >
     rm -f $(dirname $(which python3))/python &&
     ln -s $(which python3) $(dirname $(which python3))/python
   become: true
@@ -305,7 +305,7 @@
     state: absent
 
 - name: Install oh-my-zsh
-  shell: |
+  shell: >
     bash -c
     "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     ""
@@ -377,12 +377,6 @@
     - "../fastfetch"
     - "../lazygit"
     - "../lazydocker"
-
-- name: Copy files (linux only)
-  copy:
-    src: "{{ item }}"
-    dest: "${HOME}/.config/"
-  loop:
     - "../regolith3"
 
 - name: Make bar scripts executable
