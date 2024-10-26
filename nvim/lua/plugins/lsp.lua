@@ -1,7 +1,4 @@
 return {
-    -- {
-    --     "nvim-java/nvim-java"
-    -- },
     {
         "L3MON4D3/LuaSnip",
         lazy = true,
@@ -19,11 +16,25 @@ return {
 
             null_ls.setup({
                 sources = {
+                    null_ls.builtins.code_actions.proselint,
+                    null_ls.builtins.code_actions.refactoring,
+                    -- null_ls.builtins.code_actions.textlint,
                     null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.completion.luasnip,
+                    null_ls.builtins.diagnostics.codespell,
+                    null_ls.builtins.diagnostics.markdownlint,
+                    null_ls.builtins.diagnostics.write_good,
+                    null_ls.builtins.diagnostics.dotenv_linter,
+                    null_ls.builtins.diagnostics.sqlfluff.with({
+                        extra_args = { "--dialect", "postgres" }, -- change to your dialect
+                    }),
+                    null_ls.builtins.diagnostics.yamllint,
+                    null_ls.builtins.diagnostics.zsh,
                     null_ls.builtins.completion.spell,
                     null_ls.builtins.formatting.prettierd,
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.isort,
+                    -- null_ls.builtins.diagnostics.pylint,
                 },
             })
         end,
@@ -38,9 +49,14 @@ return {
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
+            "fabrizioperria/nvim-java",
+            --"nvim-java/nvim-java"
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
+            require("java").setup()
+            local lspconfig = require("lspconfig")
+            require("mason").setup({})
             local lsp_attach_custom = function(client, bufnr)
                 local opts = { buffer = bufnr }
                 vim.keymap.set("n", "<leader>a", function()
@@ -63,12 +79,7 @@ return {
                 vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
                 vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
             end
-
             local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-            -- require('java').setup()
-            local lspconfig = require("lspconfig")
-            require("mason").setup({})
             require("mason-lspconfig").setup({
                 handlers = {
                     function(server_name)
@@ -80,6 +91,8 @@ return {
                 },
             })
             lspconfig.lua_ls.setup({
+                on_attach = lsp_attach_custom,
+                capabilities = lsp_capabilities,
                 settings = {
                     Lua = {
                         diagnostics = {
@@ -88,16 +101,37 @@ return {
                     },
                 },
             })
-            lspconfig.basedpyright.setup({
+            lspconfig.pyright.setup({
+                on_attach = lsp_attach_custom,
+                capabilities = lsp_capabilities,
                 settings = {
-                    basedpyright = {
+                    pyright = {
+                        autoImportCompletion = true,
+                    },
+                    python = {
                         analysis = {
-                            typeCheckingMode = "standard",
+                            autoSearchPaths = true,
+                            diagnosticMode = "openFilesOnly",
+                            useLibraryCodeForTypes = true,
+                            typeCheckingMode = "off",
                         },
                     },
                 },
             })
+            -- lspconfig.basedpyright.setup({
+            --     on_attach = lsp_attach_custom,
+            --     capabilities = lsp_capabilities,
+            --     settings = {
+            --         basedpyright = {
+            --             analysis = {
+            --                 typeCheckingMode = "standard",
+            --             },
+            --         },
+            --     },
+            -- })
             lspconfig.gopls.setup({
+                on_attach = lsp_attach_custom,
+                capabilities = lsp_capabilities,
                 settings = {
                     gopls = {
                         gofumpt = true,
@@ -170,8 +204,8 @@ return {
                 },
                 formatting = {
                     format = require("lspkind").cmp_format({
-                        mode = "symbol_text", -- show only symbol annotations
-                        maxwidth = 80, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                        mode = "symbol_text",  -- show only symbol annotations
+                        maxwidth = 80,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
                         ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
                     }),
                 },

@@ -27,12 +27,13 @@ vim.api.nvim_create_user_command("EnablePython", function()
     require("mason-tool-installer").setup({
         ensure_installed = {
             -- "mypy",
-            "ruff",
+            -- "ruff",
             "black",
             "isort",
             "debugpy",
             -- "python-lsp-server",
-            "basedpyright",
+            "pyright",
+            -- "basedpyright",
         },
     })
     require("mason-tool-installer").check_install(false, true)
@@ -41,17 +42,6 @@ end, {})
 return {
     {
         "williamboman/mason.nvim",
-        opts = function()
-            require("mason").setup({
-                ui = {
-                    icons = {
-                        package_installed = "✓",
-                        package_pending = "➜",
-                        package_uninstalled = "✗",
-                    },
-                },
-            })
-        end,
     },
     -- {
     --     "williamboman/mason-lspconfig.nvim",
@@ -65,12 +55,13 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     -- "mypy",
-                    "ruff",
+                    -- "ruff",
                     "black",
                     "isort",
                     "debugpy",
                     -- "python-lsp-server",
-                    "basedpyright",
+                    -- "basedpyright",
+                    "pyright",
 
                     "gopls",
                     "goimports",
@@ -115,7 +106,7 @@ return {
                     "editorconfig-checker",
 
                     "css-lsp",
-                    "tsserver",
+                    -- "tsserver",
                     "tailwindcss",
                     "eslint-lsp",
                     "prettierd",

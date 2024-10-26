@@ -14,7 +14,7 @@ return {
         },
         config = function()
             require("dap-go").setup()
-            require("dap-python").setup()
+            require("dap-python").setup(".venv/bin/python")
             local dap = require("dap")
             local dapui = require("dapui")
             dapui.setup()
@@ -85,16 +85,25 @@ return {
                 {
                     type = "python",
                     request = "launch",
+                    name = "FastAPI - Launch",
+                    module = "uvicorn",
+                    args = function()
+                        return {
+                            vim.fn.input("FastAPI app module > ", "main:app", "file"),
+                            -- '--reload', -- doesn't work
+                            "--use-colors",
+                        }
+                    end,
+                    pythonPath = "python",
+                    console = "integratedTerminal",
+                },
+                {
+                    type = "python",
+                    request = "launch",
                     name = "Launch file",
                     program = "${file}",
-                    pythonPath = function()
-                        local cwd = vim.fn.getcwd()
-                        if vim.fn.executable(cwd .. "/bin/python") == 1 then
-                            return cwd .. "/bin/python"
-                        else
-                            return vim.fn.exepath("python3") or vim.fn.exepath("python")
-                        end
-                    end,
+                    pythonPath = "python",
+                    console = "integratedTerminal",
                 },
             }
             vim.g.dap_virtual_text = true

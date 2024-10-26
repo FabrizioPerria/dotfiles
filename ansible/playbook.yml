@@ -6,6 +6,7 @@
       set_fact:
         arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
         os: "{{ 'linux' if ansible_os_family == 'Debian' else 'darwin' }}"
+        os_: "{{ 'Linux' if ansible_os_family == 'Debian' else 'Darwin' }}"
         fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
         exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"
 
@@ -124,10 +125,9 @@
           - python3-venv
           - fontconfig
           - unzip
-          - ripgrep
           - fd-find
           - bat
-          - eza
+          - exa
           - ncdu
           - tree
           - clang
@@ -135,7 +135,6 @@
           - build-essential
           - net-tools
           - traceroute
-          - yq
           - git-lfs
           - axel
           - sshfs
@@ -151,9 +150,21 @@
       become: true
       when: ansible_os_family == "Debian"
 
+    - name: Install ripgrep
+      shell: cargo install --root /usr --features 'pcre2' ripgrep
+      become: true
+      when: ansible_os_family == "Debian"
+      
     - name: Install alacritty on Ubuntu
       community.general.snap:
         name: alacritty
+        classic: true
+      become: true
+      when: ansible_os_family == "Debian"
+
+    - name: Install yq on Ubuntu
+      community.general.snap:
+        name: yq
         classic: true
       become: true
       when: ansible_os_family == "Debian"
@@ -165,7 +176,7 @@
 
     - name: Download LazySQL tarball
       get_url:
-        url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_{{ ansible_os_family }}_{{ ansible_architecture }}.tar.gz"
+        url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_{{ os_ }}_{{ ansible_architecture }}.tar.gz"
         dest: "/tmp/lazysql.tar.gz"
       when: lazysql_version.stdout is defined
 
