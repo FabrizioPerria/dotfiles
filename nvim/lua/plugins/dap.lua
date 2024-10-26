@@ -36,24 +36,24 @@ return {
                     args = { "--port", "${port}" },
                 },
             }
-            dap.configurations.c = {
-                {
-                    name = "Debug with codelldb",
-                    type = "codelldb",
-                    request = "launch",
-                    program = "/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost",
-                    -- program = function()
-                    --     return vim.fn.input({
-                    --         prompt = 'Path to executable: ',
-                    --         default = vim.fn.getcwd() .. '/',
-                    --         completion = 'file',
-                    --     })
-                    -- end,
-                    cwd = "${workspaceFolder}",
-                    stopOnEntry = false,
-                },
-            }
-            dap.configurations.cpp = dap.configurations.c
+            -- dap.configurations.c = {
+            --     {
+            --         name = "Debug with codelldb",
+            --         type = "codelldb",
+            --         request = "launch",
+            --         program = "/Applications/AudioPluginHost.app/Contents/MacOS/AudioPluginHost",
+            --         -- program = function()
+            --         --     return vim.fn.input({
+            --         --         prompt = 'Path to executable: ',
+            --         --         default = vim.fn.getcwd() .. '/',
+            --         --         completion = 'file',
+            --         --     })
+            --         -- end,
+            --         cwd = "${workspaceFolder}",
+            --         stopOnEntry = false,
+            --     },
+            -- }
+            -- dap.configurations.cpp = dap.configurations.c
 
             local bash_apater_path = require("mason-registry").get_package("bash-debug-adapter"):get_install_path()
             local bash_adapter = bash_apater_path .. "/bash-debug-adapter"

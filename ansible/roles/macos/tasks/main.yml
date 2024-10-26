@@ -45,7 +45,7 @@
 
 - name: Download LazySQL tarball
   get_url:
-    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_{{ os_ }}_{{ ansible_architecture }}.tar.gz"
+    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_Darwin_arm64.tar.gz"
     dest: "/tmp/lazysql.tar.gz"
   when: lazysql_version.stdout is defined
 
@@ -109,7 +109,7 @@
 
 - name: Download Go
   get_url:
-    url: https://go.dev/dl/go1.23.0.{{ os }}-{{ arch }}.tar.gz
+    url: https://go.dev/dl/go1.23.0.darwin-arm64.tar.gz
     dest: /tmp/go.tar.gz
 
 - name: Extract go.tar.gz
@@ -146,7 +146,7 @@
 
 - name: Install oh-my-zsh
   shell: >
-    bash -c 
+    bash -c
     "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
     ""
     --unattended
@@ -249,8 +249,9 @@
     force: true
     shell: /bin/zsh
   become: true
-# - name: Run nvim commands
-#   environment:
-#     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-#     NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-#   shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
+
+- name: Run nvim commands
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+  shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"

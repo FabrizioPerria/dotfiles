@@ -1,8 +1,0 @@
----
-- name: Get os and arch
-  set_fact:
-    arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
-    os: "{{ 'linux' if ansible_os_family == 'Debian' else 'darwin' }}"
-    os_: "{{ 'Linux' if ansible_os_family == 'Debian' else 'Darwin' }}"
-    fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-    exa_ns: "{{ 'RitchieS' if ansible_architecture == 'aarch64'  or ansible_architecture == 'arm64' else 'ptavares' }}"

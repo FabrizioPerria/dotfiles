@@ -57,7 +57,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            "alfaix/neotest-gtest",
+            { "alfaix/neotest-gtest", dependencies = {"nvim-treesitter/nvim-treesitter"} },
         },
         keys = {
             {
