@@ -1,0 +1,16 @@
+---
+- name: Remove .tmux
+  file:
+    path: "${HOME}/.tmux"
+    state: absent
+
+- name: tpm
+  shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+- name: Run tmux plugin install script
+  command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+- name: Copy files
+  copy:
+    src: "../tmux"
+    dest: "${HOME}/.config/"

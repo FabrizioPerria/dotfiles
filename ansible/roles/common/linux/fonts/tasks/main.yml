@@ -1,0 +1,14 @@
+---
+- name: ensure fonts directory
+  file:
+    path: "${HOME}/.fonts"
+    state: directory
+
+- name: Copy font files on ubuntu
+  copy:
+    src: "{{ font_src }}"
+    dest: "${HOME}/.fonts/"
+
+- name: Refresh font cache
+  shell: fc-cache -fv
+  become: true

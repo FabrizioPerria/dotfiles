@@ -6,6 +6,7 @@
     lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     regolith_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+    docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
@@ -34,24 +35,6 @@
     repo: ppa:neovim-ppa/unstable
   become: true
 
-- name: Register the Regolith public key to local apt
-  ansible.builtin.apt_key:
-    url: https://regolith-desktop.org/regolith.key
-    state: present
-    keyring: /usr/share/keyrings/regolith-archive-keyring.gpg
-  become: true
-
-- name: Add the Regolith repository to apt sources
-  ansible.builtin.apt_repository:
-    repo: >
-      deb [arch={{ regolith_arch }}
-      signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg]
-      https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{ regolith_arch }}
-      jammy main
-    filename: "regolith"
-    state: present
-  become: true
-
 - name: Update apt cache again
   apt:
     update_cache: true
@@ -63,13 +46,6 @@
       - lua5.4
       - luarocks
       - zsh
-      - i3
-      - picom
-      - regolith-desktop
-      - regolith-session-flashback
-      - regolith-look-lascaille
-      - gnome-screenshot
-      - i3lock-fancy
       - git
       - tmux
       - neovim
@@ -99,6 +75,11 @@
     state: present
   become: true
 
+- name: Install Docker
+  include_role:
+    name: common/linux/docker
+  vars:
+    arch: "{{ docker_arch }}"
 
 - name: Install snap packages
   community.general.snap:
@@ -110,52 +91,15 @@
     - slack
   become: true
 
-- name: Install i3-autolayout
-  shell: cargo install --root /usr i3-autolayout
-  become: true
-
 - name: Install ripgrep
   include_role:
-    name: common/ripgrep
+    name: common/shared/ripgrep
 
-- name: Install lazySQL
-  include_role:
-    name: common/lazysql
-  vars:
-    os: Linux
-    arch: "{{ lazysql_arch }}"
-
-- name: Install lazydocker
-  include_role:
-    name: common/lazydocker
-  vars:
-    os: Linux
-    arch: "{{ lazydocker_arch }}"
-
-- name: Install lazygit
-  include_role:
-    name: common/lazygit
-  vars:
-    os: Linux
-    arch: "{{ lazygit_arch }}"
-
-- name: Download the latest release of fastfetch
-  get_url:
-    url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb"
-    dest: "/tmp/fastfetch.deb"
-
-- name: Install fastfetch deb
-  apt:
-    deb: "/tmp/fastfetch.deb"
-  become: true
 
 - name: Download and install NVM
   include_role:
-    name: common/nvm
+    name: common/shared/nvm
 
-- name: Install fzf
-  include_role:
-    name: common/fzf
 
 - name: Create local bin directory
   file:
@@ -174,7 +118,7 @@
     ln -s $(which python3) $(dirname $(which python3))/python
   become: true
 
-- name: Create symlink for tmux (Linux)
+- name: Create symlink for tmux
   file:
     src: /usr/bin/tmux
     dest: /usr/local/bin/tmux
@@ -189,7 +133,7 @@
 
 - name: Install go
   include_role:
-    name: common/go
+    name: common/shared/go
   vars:
     version: 1.23.0
     os: linux
@@ -203,121 +147,70 @@
 
 - name: Install oh-my-zsh
   include_role:
-    name: common/oh-my-zsh
+    name: common/shared/oh-my-zsh
 
-- name: Remove .tmux
-  file:
-    path: "${HOME}/.tmux"
-    state: absent
-
-- name: tpm
-  shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+- name: Setup Font
+  include_role:
+    name: common/linux/fonts
+  vars:
+    font_src: "../NerdFonts/"
 
 - name: Remove .config
   file:
     path: "${HOME}/.config"
     state: absent
 
-- name: ensure fonts directory
-  file:
-    path: "${HOME}/.fonts"
-    state: directory
+- name: Setup zsh
+  include_role:
+    name: common/shared/zsh
 
-- name: Copy font files on ubuntu
-  copy:
-    src: "../NerdFonts/"
-    dest: "${HOME}/.fonts/"
+- name: Install lazySQL
+  include_role:
+    name: common/shared/lazysql
+  vars:
+    os: Linux
+    arch: "{{ lazysql_arch }}"
 
-- name: Refresh font cache
-  shell: fc-cache -fv
-  become: true
+- name: Install lazydocker
+  include_role:
+    name: common/shared/lazydocker
+  vars:
+    os: Linux
+    arch: "{{ lazydocker_arch }}"
+
+- name: Install lazygit
+  include_role:
+    name: common/shared/lazygit
+  vars:
+    os: Linux
+    arch: "{{ lazygit_arch }}"
+
+- name: Install fastfetch
+  include_role:
+    name: common/linux/fastfetch
+  vars:
+    arch: "{{fastfetch_arch}}"
+
+- name: Install fzf
+  include_role:
+    name: common/shared/fzf
+
+- name: Install Regolith
+  include_role:
+    name: common/linux/regolith
+
+- name: Setup tmux
+  include_role:
+    name: common/shared/tpm
+
+- name: Setup nvim
+  include_role:
+    name: common/shared/nvim
 
 - name: Copy files
   copy:
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "../fzf"
-    - "../nvim"
-    - "../shell"
-    - "../tmux"
     - "../alacritty"
     - "../fastfetch"
-    - "../lazygit"
-    - "../lazydocker"
-    - "../regolith3"
-
-- name: Make bar scripts executable
-  file:
-    path: "${HOME}/.config/regolith3/i3xrocks/scripts"
-    recurse: true
-    state: directory
-    mode: "u+x"
-
-- name: Make launch scripts executable
-  file:
-    path: "{{ item }}"
-    mode: "u+x"
-  loop:
-    - "${HOME}/.config/alacritty/launch"
-    - "${HOME}/.config/regolith3/picom/init"
-
-- name: update-alternatives for alacritty
-  community.general.alternatives:
-    name: x-terminal-emulator
-    path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
-    priority: 100
-  become: true
-
-- name: setup wallpaper for regolith
-  blockinfile:
-    path: "${HOME}/.config/regolith3/Xresources"
-    block: |
-      regolith.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
-      regolith.lockscreen.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
-
-- name: Add source commands to .zshrc
-  blockinfile:
-    path: "${HOME}/.zshrc"
-    block: |
-      source ${HOME}/.config/shell/aliases.zsh
-      source ${HOME}/.config/shell/exports.zsh
-      source ${HOME}/.config/shell/zsh.zsh
-      source ${HOME}/.config/shell/p10k.zsh
-      source ${HOME}/.config/shell/colors.zsh
-      source ${HOME}/.config/fzf/completion.sh
-      source ${HOME}/.config/fzf/keybindings.sh
-      export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
-      export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
-    create: true
-
-- name: Run tmux plugin install script
-  command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
-
-- name: Remove nvim cache
-  file:
-    path: "${HOME}/.cache/nvim"
-    state: absent
-
-- name: Remove nvim plugins
-  file:
-    path: "${HOME}/.local/share/nvim"
-    state: absent
-
-- name: Remove nvim logs
-  file:
-    path: "${HOME}/.local/state/nvim"
-    state: absent
-
-- name: Set default shell to zsh
-  user:
-    name: "{{ansible_env.USER}}"
-    force: true
-    shell: /bin/zsh
-  become: true
-
-# - name: Run nvim commands
-#   environment:
-#     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-#     NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-#   shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"

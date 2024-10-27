@@ -1,4 +1,0 @@
----
-- name: Install ripgrep
-  shell: cargo install --root /usr --features 'pcre2' ripgrep
-  become: true

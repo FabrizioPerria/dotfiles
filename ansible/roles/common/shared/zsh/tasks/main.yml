@@ -1,0 +1,27 @@
+---
+- name: Copy files
+  copy:
+    src: "../shell"
+    dest: "${HOME}/.config/"
+
+- name: Add source commands to .zshrc
+  blockinfile:
+    path: "${HOME}/.zshrc"
+    block: |
+      source ${HOME}/.config/shell/aliases.zsh
+      source ${HOME}/.config/shell/exports.zsh
+      source ${HOME}/.config/shell/zsh.zsh
+      source ${HOME}/.config/shell/p10k.zsh
+      source ${HOME}/.config/shell/colors.zsh
+      source ${HOME}/.config/fzf/completion.sh
+      source ${HOME}/.config/fzf/keybindings.sh
+      export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
+      export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
+    create: true
+
+- name: Set default shell to zsh
+  user:
+    name: "{{ansible_env.USER}}"
+    force: true
+    shell: /bin/zsh
+  become: true

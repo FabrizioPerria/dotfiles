@@ -25,3 +25,7 @@
   become: true
   when: lazydocker_version.stdout is defined
 
+- name: Copy files
+  copy:
+    src: "../lazydocker"
+    dest: "${HOME}/.config/"

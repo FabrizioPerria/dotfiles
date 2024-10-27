@@ -7,3 +7,8 @@
 
 - name: Install fzf
   command: ${HOME}/.fzf/install --all --no-update-rc
+
+- name: Copy files
+  copy:
+    src: "../fzf"
+    dest: "${HOME}/.config/"

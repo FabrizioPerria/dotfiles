@@ -24,3 +24,8 @@
   command: install /tmp/lazygit /usr/local/bin
   become: true
   when: lazygit_version.stdout is defined
+
+- name: Copy files
+  copy:
+    src: "../lazygit"
+    dest: "${HOME}/.config/"
