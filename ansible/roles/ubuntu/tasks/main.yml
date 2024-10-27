@@ -153,12 +153,17 @@
   include_role:
     name: common/linux/fonts
   vars:
-    font_src: "../NerdFonts/"
+    font_src: "{{playbook_dir}}/../NerdFonts/"
 
 - name: Remove .config
   file:
     path: "${HOME}/.config"
     state: absent
+
+- name: Create .config
+  file:
+    state: directory
+    path: "${HOME}/.config"
 
 - name: Setup zsh
   include_role:
@@ -195,10 +200,6 @@
   include_role:
     name: common/shared/fzf
 
-- name: Install Regolith
-  include_role:
-    name: common/linux/regolith
-
 - name: Setup tmux
   include_role:
     name: common/shared/tpm
@@ -212,5 +213,9 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "../alacritty"
-    - "../fastfetch"
+    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../fastfetch"
+    
+- name: Install Regolith
+  include_role:
+    name: common/linux/regolith

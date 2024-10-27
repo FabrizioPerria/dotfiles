@@ -69,13 +69,18 @@
 
 - name: Copy font files
   copy:
-    src: "../NerdFonts/"
+    src: "{{playbook_dir}}/../NerdFonts/"
     dest: "/Library/Fonts/"
 
 - name: Remove .config
   file:
     path: "${HOME}/.config"
     state: absent
+
+- name: Create .config
+  file:
+    state: directory
+    path: "${HOME}/.config"
 
 - name: Setup zsh
   include_role:
@@ -119,7 +124,7 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "../alacritty"
-    - "../fastfetch"
-    - "../aerospace"
+    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../fastfetch"
+    - "{{playbook_dir}}/../aerospace"
 

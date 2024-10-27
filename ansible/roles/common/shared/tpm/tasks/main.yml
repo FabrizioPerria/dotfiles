@@ -1,4 +1,9 @@
 ---
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../tmux"
+    dest: "${HOME}/.config/"
+ 
 - name: Remove .tmux
   file:
     path: "${HOME}/.tmux"
@@ -9,8 +14,3 @@
 
 - name: Run tmux plugin install script
   command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
-
-- name: Copy files
-  copy:
-    src: "../tmux"
-    dest: "${HOME}/.config/"

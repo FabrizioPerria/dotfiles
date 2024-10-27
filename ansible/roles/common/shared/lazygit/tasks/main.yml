@@ -27,5 +27,5 @@
 
 - name: Copy files
   copy:
-    src: "../lazygit"
+    src: "{{playbook_dir}}/../lazygit"
     dest: "${HOME}/.config/"

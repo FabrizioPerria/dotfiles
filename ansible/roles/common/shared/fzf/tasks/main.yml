@@ -10,5 +10,5 @@
 
 - name: Copy files
   copy:
-    src: "../fzf"
+    src: "{{playbook_dir}}/../fzf"
     dest: "${HOME}/.config/"

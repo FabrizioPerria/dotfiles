@@ -1,7 +1,7 @@
 ---
 - name: Copy files
   copy:
-    src: "../shell"
+    src: "{{playbook_dir}}/../shell"
     dest: "${HOME}/.config/"
 
 - name: Add source commands to .zshrc

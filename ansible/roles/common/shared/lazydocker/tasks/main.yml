@@ -27,5 +27,5 @@
 
 - name: Copy files
   copy:
-    src: "../lazydocker"
+    src: "{{playbook_dir}}/../lazydocker"
     dest: "${HOME}/.config/"

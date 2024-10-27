@@ -1,7 +1,7 @@
 ---
 - name: Copy files
   copy:
-    src: "../nvim"
+    src: "{{playbook_dir}}/../nvim"
     dest: "${HOME}/.config/"
 
 - name: Remove nvim cache

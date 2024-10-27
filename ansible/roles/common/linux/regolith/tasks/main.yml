@@ -52,7 +52,7 @@
 
 - name: Copy files
   copy:
-    src: "../regolith3"
+    src: "{{playbook_dir}}/../regolith3"
     dest: "${HOME}/.config/"
 
 - name: Make bar scripts executable
