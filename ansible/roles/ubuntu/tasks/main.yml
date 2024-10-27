@@ -99,25 +99,24 @@
     state: present
   become: true
 
+
+- name: Install snap packages
+  community.general.snap:
+    name: alacritty
+    classic: true
+  loop:
+    - alacritty
+    - yq
+    - slack
+  become: true
+
 - name: Install i3-autolayout
   shell: cargo install --root /usr i3-autolayout
   become: true
 
 - name: Install ripgrep
-  shell: cargo install --root /usr --features 'pcre2' ripgrep
-  become: true
-
-- name: Install alacritty
-  community.general.snap:
-    name: alacritty
-    classic: true
-  become: true
-
-- name: Install yq
-  community.general.snap:
-    name: yq
-    classic: true
-  become: true
+  include_role:
+    name: common/ripgrep
 
 - name: Install lazySQL
   include_role:

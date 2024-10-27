@@ -7,8 +7,6 @@
       - fastfetch
       - tmux
       - neovim
-      - fzf
-      - ripgrep
       - fd
       - llvm
       - yq
@@ -26,6 +24,7 @@
       - fontconfig
       - luarocks
       - axel
+      - rust
     state: present
 
 - name: Install cask
@@ -34,6 +33,10 @@
       - nikitabobko/tap/aerospace
       - alfred
     state: present
+
+- name: Install ripgrep
+  include_role:
+    name: common/ripgrep
 
 - name: Install lazySQL
   include_role:
