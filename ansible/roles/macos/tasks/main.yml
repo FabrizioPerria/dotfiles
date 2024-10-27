@@ -37,47 +37,30 @@
       - alfred
     state: present
 
-- name: Get the latest LazySQL version
-  shell: >
-    curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" |
-    rg -Po '"tag_name": "v\K[^"]*'
-  register: lazysql_version
+- name: Install lazySQL
+  include_role:
+    name: common/lazysql
+  vars:
+    os: Linux
+    arch: "{{ lazydocker_arch }}"
 
-- name: Download LazySQL tarball
-  get_url:
-    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_Darwin_arm64.tar.gz"
-    dest: "/tmp/lazysql.tar.gz"
-  when: lazysql_version.stdout is defined
+- name: Install lazydocker
+  include_role:
+    name: common/lazydocker
+  vars:
+    os: Darwin
+    arch: arm64
 
-- name: Extract LazySQL binary
-  unarchive:
-    src: "/tmp/lazysql.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazysql"
-    remote_src: true
-  when: lazysql_version.stdout is defined
-
-- name: Install LazySQL
-  command: install /tmp/lazysql /usr/local/bin
-  become: true
-  when: lazysql_version.stdout is defined
+- name: Install lazygit
+  include_role:
+    name: common/lazygit
+  vars:
+    os: Darwin
+    arch: arm64
 
 - name: Download and install NVM
-  shell: >
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh |
-    bash
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-
-- name: Load NVM and install Node.js
-  shell: >
-    . {{ ansible_env.HOME }}/.nvm/nvm.sh &&
-    nvm install --lts &&
-    nvm alias default lts/*
-  environment:
-    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-  args:
-    executable: /bin/bash
+  include_role:
+    name: common/nvm
 
 - name: Download fzf
   git:
@@ -101,55 +84,23 @@
     state: link
   become: true
 
-- name: Remove any existing Go installation
-  file:
-    path: /usr/local/go
-    state: absent
-  become: true
+- name: Install go
+  include_role:
+    name: common/go
+  vars:
+    version: 1.23.0
+    os: darwin
+    arch: arm64
 
-- name: Download Go
-  get_url:
-    url: https://go.dev/dl/go1.23.0.darwin-arm64.tar.gz
-    dest: /tmp/go.tar.gz
-
-- name: Extract go.tar.gz
-  unarchive:
-    src: "/tmp/go.tar.gz"
-    dest: "/usr/local/"
-    remote_src: true
-  become: true
-
-- name: Remove Go tarball
-  file:
-    path: /tmp/go.tar.gz
-    state: absent
-
-- name: Install Go tools
-  become: true
-  environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-  shell: |
-    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
-
-- name: Remove .oh-my-zsh
-  file:
-    path: "${HOME}/.oh-my-zsh"
-    state: absent
+- name: Install oh-my-zsh
+  include_role:
+    name: common/oh-my-zsh
 
 - name: Remove .tmux
   file:
     path: "${HOME}/.tmux"
     state: absent
 
-- name: Install oh-my-zsh
-  shell: >
-    bash -c
-    "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    ""
-    --unattended
 
 - name: tpm
   shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm

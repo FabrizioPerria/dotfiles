@@ -1,0 +1,4 @@
+---
+os: darwin
+arch: arm64
+version: 1.23.0

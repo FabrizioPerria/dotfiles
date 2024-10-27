@@ -1,0 +1,25 @@
+---
+- name: Get the latest LazySQL version
+  shell: >
+    curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" |
+    rg -Po '"tag_name": "v\K[^"]*'
+  register: lazysql_version
+
+- name: Download LazySQL tarball
+  get_url:
+    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_{{ os }}_{{arch}}.tar.gz"
+    dest: "/tmp/lazysql.tar.gz"
+  when: lazysql_version.stdout is defined
+
+- name: Extract LazySQL binary
+  unarchive:
+    src: "/tmp/lazysql.tar.gz"
+    dest: "/tmp/"
+    creates: "/tmp/lazysql"
+    remote_src: true
+  when: lazysql_version.stdout is defined
+
+- name: Install LazySQL
+  command: install /tmp/lazysql /usr/local/bin
+  become: true
+  when: lazysql_version.stdout is defined
