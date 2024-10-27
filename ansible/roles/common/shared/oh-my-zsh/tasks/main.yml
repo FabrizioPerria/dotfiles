@@ -34,7 +34,7 @@
       dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
     }
     - {
-      repo: "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git",
+      repo: "https://github.com/fabrizioperria/zsh-autoswitch-virtualenv.git",
       dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
     }
     - {

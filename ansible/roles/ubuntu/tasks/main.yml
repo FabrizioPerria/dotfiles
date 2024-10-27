@@ -7,6 +7,7 @@
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     regolith_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+    code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
@@ -34,6 +35,33 @@
   apt_repository:
     repo: ppa:neovim-ppa/unstable
   become: true
+
+- name: Download the Microsoft GPG key
+  ansible.builtin.get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /tmp/packages.microsoft.gpg
+    mode: "0644"
+
+- name: Add the Microsoft GPG key to trusted keyring
+  ansible.builtin.command:
+    cmd: gpg --dearmor /tmp/packages.microsoft.gpg
+    creates: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+  register: gpg_result
+
+- name: Move the dearmored GPG key to the apt trusted.gpg.d directory
+  ansible.builtin.copy:
+    src: /tmp/packages.microsoft.gpg
+    dest: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+    owner: root
+    group: root
+    mode: "0644"
+  when: gpg_result is changed
+
+- name: Add the Visual Studio Code repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    filename: vscode
+    state: present
 
 - name: Update apt cache again
   apt:
@@ -72,6 +100,28 @@
       - clangd
       - snapd
       - cargo
+      - cifs-utils
+      - virtualenv
+      - nfs-common
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - llvm
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+      - dcmtk
+      - python3.11
+      - code
+      - azure-cli
     state: present
   become: true
 
@@ -89,17 +139,24 @@
     - alacritty
     - yq
     - slack
+    - code
   become: true
 
 - name: Install ripgrep
   include_role:
     name: common/shared/ripgrep
 
+- name: Install Weasis
+  include_role:
+    name: common/linux/weasis
+  vars:
+    version: "3.6.2"
+    install_url: "https://github.com/nroduit/Weasis/releases/download/v{{ version }}/weasis_{{ version }}-1_amd64.deb"
+    download_path: "/tmp/weasis.deb"
 
 - name: Download and install NVM
   include_role:
     name: common/shared/nvm
-
 
 - name: Create local bin directory
   file:
@@ -115,7 +172,7 @@
 - name: Create symlink for python
   shell: >
     rm -f $(dirname $(which python3))/python &&
-    ln -s $(which python3) $(dirname $(which python3))/python
+    ln -s $(which python3.11) $(dirname $(which python3))/python
   become: true
 
 - name: Create symlink for tmux
@@ -215,7 +272,7 @@
   loop:
     - "{{playbook_dir}}/../alacritty"
     - "{{playbook_dir}}/../fastfetch"
-    
+
 - name: Install Regolith
   include_role:
     name: common/linux/regolith
