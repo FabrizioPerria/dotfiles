@@ -26,8 +26,6 @@
       - fontconfig
       - luarocks
       - axel
-      - lazygit
-      - lazydocker
     state: present
 
 - name: Install cask
@@ -41,8 +39,8 @@
   include_role:
     name: common/lazysql
   vars:
-    os: Linux
-    arch: "{{ lazydocker_arch }}"
+    os: Darwin
+    arch: arm64
 
 - name: Install lazydocker
   include_role:
@@ -62,14 +60,9 @@
   include_role:
     name: common/nvm
 
-- name: Download fzf
-  git:
-    repo: "https://github.com/junegunn/fzf.git"
-    dest: "${HOME}/.fzf"
-    depth: 1
-
 - name: Install fzf
-  command: ${HOME}/.fzf/install --all --no-update-rc
+  include_role:
+    name: common/fzf
 
 - name: Create symlink for python
   shell: >
@@ -101,40 +94,8 @@
     path: "${HOME}/.tmux"
     state: absent
 
-
 - name: tpm
   shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-- name: Clone repositories
-  git:
-    repo: "{{ item.repo }}"
-    dest: "{{ item.dest }}"
-    depth: 1
-  loop:
-    - {
-      repo: "https://github.com/romkatv/powerlevel10k.git",
-      dest: "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-autosuggestions",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
-    }
-    - {
-      repo: "https://github.com/wfxr/forgit.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
-    }
-    - {
-      repo: "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
-    }
-    - {
-      repo: "https://github.com/z-shell/zsh-eza.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-eza",
-    }
 
 - name: Remove .config
   file:
