@@ -83,6 +83,9 @@ return {
             require("mason-lspconfig").setup({
                 handlers = {
                     function(server_name)
+                        if server_name == "jdtls" and not require'config.utils'.is_java_project() then
+                            return
+                        end
                         lspconfig[server_name].setup({
                             on_attach = lsp_attach_custom,
                             capabilities = lsp_capabilities,

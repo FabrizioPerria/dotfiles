@@ -1,53 +1,6 @@
-return {
-    -- {
-    --     "vhyrro/luarocks.nvim",
-    --     priority = 1000,
-    --     config = true,
-    --     lazy = true,
-    -- },
-    -- {
-    --     "rest-nvim/rest.nvim",
-    --     ft = "http",
-    --     dependencies = {
-    --         "vhyrro/luarocks.nvim",
-    --         "nvim-treesitter/nvim-treesitter",
-    --         "nvim-telescope/telescope.nvim",
-    --     },
-    --     filetypes = { "http" },
-    --     keys = {
-    --         { "<leader>rr", "<cmd>Rest run<cr>",                  desc = "Run request under the cursor", },
-    --         { "<leader>rl", "<cmd>Rest run last<cr>",             desc = "Re-run latest request", },
-    --         { "<leader>re", "<cmd>Telescope rest select_env<cr>", desc = "Select environment file", },
-    --
-    --     },
-    --     config = function()
-    --         require("rest-nvim").setup({
-    --             result = {
-    --                 split = {
-    --                     stay_in_current_window_after_split = false,
-    --                 },
-    --             },
-    --         })
-    --         require('telescope').load_extension('rest')
-    --     end,
-    -- },
-    {
-        "fabrizioperria/neotest-jdtls",
-        ft = "java",
-        lazy = true,
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            "nvim-neotest/neotest",
-        },
-        config = function()
-            local neotest = require("neotest")
-            local existing_adapters = neotest.adapters or {}
-            table.insert(existing_adapters, require("neotest-jdtls"))
-            neotest.setup({
-                adapters = existing_adapters,
-            })
-        end,
-    },
+
+local plugins = {
+    -- Other plugins
     {
         "nvim-neotest/neotest",
         lazy = true,
@@ -59,7 +12,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            { "alfaix/neotest-gtest", dependencies = {"nvim-treesitter/nvim-treesitter"} },
+            "alfaix/neotest-gtest",
         },
         keys = {
             {
@@ -148,3 +101,24 @@ return {
         end,
     },
 }
+
+if require('config.utils').is_java_project() then
+    table.insert(plugins, {
+        "fabrizioperria/neotest-jdtls",
+        ft = "java",
+        lazy = true,
+        event = { "BufReadPre", "BufNewFile" },
+        dependencies = {
+            "nvim-neotest/neotest",
+        },
+        config = function()
+            require("neotest").setup({
+                adapters = {
+                    require("neotest-jdtls")
+                }
+            })
+        end,
+    })
+end
+
+return plugins
