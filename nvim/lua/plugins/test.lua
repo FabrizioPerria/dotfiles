@@ -35,14 +35,16 @@ return {
         "fabrizioperria/neotest-jdtls",
         ft = "java",
         lazy = true,
+        event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "nvim-neotest/neotest",
         },
         config = function()
-            require("neotest").setup({
-                adapters = {
-                    require("neotest-jdtls")
-                }
+            local neotest = require("neotest")
+            local existing_adapters = neotest.adapters or {}
+            table.insert(existing_adapters, require("neotest-jdtls"))
+            neotest.setup({
+                adapters = existing_adapters,
             })
         end,
     },
@@ -63,7 +65,11 @@ return {
             {
                 "<leader>tt",
                 function()
-                    require("neotest").run.run(vim.fn.expand("%"))
+                    if vim.fn.expand("%:e") == "java" then
+                        require("java").test.run_current_class()
+                    else
+                        require("neotest").run.run(vim.fn.expand("%"))
+                    end
                 end,
                 desc = "Run File",
             },
