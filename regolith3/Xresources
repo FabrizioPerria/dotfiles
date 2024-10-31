@@ -1,6 +1,5 @@
 wm.bar.position: top
 regolith.look.path: /usr/share/regolith-look/lascaille
-wm.program.lock: /usr/bin/i3lock-fancy
 wm.gaps.focus_follows_mouse: true
 wm.program.compositor: $HOME/.config/regolith3/picom/init
 
@@ -67,3 +66,5 @@ wm.client.urgent.color.indicator: color_red
 wm.client.urgent.color.child_border: color_base03
 
 wm.window.border.size: 5
+regolith.wallpaper.file: /home/fabrizio/.config/regolith3/desktop.jpeg
+regolith.lockscreen.wallpaper.file: /home/fabrizio/.config/regolith3/desktop.jpeg
