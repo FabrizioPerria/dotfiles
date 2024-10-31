@@ -7,8 +7,6 @@
       - fastfetch
       - tmux
       - neovim
-      - fzf
-      - ripgrep
       - fd
       - llvm
       - yq
@@ -26,8 +24,7 @@
       - fontconfig
       - luarocks
       - axel
-      - lazygit
-      - lazydocker
+      - rust
     state: present
 
 - name: Install cask
@@ -37,56 +34,13 @@
       - alfred
     state: present
 
-- name: Get the latest LazySQL version
-  shell: >
-    curl -s "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" |
-    rg -Po '"tag_name": "v\K[^"]*'
-  register: lazysql_version
-
-- name: Download LazySQL tarball
-  get_url:
-    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_Darwin_arm64.tar.gz"
-    dest: "/tmp/lazysql.tar.gz"
-  when: lazysql_version.stdout is defined
-
-- name: Extract LazySQL binary
-  unarchive:
-    src: "/tmp/lazysql.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazysql"
-    remote_src: true
-  when: lazysql_version.stdout is defined
-
-- name: Install LazySQL
-  command: install /tmp/lazysql /usr/local/bin
-  become: true
-  when: lazysql_version.stdout is defined
+- name: Install ripgrep
+  include_role:
+    name: common/shared/ripgrep
 
 - name: Download and install NVM
-  shell: >
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh |
-    bash
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-
-- name: Load NVM and install Node.js
-  shell: >
-    . {{ ansible_env.HOME }}/.nvm/nvm.sh &&
-    nvm install --lts &&
-    nvm alias default lts/*
-  environment:
-    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-  args:
-    executable: /bin/bash
-
-- name: Download fzf
-  git:
-    repo: "https://github.com/junegunn/fzf.git"
-    dest: "${HOME}/.fzf"
-    depth: 1
-
-- name: Install fzf
-  command: ${HOME}/.fzf/install --all --no-update-rc
+  include_role:
+    name: common/shared/nvm
 
 - name: Create symlink for python
   shell: >
@@ -101,157 +55,76 @@
     state: link
   become: true
 
-- name: Remove any existing Go installation
-  file:
-    path: /usr/local/go
-    state: absent
-  become: true
-
-- name: Download Go
-  get_url:
-    url: https://go.dev/dl/go1.23.0.darwin-arm64.tar.gz
-    dest: /tmp/go.tar.gz
-
-- name: Extract go.tar.gz
-  unarchive:
-    src: "/tmp/go.tar.gz"
-    dest: "/usr/local/"
-    remote_src: true
-  become: true
-
-- name: Remove Go tarball
-  file:
-    path: /tmp/go.tar.gz
-    state: absent
-
-- name: Install Go tools
-  become: true
-  environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-  shell: |
-    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
-
-- name: Remove .oh-my-zsh
-  file:
-    path: "${HOME}/.oh-my-zsh"
-    state: absent
-
-- name: Remove .tmux
-  file:
-    path: "${HOME}/.tmux"
-    state: absent
+- name: Install go
+  include_role:
+    name: common/shared/go
+  vars:
+    version: 1.23.0
+    os: darwin
+    arch: arm64
 
 - name: Install oh-my-zsh
-  shell: >
-    bash -c
-    "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    ""
-    --unattended
+  include_role:
+    name: common/shared/oh-my-zsh
 
-- name: tpm
-  shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-- name: Clone repositories
-  git:
-    repo: "{{ item.repo }}"
-    dest: "{{ item.dest }}"
-    depth: 1
-  loop:
-    - {
-      repo: "https://github.com/romkatv/powerlevel10k.git",
-      dest: "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-autosuggestions",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
-    }
-    - {
-      repo: "https://github.com/wfxr/forgit.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
-    }
-    - {
-      repo: "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
-    }
-    - {
-      repo: "https://github.com/z-shell/zsh-eza.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-eza",
-    }
+- name: Copy font files
+  copy:
+    src: "{{playbook_dir}}/../NerdFonts/"
+    dest: "/Library/Fonts/"
 
 - name: Remove .config
   file:
     path: "${HOME}/.config"
     state: absent
 
-- name: Copy font files
-  copy:
-    src: "../NerdFonts/"
-    dest: "/Library/Fonts/"
+- name: Create .config
+  file:
+    state: directory
+    path: "${HOME}/.config"
+
+- name: Setup zsh
+  include_role:
+    name: common/shared/zsh
+
+- name: Install lazySQL
+  include_role:
+    name: common/shared/lazysql
+  vars:
+    os: Darwin
+    arch: arm64
+
+- name: Install lazydocker
+  include_role:
+    name: common/shared/lazydocker
+  vars:
+    os: Darwin
+    arch: arm64
+
+- name: Install lazygit
+  include_role:
+    name: common/shared/lazygit
+  vars:
+    os: Darwin
+    arch: arm64
+
+- name: Install fzf
+  include_role:
+    name: common/shared/fzf
+
+- name: Setup tmux
+  include_role:
+    name: common/shared/tpm
+
+- name: Setup nvim
+  include_role:
+    name: common/shared/nvim
 
 - name: Copy files
   copy:
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "../fzf"
-    - "../nvim"
-    - "../shell"
-    - "../tmux"
-    - "../alacritty"
-    - "../fastfetch"
-    - "../lazygit"
-    - "../lazydocker"
-    - "../aerospace"
+    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../fastfetch"
+    - "{{playbook_dir}}/../aerospace"
 
-- name: Add source commands to .zshrc
-  blockinfile:
-    path: "${HOME}/.zshrc"
-    block: |
-      source ${HOME}/.config/shell/aliases.zsh
-      source ${HOME}/.config/shell/exports.zsh
-      source ${HOME}/.config/shell/zsh.zsh
-      source ${HOME}/.config/shell/p10k.zsh
-      source ${HOME}/.config/shell/colors.zsh
-      source ${HOME}/.config/fzf/completion.sh
-      source ${HOME}/.config/fzf/keybindings.sh
-      export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
-      export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
-    create: true
-
-- name: Run tmux plugin install script
-  command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
-
-- name: Remove nvim cache
-  file:
-    path: "${HOME}/.cache/nvim"
-    state: absent
-
-- name: Remove nvim plugins
-  file:
-    path: "${HOME}/.local/share/nvim"
-    state: absent
-
-- name: Remove nvim logs
-  file:
-    path: "${HOME}/.local/state/nvim"
-    state: absent
-
-- name: Set default shell to zsh
-  user:
-    name: "{{ansible_env.USER}}"
-    force: true
-    shell: /bin/zsh
-  become: true
-
-- name: Run nvim commands
-  environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-  shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"

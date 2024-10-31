@@ -1,0 +1,14 @@
+---
+- name: Download fzf
+  git:
+    repo: "https://github.com/junegunn/fzf.git"
+    dest: "${HOME}/.fzf"
+    depth: 1
+
+- name: Install fzf
+  command: ${HOME}/.fzf/install --all --no-update-rc
+
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../fzf"
+    dest: "${HOME}/.config/"

@@ -1,0 +1,16 @@
+---
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../tmux"
+    dest: "${HOME}/.config/"
+ 
+- name: Remove .tmux
+  file:
+    path: "${HOME}/.tmux"
+    state: absent
+
+- name: tpm
+  shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+- name: Run tmux plugin install script
+  command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh

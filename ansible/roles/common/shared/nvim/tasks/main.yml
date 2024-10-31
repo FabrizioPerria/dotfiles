@@ -1,0 +1,26 @@
+---
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../nvim"
+    dest: "${HOME}/.config/"
+
+- name: Remove nvim cache
+  file:
+    path: "${HOME}/.cache/nvim"
+    state: absent
+
+- name: Remove nvim plugins
+  file:
+    path: "${HOME}/.local/share/nvim"
+    state: absent
+
+- name: Remove nvim logs
+  file:
+    path: "${HOME}/.local/state/nvim"
+    state: absent
+
+- name: Run nvim commands
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
+  shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"

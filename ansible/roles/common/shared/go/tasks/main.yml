@@ -1,0 +1,33 @@
+---
+- name: Remove any existing Go installation
+  file:
+    path: /usr/local/go
+    state: absent
+  become: true
+
+- name: Download Go
+  get_url:
+    url: https://go.dev/dl/go{{version}}.{{os}}-{{arch}}.tar.gz
+    dest: /tmp/go.tar.gz
+
+- name: Extract go.tar.gz
+  unarchive:
+    src: "/tmp/go.tar.gz"
+    dest: "/usr/local/"
+    remote_src: true
+  become: true
+
+- name: Remove Go tarball
+  file:
+    path: /tmp/go.tar.gz
+    state: absent
+
+- name: Install Go tools
+  become: true
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+  shell: |
+    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
+    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
+    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
+    /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest

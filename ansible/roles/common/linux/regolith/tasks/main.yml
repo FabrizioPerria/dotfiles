@@ -1,0 +1,85 @@
+---
+- name: Install required packages
+  apt:
+    name:
+      - software-properties-common
+      - apt-transport-https
+      - wget
+      - curl
+      - locales
+    state: present
+  become: true
+
+- name: Register the Regolith public key to local apt
+  ansible.builtin.apt_key:
+    url: https://regolith-desktop.org/regolith.key
+    state: present
+    keyring: /usr/share/keyrings/regolith-archive-keyring.gpg
+  become: true
+
+- name: Add the Regolith repository to apt sources
+  ansible.builtin.apt_repository:
+    repo: >
+      deb [arch={{ regolith_arch }}
+      signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg]
+      https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{ regolith_arch }}
+      jammy main
+    filename: "regolith"
+    state: present
+  become: true
+
+- name: Update apt cache again
+  apt:
+    update_cache: true
+  become: true
+
+- name: Install regolith
+  apt:
+    name:
+      - i3
+      - picom
+      - regolith-desktop
+      - regolith-session-flashback
+      - regolith-look-lascaille
+      - gnome-screenshot
+      - i3lock-fancy
+    state: present
+  become: true
+
+- name: Install i3-autolayout
+  shell: cargo install --root /usr i3-autolayout
+  become: true
+
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../regolith3"
+    dest: "${HOME}/.config/"
+
+- name: Make bar scripts executable
+  file:
+    path: "${HOME}/.config/regolith3/i3xrocks/scripts"
+    recurse: true
+    state: directory
+    mode: "u+x"
+
+- name: Make launch scripts executable
+  file:
+    path: "{{ item }}"
+    mode: "u+x"
+  loop:
+    - "${HOME}/.config/alacritty/launch"
+    - "${HOME}/.config/regolith3/picom/init"
+
+- name: setup wallpaper for regolith
+  blockinfile:
+    path: "${HOME}/.config/regolith3/Xresources"
+    block: |
+      regolith.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
+      regolith.lockscreen.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
+
+- name: update-alternatives for alacritty
+  community.general.alternatives:
+    name: x-terminal-emulator
+    path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
+    priority: 100
+  become: true

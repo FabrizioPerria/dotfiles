@@ -1,11 +1,13 @@
 ---
 - name: Get arch
   set_fact:
-    lazydocker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
-    lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     lazysql_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'x86_64' }}"
+    lazydocker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
+    lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     regolith_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+    docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+    code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
@@ -34,23 +36,32 @@
     repo: ppa:neovim-ppa/unstable
   become: true
 
-- name: Register the Regolith public key to local apt
-  ansible.builtin.apt_key:
-    url: https://regolith-desktop.org/regolith.key
-    state: present
-    keyring: /usr/share/keyrings/regolith-archive-keyring.gpg
-  become: true
+- name: Download the Microsoft GPG key
+  ansible.builtin.get_url:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    dest: /tmp/packages.microsoft.gpg
+    mode: "0644"
 
-- name: Add the Regolith repository to apt sources
+- name: Add the Microsoft GPG key to trusted keyring
+  ansible.builtin.command:
+    cmd: gpg --dearmor /tmp/packages.microsoft.gpg
+    creates: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+  register: gpg_result
+
+- name: Move the dearmored GPG key to the apt trusted.gpg.d directory
+  ansible.builtin.copy:
+    src: /tmp/packages.microsoft.gpg
+    dest: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
+    owner: root
+    group: root
+    mode: "0644"
+  when: gpg_result is changed
+
+- name: Add the Visual Studio Code repository
   ansible.builtin.apt_repository:
-    repo: >
-      deb [arch={{ regolith_arch }}
-      signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg]
-      https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{ regolith_arch }}
-      jammy main
-    filename: "regolith"
+    repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    filename: vscode
     state: present
-  become: true
 
 - name: Update apt cache again
   apt:
@@ -63,13 +74,6 @@
       - lua5.4
       - luarocks
       - zsh
-      - i3
-      - picom
-      - regolith-desktop
-      - regolith-session-flashback
-      - regolith-look-lascaille
-      - gnome-screenshot
-      - i3lock-fancy
       - git
       - tmux
       - neovim
@@ -96,143 +100,63 @@
       - clangd
       - snapd
       - cargo
+      - cifs-utils
+      - virtualenv
+      - nfs-common
+      - make
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+      - libbz2-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - llvm
+      - libncursesw5-dev
+      - xz-utils
+      - tk-dev
+      - libxml2-dev
+      - libxmlsec1-dev
+      - libffi-dev
+      - liblzma-dev
+      - dcmtk
+      - python3.11
+      - code
+      - azure-cli
     state: present
   become: true
 
-- name: Install i3-autolayout
-  shell: cargo install --root /usr i3-autolayout
-  become: true
+- name: Install Docker
+  include_role:
+    name: common/linux/docker
+  vars:
+    arch: "{{ docker_arch }}"
 
-- name: Install ripgrep
-  shell: cargo install --root /usr --features 'pcre2' ripgrep
-  become: true
-
-- name: Install alacritty
+- name: Install snap packages
   community.general.snap:
     name: alacritty
     classic: true
+  loop:
+    - alacritty
+    - yq
+    - slack
+    - code
   become: true
 
-- name: Install yq
-  community.general.snap:
-    name: yq
-    classic: true
-  become: true
+- name: Install ripgrep
+  include_role:
+    name: common/shared/ripgrep
 
-- name: Get the latest LazySQL version
-  shell: >
-    curl -s
-    "https://api.github.com/repos/jorgerojas26/lazysql/releases/latest" |
-    rg -Po '"tag_name": "v\K[^"]*'
-  register: lazysql_version
-  ignore_errors: true
-
-- name: Download LazySQL tarball
-  get_url:
-    url: "https://github.com/jorgerojas26/lazysql/releases/download/v{{ lazysql_version.stdout }}/lazysql_Linux_{{ lazysql_arch }}.tar.gz"
-    dest: "/tmp/lazysql.tar.gz"
-  when: lazysql_version.stdout is defined
-
-- name: Extract LazySQL binary
-  unarchive:
-    src: "/tmp/lazysql.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazysql"
-    remote_src: true
-  when: lazysql_version.stdout is defined
-
-- name: Install LazySQL
-  command: install /tmp/lazysql /usr/local/bin
-  become: true
-  when: lazysql_version.stdout is defined
-
-- name: Get the latest LazyDocker version
-  shell: >
-    curl -s
-    "https://api.github.com/repos/jesseduffield/lazydocker/releases/latest" |
-    rg -Po '"tag_name": "v\K[^"]*'
-  register: lazydocker_version
-
-- name: Download LazyDocker tarball
-  get_url:
-    url: "https://github.com/jesseduffield/lazydocker/releases/latest/download/lazydocker_{{ lazydocker_version.stdout }}_Linux_{{ lazydocker_arch }}.tar.gz"
-    dest: "/tmp/lazydocker.tar.gz"
-  when: lazydocker_version.stdout is defined
-
-- name: Extract LazyDocker binary
-  unarchive:
-    src: "/tmp/lazydocker.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazydocker"
-    remote_src: true
-  when: lazydocker_version.stdout is defined
-
-- name: Install LazyDocker
-  command: install /tmp/lazydocker /usr/local/bin
-  become: true
-  when: lazydocker_version.stdout is defined
-
-- name: Get the latest LazyGit version
-  shell: >
-    curl -s
-    "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" |
-    grep -Po '"tag_name": "v\K[^"]*'
-  register: lazygit_version
-
-- name: Download LazyGit tarball
-  get_url:
-    url: "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_{{ lazygit_version.stdout }}_Linux_{{ lazygit_arch }}.tar.gz"
-    dest: "/tmp/lazygit.tar.gz"
-  when: lazygit_version.stdout is defined
-
-- name: Extract LazyGit binary
-  unarchive:
-    src: "/tmp/lazygit.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazygit"
-    remote_src: true
-  when: lazygit_version.stdout is defined
-
-- name: Install LazyGit
-  command: install /tmp/lazygit /usr/local/bin
-  become: true
-  when: lazygit_version.stdout is defined
-
-- name: Download the latest release of fastfetch
-  get_url:
-    url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb"
-    dest: "/tmp/fastfetch.deb"
-
-- name: Install fastfetch deb
-  apt:
-    deb: "/tmp/fastfetch.deb"
-  become: true
+- name: Install Weasis
+  include_role:
+    name: common/linux/weasis
+  vars:
+    version: "3.6.2"
+    install_url: "https://github.com/nroduit/Weasis/releases/download/v{{ version }}/weasis_{{ version }}-1_amd64.deb"
+    download_path: "/tmp/weasis.deb"
 
 - name: Download and install NVM
-  shell: >
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh |
-    bash
-  args:
-    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
-
-- name: Load NVM and install Node.js
-  shell: >
-    . {{ ansible_env.HOME }}/.nvm/nvm.sh &&
-    nvm install --lts &&
-    nvm alias default lts/*
-  environment:
-    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-  args:
-    executable: /bin/bash
-
-- name: Download fzf
-  git:
-    repo: "https://github.com/junegunn/fzf.git"
-    dest: "${HOME}/.fzf"
-    depth: 1
-
-- name: Install fzf
-  command: ${HOME}/.fzf/install --all --no-update-rc
+  include_role:
+    name: common/shared/nvm
 
 - name: Create local bin directory
   file:
@@ -248,10 +172,10 @@
 - name: Create symlink for python
   shell: >
     rm -f $(dirname $(which python3))/python &&
-    ln -s $(which python3) $(dirname $(which python3))/python
+    ln -s $(which python3.11) $(dirname $(which python3))/python
   become: true
 
-- name: Create symlink for tmux (Linux)
+- name: Create symlink for tmux
   file:
     src: /usr/bin/tmux
     dest: /usr/local/bin/tmux
@@ -264,38 +188,13 @@
     dest: ${HOME}/.local/bin/bat
     state: link
 
-- name: Remove any existing Go installation
-  file:
-    path: /usr/local/go
-    state: absent
-  become: true
-
-- name: Download Go
-  get_url:
-    url: https://go.dev/dl/go1.23.0.linux-{{ go_arch }}.tar.gz
-    dest: /tmp/go.tar.gz
-
-- name: Extract go.tar.gz
-  unarchive:
-    src: "/tmp/go.tar.gz"
-    dest: "/usr/local/"
-    remote_src: true
-  become: true
-
-- name: Remove Go tarball
-  file:
-    path: /tmp/go.tar.gz
-    state: absent
-
-- name: Install Go tools
-  become: true
-  environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-  shell: |
-    /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
-    /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-    /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+- name: Install go
+  include_role:
+    name: common/shared/go
+  vars:
+    version: 1.23.0
+    os: linux
+    arch: "{{ go_arch }}"
 
 - name: Generate locale
   locale_gen:
@@ -303,162 +202,77 @@
     state: present
   become: true
 
-- name: Remove .oh-my-zsh
-  file:
-    path: "${HOME}/.oh-my-zsh"
-    state: absent
-
-- name: Remove .tmux
-  file:
-    path: "${HOME}/.tmux"
-    state: absent
-
 - name: Install oh-my-zsh
-  shell: >
-    bash -c
-    "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    ""
-    --unattended
+  include_role:
+    name: common/shared/oh-my-zsh
 
-- name: tpm
-  shell: git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-- name: Clone repositories
-  git:
-    repo: "{{ item.repo }}"
-    dest: "{{ item.dest }}"
-    depth: 1
-  loop:
-    - {
-      repo: "https://github.com/romkatv/powerlevel10k.git",
-      dest: "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting",
-    }
-    - {
-      repo: "https://github.com/zsh-users/zsh-autosuggestions",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
-    }
-    - {
-      repo: "https://github.com/wfxr/forgit.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
-    }
-    - {
-      repo: "https://github.com/MichaelAquilina/zsh-autoswitch-virtualenv.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
-    }
-    - {
-      repo: "https://github.com/z-shell/zsh-eza.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-eza",
-    }
+- name: Setup Font
+  include_role:
+    name: common/linux/fonts
+  vars:
+    font_src: "{{playbook_dir}}/../NerdFonts/"
 
 - name: Remove .config
   file:
     path: "${HOME}/.config"
     state: absent
 
-- name: ensure fonts directory
+- name: Create .config
   file:
-    path: "${HOME}/.fonts"
     state: directory
+    path: "${HOME}/.config"
 
-- name: Copy font files on ubuntu
-  copy:
-    src: "../NerdFonts/"
-    dest: "${HOME}/.fonts/"
+- name: Setup zsh
+  include_role:
+    name: common/shared/zsh
 
-- name: Refresh font cache
-  shell: fc-cache -fv
-  become: true
+- name: Install lazySQL
+  include_role:
+    name: common/shared/lazysql
+  vars:
+    os: Linux
+    arch: "{{ lazysql_arch }}"
+
+- name: Install lazydocker
+  include_role:
+    name: common/shared/lazydocker
+  vars:
+    os: Linux
+    arch: "{{ lazydocker_arch }}"
+
+- name: Install lazygit
+  include_role:
+    name: common/shared/lazygit
+  vars:
+    os: Linux
+    arch: "{{ lazygit_arch }}"
+
+- name: Install fastfetch
+  include_role:
+    name: common/linux/fastfetch
+  vars:
+    arch: "{{fastfetch_arch}}"
+
+- name: Install fzf
+  include_role:
+    name: common/shared/fzf
+
+- name: Setup tmux
+  include_role:
+    name: common/shared/tpm
+
+- name: Setup nvim
+  include_role:
+    name: common/shared/nvim
 
 - name: Copy files
   copy:
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "../fzf"
-    - "../nvim"
-    - "../shell"
-    - "../tmux"
-    - "../alacritty"
-    - "../fastfetch"
-    - "../lazygit"
-    - "../lazydocker"
-    - "../regolith3"
+    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../fastfetch"
 
-- name: Make bar scripts executable
-  file:
-    path: "${HOME}/.config/regolith3/i3xrocks/scripts"
-    recurse: true
-    state: directory
-    mode: "u+x"
-
-- name: Make launch scripts executable
-  file:
-    path: "{{ item }}"
-    mode: "u+x"
-  loop:
-    - "${HOME}/.config/alacritty/launch"
-    - "${HOME}/.config/regolith3/picom/init"
-
-- name: update-alternatives for alacritty
-  community.general.alternatives:
-    name: x-terminal-emulator
-    path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
-    priority: 100
-  become: true
-
-- name: setup wallpaper for regolith
-  blockinfile:
-    path: "${HOME}/.config/regolith3/Xresources"
-    block: |
-      regolith.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
-      regolith.lockscreen.wallpaper.file: {{ ansible_env.HOME }}/.config/regolith3/desktop.jpeg
-
-- name: Add source commands to .zshrc
-  blockinfile:
-    path: "${HOME}/.zshrc"
-    block: |
-      source ${HOME}/.config/shell/aliases.zsh
-      source ${HOME}/.config/shell/exports.zsh
-      source ${HOME}/.config/shell/zsh.zsh
-      source ${HOME}/.config/shell/p10k.zsh
-      source ${HOME}/.config/shell/colors.zsh
-      source ${HOME}/.config/fzf/completion.sh
-      source ${HOME}/.config/fzf/keybindings.sh
-      export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
-      export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
-    create: true
-
-- name: Run tmux plugin install script
-  command: ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
-
-- name: Remove nvim cache
-  file:
-    path: "${HOME}/.cache/nvim"
-    state: absent
-
-- name: Remove nvim plugins
-  file:
-    path: "${HOME}/.local/share/nvim"
-    state: absent
-
-- name: Remove nvim logs
-  file:
-    path: "${HOME}/.local/state/nvim"
-    state: absent
-
-- name: Set default shell to zsh
-  user:
-    name: "{{ansible_env.USER}}"
-    force: true
-    shell: /bin/zsh
-  become: true
-
-# - name: Run nvim commands
-#   environment:
-#     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-#     NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-#   shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
+- name: Install Regolith
+  include_role:
+    name: common/linux/regolith
