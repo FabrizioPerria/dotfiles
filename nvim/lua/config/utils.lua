@@ -78,4 +78,16 @@ M.is_java_project = function()
     return false
 end
 
+M.find_python_executable = function()
+    local python_executable = vim.fn.exepath("python3")
+    if python_executable == "" then
+        python_executable = vim.fn.exepath("python")
+    end
+    if python_executable == "" then
+        M.err("Python executable not found")
+        return
+    end
+    return python_executable
+end
+
 return M

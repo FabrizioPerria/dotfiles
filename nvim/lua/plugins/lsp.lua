@@ -1,3 +1,5 @@
+local is_java_project = require("config.utils").is_java_project()
+
 return {
     {
         "L3MON4D3/LuaSnip",
@@ -49,12 +51,13 @@ return {
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
-            "fabrizioperria/nvim-java",
-            --"nvim-java/nvim-java"
+            "fabrizioperria/nvim-java"
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
-            require("java").setup()
+            if is_java_project then
+                require("java").setup()
+            end
             local lspconfig = require("lspconfig")
             require("mason").setup({})
             local lsp_attach_custom = function(client, bufnr)
@@ -83,7 +86,7 @@ return {
             require("mason-lspconfig").setup({
                 handlers = {
                     function(server_name)
-                        if server_name == "jdtls" and not require'config.utils'.is_java_project() then
+                        if server_name == "jdtls" and not is_java_project then
                             return
                         end
                         lspconfig[server_name].setup({
@@ -121,17 +124,6 @@ return {
                     },
                 },
             })
-            -- lspconfig.basedpyright.setup({
-            --     on_attach = lsp_attach_custom,
-            --     capabilities = lsp_capabilities,
-            --     settings = {
-            --         basedpyright = {
-            --             analysis = {
-            --                 typeCheckingMode = "standard",
-            --             },
-            --         },
-            --     },
-            -- })
             lspconfig.gopls.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
@@ -207,8 +199,8 @@ return {
                 },
                 formatting = {
                     format = require("lspkind").cmp_format({
-                        mode = "symbol_text",  -- show only symbol annotations
-                        maxwidth = 80,         -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+                        mode = "symbol_text", -- show only symbol annotations
+                        maxwidth = 80, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
                         ellipsis_char = "...", -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
                     }),
                 },

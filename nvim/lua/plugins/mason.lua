@@ -26,14 +26,8 @@ end, {})
 vim.api.nvim_create_user_command("EnablePython", function()
     require("mason-tool-installer").setup({
         ensure_installed = {
-            -- "mypy",
-            -- "ruff",
-            "black",
-            "isort",
             "debugpy",
-            -- "python-lsp-server",
             "pyright",
-            -- "basedpyright",
         },
     })
     require("mason-tool-installer").check_install(false, true)
@@ -43,24 +37,12 @@ return {
     {
         "williamboman/mason.nvim",
     },
-    -- {
-    --     "williamboman/mason-lspconfig.nvim",
-    --     config = function()
-    --         require("mason-lspconfig").setup()
-    --     end,
-    -- },
     {
         "WhoIsSethDaniel/mason-tool-installer.nvim",
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
-                    -- "mypy",
-                    -- "ruff",
-                    "black",
-                    "isort",
                     "debugpy",
-                    -- "python-lsp-server",
-                    -- "basedpyright",
                     "pyright",
 
                     "gopls",

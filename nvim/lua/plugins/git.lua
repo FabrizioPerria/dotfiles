@@ -6,26 +6,56 @@ local function DiffViewToggle()
     end
 end
 
+local blameFormat = function(line_porcelain, config, idx)
+    local hash = string.sub(line_porcelain.hash, 0, 7)
+    local line_with_hl = {}
+    local is_commited = hash ~= "0000000"
+    if is_commited then
+        local summary
+        if #line_porcelain.summary > config.max_summary_width then
+            summary = string.sub(line_porcelain.summary, 0, config.max_summary_width - 3) .. "..."
+        else
+            summary = line_porcelain.summary
+        end
+        summary = string.gsub(summary, "Merged in ", "⇵")
+        line_with_hl = {
+            idx = idx,
+            values = {
+                {
+                    textValue = summary,
+                    hl = "Comment",
+                },
+                {
+                    textValue = os.date(config.date_format, line_porcelain.committer_time),
+                    hl = "Comment",
+                },
+                {
+                    textValue = line_porcelain.author,
+                    hl = hash,
+                },
+                {
+                    textValue = hash,
+                    hl = "Comment",
+                },
+            },
+            format = "%s (%s) %s\t%s",
+        }
+    else
+        line_with_hl = {
+            idx = idx,
+            values = {
+                {
+                    textValue = "Not committed",
+                    hl = "Comment",
+                },
+            },
+            format = "%s",
+        }
+    end
+    return line_with_hl
+end
+
 return {
-    -- {
-    --     "kdheepak/lazygit.nvim",
-    --     cmd = {
-    --         "LazyGit",
-    --         "LazyGitConfig",
-    --         "LazyGitCurrentFile",
-    --         "LazyGitFilter",
-    --         "LazyGitFilterCurrentFile",
-    --     },
-    --     -- optional for floating window border decoration
-    --     dependencies = {
-    --         "nvim-lua/plenary.nvim",
-    --     },
-    --     -- setting the keybinding for LazyGit with 'keys' is recommended in
-    --     -- order to load the plugin when the command is run for the first time
-    --     keys = {
-    --         { "<leader>g", "<cmd>LazyGit<cr>", desc = "LazyGit" }
-    --     }
-    -- },
     {
         "lewis6991/gitsigns.nvim",
         config = function()
@@ -43,24 +73,33 @@ return {
     },
     {
         "FabijanZulj/blame.nvim",
-        keys = {
-            { "<leader>gB", "<cmd>ToggleBlame virtual<CR>", desc = "toggle git blame - Full file" },
-        },
-    },
-    {
-        "f-person/git-blame.nvim",
+        lazy = false,
         config = function()
-            vim.g.gitblame_enabled = false
-            vim.g.gitblame_virtual_text_column = 120
-            vim.g.gitblame_highlight_group = "Question"
-            vim.g.gitblame_message_when_not_committed = "NOT COMMITTED YET"
-            require("gitblame").setup({
-                enabled = false,
-                message_template = "[<sha>] <summary> • <author> • <date>",
+            require("blame").setup({
+                date_format = "%d.%m.%Y",
+                virtual_style = "right_align",
+                focus_blame = true,
+                merge_consecutive = false,
+                max_summary_width = 40,
+                colors = nil,
+                blame_options = nil,
+                commit_detail_view = "vsplit",
+                format_fn = blameFormat,
+                mappings = {
+                    commit_info = "i",
+                    stack_push = "<TAB>",
+                    stack_pop = "<BS>",
+                    show_commit = "<CR>",
+                    close = { "<esc>", "q" },
+                },
             })
         end,
+        opts = {
+            blame_options = { "-w" },
+        },
         keys = {
-            { "<leader>gb", "<cmd>GitBlameToggle<CR>", desc = "toggle git blame - Single Line" },
+            { "<leader>gb", "<cmd>BlameToggle virtual<CR>", desc = "toggle git blame - virtual" },
+            { "<leader>gB", "<cmd>BlameToggle window<CR>", desc = "toggle git blame - window" },
         },
     },
     {
@@ -83,10 +122,10 @@ return {
                 end,
                 desc = "toggle diff",
             },
-            { "<leader>gd<Left>",  "<cmd>lua require('diffview').diffget('base')<CR>", desc = "" },
+            { "<leader>gd<Left>", "<cmd>lua require('diffview').diffget('base')<CR>", desc = "" },
             { "<leader>gd<Right>", "<cmd>lua require('diffview').diffget('mine')<CR>", desc = "" },
-            { "<leader>gd<Down>",  "<cmd>lua require('diffview').diffput('mine')<CR>", desc = "" },
-            { "<leader>gd<Up>",    "<cmd>lua require('diffview').diffput('base')<CR>", desc = "" },
+            { "<leader>gd<Down>", "<cmd>lua require('diffview').diffput('mine')<CR>", desc = "" },
+            { "<leader>gd<Up>", "<cmd>lua require('diffview').diffput('base')<CR>", desc = "" },
         },
     },
 }

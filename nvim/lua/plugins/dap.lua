@@ -14,7 +14,9 @@ return {
         },
         config = function()
             require("dap-go").setup()
-            require("dap-python").setup(".venv/bin/python")
+            -- python_executable = require("config.utils").find_python_executable()
+            -- require("dap-python").setup(python_executable)
+            require("dap-python").setup("python")
             local dap = require("dap")
             local dapui = require("dapui")
             dapui.setup()
@@ -107,6 +109,9 @@ return {
                     program = "${file}",
                     pythonPath = "python",
                     console = "integratedTerminal",
+                    env = {
+                        PYTHONPATH = "${workspaceFolder}:${workspaceFolder}/src",
+                    }
                 },
             }
             vim.g.dap_virtual_text = true
