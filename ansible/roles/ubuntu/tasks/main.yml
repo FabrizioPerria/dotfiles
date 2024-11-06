@@ -287,3 +287,44 @@
 - name: Install Regolith
   include_role:
     name: common/linux/regolith
+
+- pause:
+    prompt: "Provide AZURE_PYPI_AUTH_URL"
+    echo: true
+  register: azure_pypi_auth_url
+
+- when: azure_pypi_auth_url.user_input is defined
+  blocks:
+    - name: Set Azure PyPi auth URL
+      shell: >
+        echo "export AZURE_PYPI_AUTH_URL=${azure_pypi_auth_url.user_input}" >> ${HOME}/.config/shell/exports.zsh
+      become: true
+      when: azure_pypi_auth_url.user_input is defined
+
+    - name: Setup global pip conf
+      shell: >
+        echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
+        echo "index-url = ${AZURE_PYPI_AUTH_URL}" >> ${HOME}/.config/pip/pip.conf
+      become: true
+
+- pause:
+    prompt: "Provide CLOUD_USERNAME"
+    echo: true
+  register: cloud_username
+
+- name: Set Cloud Username
+  shell: >
+    echo "export CLOUD_USERNAME=${cloud_username.user_input}" >> ${HOME}/.config/shell/exports.zsh
+  become: true
+  when: cloud_username.user_input is defined
+
+- pause:
+    prompt: "Provide CLOUD_PASSWORD"
+    echo: true
+  register: cloud_password
+
+- name: Set Cloud Password
+  shell: >
+    echo "export CLOUD_PASSWORD=${cloud_password.user_input}" >> ${HOME}/.config/shell/exports.zsh
+  become: true
+  when: cloud_password.user_input is defined
