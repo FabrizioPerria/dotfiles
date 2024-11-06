@@ -10,3 +10,4 @@
   apt:
     deb: "{{ download_path }}"
   when: download_result is succeeded
+  become: true

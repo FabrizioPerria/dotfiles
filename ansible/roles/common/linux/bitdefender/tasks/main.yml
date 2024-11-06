@@ -1,0 +1,37 @@
+---
+- pause:
+    prompt: "Provide location of Bitdefender installer"
+    echo: true
+  register: bitdefender_location
+
+- when: bitdefender_location.user_input is defined and bitdefender_location.user_input.startswith("http")
+  block:
+    - name: Download Bitdefender package
+      get_url:
+        url: bitdefender_location.user_input
+        dest: "/tmp/bitdefender.tar"
+        mode: "0644"
+      register: download_result
+
+    - name: Create Bitdefender directory
+      ansible.builtin.file:
+        path: "/tmp/bitdefender"
+        state: directory
+      when: download_result is succeeded
+
+    - name: Unarchive Bitdefender package
+      ansible.builtin.unarchive:
+        src: "/tmp/bitdefender.tar"
+        dest: "/tmp/bitdefender"
+      when: download_result is succeeded
+
+    - name: Make Installer Executable
+      ansible.builtin.file:
+        path: "/tmp/bitdefender/installer"
+        mode: "u+x"
+      when: download_result is succeeded
+
+    - name: Install Bitdefender
+      command: "/tmp/bitdefender/installer --accept-eula --silent"
+      become: true
+      when: download_result is succeeded

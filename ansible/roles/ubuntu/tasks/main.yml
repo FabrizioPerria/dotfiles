@@ -9,6 +9,7 @@
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+    neovim_ppa: "{{ 'stable' if ansible_architecture == 'aarch64' else 'unstable' }}"
 
 - name: Set timezone to Europe/Copenhagen
   become: true
@@ -33,36 +34,45 @@
 
 - name: Add Neovim PPA
   apt_repository:
-    repo: ppa:neovim-ppa/unstable
+    repo: ppa:neovim-ppa/{{ neovim_ppa }}
   become: true
 
-- name: Download the Microsoft GPG key
+- name: Create APT keyrings dir
+  become: true
+  ansible.builtin.file:
+    path: '/etc/apt/keyrings'
+    state: directory
+    mode: 'u=rwx,go=rx'
+
+- name: Install vscode key
+  become: true
   ansible.builtin.get_url:
-    url: https://packages.microsoft.com/keys/microsoft.asc
-    dest: /tmp/packages.microsoft.gpg
-    mode: "0644"
+    url: 'https://packages.microsoft.com/keys/microsoft.asc'
+    dest: '/etc/apt/keyrings/'
+    mode: 'u=rw,go=r'
+    force: true
 
-- name: Add the Microsoft GPG key to trusted keyring
-  ansible.builtin.command:
-    cmd: gpg --dearmor /tmp/packages.microsoft.gpg
-    creates: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
-  register: gpg_result
-
-- name: Move the dearmored GPG key to the apt trusted.gpg.d directory
-  ansible.builtin.copy:
-    src: /tmp/packages.microsoft.gpg
-    dest: /etc/apt/trusted.gpg.d/packages.microsoft.gpg
-    owner: root
-    group: root
-    mode: "0644"
-  when: gpg_result is changed
-
-- name: Add the Visual Studio Code repository
+- name: Install VS Code repo
+  become: true
   ansible.builtin.apt_repository:
-    repo: "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
+    repo: >-
+      deb [arch=amd64,arm64
+      trusted=true
+      signed-by=/etc/apt/keyrings/microsoft.asc]
+      https://packages.microsoft.com/repos/code stable main
     filename: vscode
     state: present
+
+- name: Install azure-cli repo
   become: true
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb [arch=amd64,arm64
+      trusted=true
+      signed-by=/etc/apt/keyrings/microsoft.asc]
+      https://packages.microsoft.com/repos/azure-cli jammy main
+    filename: vscode
+    state: present
 
 - name: Update apt cache again
   apt:
@@ -140,7 +150,6 @@
     - alacritty
     - yq
     - slack
-    - code
   become: true
 
 - name: Install ripgrep
@@ -150,10 +159,10 @@
 - name: Install Weasis
   include_role:
     name: common/linux/weasis
-  vars:
-    version: "3.6.2"
-    install_url: "https://github.com/nroduit/Weasis/releases/download/v{{ version }}/weasis_{{ version }}-1_amd64.deb"
-    download_path: "/tmp/weasis.deb"
+
+- name: Install Bitdefender
+  include_role:
+    name: common/linux/bitdefender
 
 - name: Download and install NVM
   include_role:
@@ -265,6 +274,7 @@
 - name: Setup nvim
   include_role:
     name: common/shared/nvim
+  when: ansible_architecture != 'aarch64'
 
 - name: Copy files
   copy:
