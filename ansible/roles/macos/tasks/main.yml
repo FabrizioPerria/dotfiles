@@ -20,7 +20,7 @@
       - bat
       - wget
       - gnu-tar
-      - alacritty
+      - kitty
       - fontconfig
       - luarocks
       - axel
@@ -124,7 +124,7 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../kitty"
     - "{{playbook_dir}}/../fastfetch"
     - "{{playbook_dir}}/../aerospace"
 

@@ -22,7 +22,7 @@ inner.vertical = 5
 # end tell'
 # '''
 alt-enter = '''exec-and-forget osascript -e '
-tell application "Alacritty"
+tell application "kitty.app"
     activate
 end tell'
 '''
