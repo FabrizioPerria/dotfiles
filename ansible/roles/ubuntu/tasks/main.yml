@@ -133,6 +133,7 @@
       - python3.11
       - code
       - azure-cli
+      - kitty
     state: present
   become: true
 
@@ -142,15 +143,18 @@
   vars:
     arch: "{{ docker_arch }}"
 
-- name: Install snap packages
+- name: Install yq
   community.general.snap:
-    name: alacritty
+    name: yq
     classic: true
-  loop:
-    - alacritty
-    - yq
-    - slack
   become: true
+
+- name: Install slack
+  community.general.snap:
+    name: slack
+    classic: true
+  become: true
+  when: ansible_architecture != 'aarch64'
 
 - name: Install ripgrep
   include_role:
@@ -281,7 +285,7 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "{{playbook_dir}}/../alacritty"
+    - "{{playbook_dir}}/../kitty"
     - "{{playbook_dir}}/../fastfetch"
 
 - name: Install Regolith
@@ -293,19 +297,17 @@
     echo: true
   register: azure_pypi_auth_url
 
-- when: azure_pypi_auth_url.user_input is defined
-  blocks:
+- when: azure_pypi_auth_url.user_input is defined and azure_pypi_auth_url.user_input.startswith("http")
+  block:
     - name: Set Azure PyPi auth URL
       shell: >
-        echo "export AZURE_PYPI_AUTH_URL=${azure_pypi_auth_url.user_input}" >> ${HOME}/.config/shell/exports.zsh
-      become: true
+        echo "export AZURE_PYPI_AUTH_URL={{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/shell/exports.zsh
       when: azure_pypi_auth_url.user_input is defined
 
     - name: Setup global pip conf
       shell: >
         echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
-        echo "index-url = ${AZURE_PYPI_AUTH_URL}" >> ${HOME}/.config/pip/pip.conf
-      become: true
+        echo "index-url = {{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/pip/pip.conf
 
 - pause:
     prompt: "Provide CLOUD_USERNAME"
@@ -314,8 +316,7 @@
 
 - name: Set Cloud Username
   shell: >
-    echo "export CLOUD_USERNAME=${cloud_username.user_input}" >> ${HOME}/.config/shell/exports.zsh
-  become: true
+    echo "export CLOUD_USERNAME={{ cloud_username.user_input }}" >> ${HOME}/.config/shell/exports.zsh
   when: cloud_username.user_input is defined
 
 - pause:
@@ -325,6 +326,5 @@
 
 - name: Set Cloud Password
   shell: >
-    echo "export CLOUD_PASSWORD=${cloud_password.user_input}" >> ${HOME}/.config/shell/exports.zsh
-  become: true
+    echo "export CLOUD_PASSWORD={{ cloud_password.user_input }}" >> ${HOME}/.config/shell/exports.zsh
   when: cloud_password.user_input is defined

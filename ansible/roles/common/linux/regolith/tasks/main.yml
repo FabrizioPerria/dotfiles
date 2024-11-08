@@ -42,7 +42,7 @@
       - regolith-session-flashback
       - regolith-look-lascaille
       - gnome-screenshot
-      - i3lock-fancy
+      # - i3lock-fancy
     state: present
   become: true
 
@@ -67,12 +67,12 @@
     path: "{{ item }}"
     mode: "u+x"
   loop:
-    - "${HOME}/.config/alacritty/launch"
+    - "${HOME}/.config/kitty/launch"
     - "${HOME}/.config/regolith3/picom/init"
 
-- name: update-alternatives for alacritty
+- name: update-alternatives for kitty
   community.general.alternatives:
     name: x-terminal-emulator
-    path: "{{ ansible_env.HOME }}/.config/alacritty/launch"
+    path: "{{ ansible_env.HOME }}/.config/kitty/launch"
     priority: 100
   become: true
