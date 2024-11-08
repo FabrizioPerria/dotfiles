@@ -1,4 +1,9 @@
 ---
+- name: Set user home directory as a fact
+  set_fact:
+    user_home: "/home/{{ ansible_user_id }}"
+    regolith_version: "3_2"
+
 - name: Install required packages
   apt:
     name:
@@ -22,8 +27,8 @@
     repo: >
       deb [arch={{ regolith_arch }}
       signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg]
-      https://regolith-desktop.org/release-3_0-ubuntu-jammy-{{ regolith_arch }}
-      jammy main
+      https://regolith-desktop.org/release-{{ regolith_version }}-ubuntu-noble-{{ regolith_arch }}
+      noble main
     filename: "regolith"
     state: present
   become: true
@@ -45,6 +50,11 @@
       # - i3lock-fancy
     state: present
   become: true
+
+- name: Remove existing regolith3 directory
+  file:
+    path: "${HOME}/.config/regolith3"
+    state: absent
 
 - name: Install i3-autolayout
   shell: cargo install --root /usr i3-autolayout
@@ -70,9 +80,6 @@
     - "${HOME}/.config/kitty/launch"
     - "${HOME}/.config/regolith3/picom/init"
 
-- name: update-alternatives for kitty
-  community.general.alternatives:
-    name: x-terminal-emulator
-    path: "{{ ansible_env.HOME }}/.config/kitty/launch"
-    priority: 100
+- name: Set default terminal emulator
   become: true
+  command: update-alternatives --set x-terminal-emulator /usr/bin/kitty

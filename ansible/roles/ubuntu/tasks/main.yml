@@ -70,7 +70,7 @@
       deb [arch=amd64,arm64
       trusted=true
       signed-by=/etc/apt/keyrings/microsoft.asc]
-      https://packages.microsoft.com/repos/azure-cli jammy main
+      https://packages.microsoft.com/repos/azure-cli noble main
     filename: vscode
     state: present
 
@@ -97,7 +97,7 @@
       - unzip
       - fd-find
       - bat
-      - exa
+      - eza
       - ncdu
       - tree
       - clang
@@ -130,10 +130,15 @@
       - libffi-dev
       - liblzma-dev
       - dcmtk
-      - python3.11
+      - python3.12
       - code
       - azure-cli
       - kitty
+      - sassc
+      - gnome-themes-extra
+      - gtk2-engines-murrine
+      - gnome-tweaks
+      - gnome-shell-extensions
     state: present
   become: true
 
@@ -164,9 +169,6 @@
   include_role:
     name: common/linux/weasis
 
-- name: Install Bitdefender
-  include_role:
-    name: common/linux/bitdefender
 
 - name: Download and install NVM
   include_role:
@@ -186,7 +188,7 @@
 - name: Create symlink for python
   shell: >
     rm -f $(dirname $(which python3))/python &&
-    ln -s $(which python3.11) $(dirname $(which python3))/python
+    ln -s $(which python3.12) $(dirname $(which python3))/python
   become: true
 
 - name: Create symlink for tmux
@@ -292,6 +294,11 @@
   include_role:
     name: common/linux/regolith
 
+
+- name: Set Caps Lock as Control
+  become: true
+  command: gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
+
 - pause:
     prompt: "Provide AZURE_PYPI_AUTH_URL"
     echo: true
@@ -328,3 +335,7 @@
   shell: >
     echo "export CLOUD_PASSWORD={{ cloud_password.user_input }}" >> ${HOME}/.config/shell/exports.zsh
   when: cloud_password.user_input is defined
+
+- name: Install Bitdefender
+  include_role:
+    name: common/linux/bitdefender

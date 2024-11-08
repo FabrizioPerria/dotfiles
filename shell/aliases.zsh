@@ -1,11 +1,11 @@
-alias ls='exa $eza_params'
-alias l='exa --git-ignore $eza_params'
-alias ll='exa --all --header --long $eza_params'
-alias llm='exa --all --header --long --sort=modified $eza_params'
-alias la='exa -lbhHigUmuSa'
-alias lx='exa -lbhHigUmuSa@'
-alias lt='exa --tree $eza_params'
-alias tree='exa --tree $eza_params'
+alias ls='eza $eza_params'
+alias l='eza --git-ignore $eza_params'
+alias ll='eza --all --header --long $eza_params'
+alias llm='eza --all --header --long --sort=modified $eza_params'
+alias la='eza -lbhHigUmuSa'
+alias lx='eza -lbhHigUmuSa@'
+alias lt='eza --tree $eza_params'
+alias tree='eza --tree $eza_params'
 
 alias vi=nvim
 alias vim=nvim
