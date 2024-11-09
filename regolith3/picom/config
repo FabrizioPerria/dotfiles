@@ -127,7 +127,7 @@ blur-kern = "3x3box";
 blur-method = "dual_kawase";
 blur-strength = 5;
 opacity-rule = [
-  "95:class_g = 'Alacritty'"
+  "95:class_g = 'kitty'"
 ];
 
 #################################

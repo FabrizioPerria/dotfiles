@@ -37,6 +37,11 @@
     repo: ppa:neovim-ppa/{{ neovim_ppa }}
   become: true
 
+- name: Add ulauncher PPA
+  apt_repository:
+    repo: ppa:agornostal/ulauncher
+  become: true
+
 - name: Create APT keyrings dir
   become: true
   ansible.builtin.file:
@@ -101,13 +106,13 @@
       - ncdu
       - tree
       - clang
+      - yq
       - cmake
       - build-essential
       - net-tools
       - traceroute
       - git-lfs
       - axel
-      - sshfs
       - clangd
       - snapd
       - cargo
@@ -139,20 +144,19 @@
       - gtk2-engines-murrine
       - gnome-tweaks
       - gnome-shell-extensions
+      - ulauncher
     state: present
   become: true
+
+- name: Set default terminal emulator
+  become: true
+  command: update-alternatives --set x-terminal-emulator /usr/bin/kitty
 
 - name: Install Docker
   include_role:
     name: common/linux/docker
   vars:
     arch: "{{ docker_arch }}"
-
-- name: Install yq
-  community.general.snap:
-    name: yq
-    classic: true
-  become: true
 
 - name: Install slack
   community.general.snap:
@@ -168,7 +172,6 @@
 - name: Install Weasis
   include_role:
     name: common/linux/weasis
-
 
 - name: Download and install NVM
   include_role:
@@ -189,6 +192,12 @@
   shell: >
     rm -f $(dirname $(which python3))/python &&
     ln -s $(which python3.12) $(dirname $(which python3))/python
+  become: true
+
+- name: Create symlink for pip
+  shell: >
+    rm -f $(dirname $(which pip3))/pip &&
+    ln -s $(which pip3.12) $(dirname $(which pip3))/pip
   become: true
 
 - name: Create symlink for tmux
@@ -290,10 +299,20 @@
     - "{{playbook_dir}}/../kitty"
     - "{{playbook_dir}}/../fastfetch"
 
-- name: Install Regolith
-  include_role:
-    name: common/linux/regolith
+# - name: Install Regolith
+#   include_role:
+#     name: common/linux/regolith
 
+- name: Install gnome extensions cli
+  command: pip install gnome-extensions-cli --break-system-packages
+
+- name: Install gnome extensions
+  command: ${HOME}/.local/bin/gext install {{ item }}
+  loop:
+    - 4481
+    - 7048
+    - 3193
+    - 5090
 
 - name: Set Caps Lock as Control
   become: true

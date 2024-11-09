@@ -79,7 +79,3 @@
   loop:
     - "${HOME}/.config/kitty/launch"
     - "${HOME}/.config/regolith3/picom/init"
-
-- name: Set default terminal emulator
-  become: true
-  command: update-alternatives --set x-terminal-emulator /usr/bin/kitty
