@@ -1,0 +1,281 @@
+[gnome/Extensions]
+window-height=1783
+window-width=1458
+
+[gnome/control-center]
+last-panel='background'
+window-state=(1458, 1783, false)
+
+[gnome/desktop/app-folders]
+folder-children=['Utilities', 'YaST', 'Pardus']
+
+[gnome/desktop/app-folders/folders/Pardus]
+categories=['X-Pardus-Apps']
+name='X-Pardus-Apps.directory'
+translate=true
+
+[gnome/desktop/app-folders/folders/Utilities]
+apps=['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop', 'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop', 'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop', 'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
+categories=['X-GNOME-Utilities']
+name='X-GNOME-Utilities.directory'
+translate=true
+
+[gnome/desktop/app-folders/folders/YaST]
+categories=['X-SuSE-YaST']
+name='suse-yast.directory'
+translate=true
+
+[gnome/desktop/background]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
+picture-uri-dark='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
+
+[gnome/desktop/input-sources]
+sources=[('xkb', 'us')]
+xkb-options=['ctrl:nocaps']
+
+[gnome/desktop/interface]
+color-scheme='prefer-dark'
+document-font-name='JetBrainsMono Nerd Font Mono 14'
+font-name='JetBrainsMono Nerd Font Mono 14'
+gtk-theme='Yaru-prussiangreen-dark'
+icon-theme='Yaru-prussiangreen'
+monospace-font-name='JetBrainsMono Nerd Font Mono 14'
+text-scaling-factor=1.0
+
+[gnome/desktop/notifications]
+application-children=['kitty', 'ulauncher', 'firefox-firefox']
+
+[gnome/desktop/notifications/application/firefox-firefox]
+application-id='firefox_firefox.desktop'
+
+[gnome/desktop/notifications/application/kitty]
+application-id='kitty.desktop'
+
+[gnome/desktop/notifications/application/ulauncher]
+application-id='ulauncher.desktop'
+
+[gnome/desktop/screensaver]
+color-shading-type='solid'
+picture-options='zoom'
+picture-uri='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
+primary-color='#000000000000'
+secondary-color='#000000000000'
+
+[gnome/desktop/session]
+idle-delay=uint32 900
+
+[gnome/desktop/wm/keybindings]
+activate-window-menu=@as []
+cycle-windows=@as []
+cycle-windows-backward=@as []
+minimize=['<Shift><Alt><Super>h']
+move-to-workspace-1=['<Shift><Alt>1']
+move-to-workspace-2=['<Shift><Alt>2']
+move-to-workspace-3=['<Shift><Alt>3']
+move-to-workspace-4=['<Shift><Alt>4']
+switch-input-source=@as []
+switch-input-source-backward=@as []
+switch-to-workspace-1=['<Alt>1']
+switch-to-workspace-2=['<Alt>2']
+switch-to-workspace-3=['<Alt>3']
+switch-to-workspace-4=['<Alt>4']
+toggle-on-all-workspaces=['<Shift><Alt>t']
+
+[gnome/desktop/wm/preferences]
+button-layout=':minimize,maximize,close'
+focus-mode='sloppy'
+workspace-names=@as []
+
+[gnome/evolution-data-server]
+migrated=true
+
+[gnome/mutter]
+edge-tiling=false
+
+[gnome/mutter/keybindings]
+toggle-tiled-left=@as []
+toggle-tiled-right=@as []
+
+[gnome/nautilus/preferences]
+default-folder-viewer='icon-view'
+migrated-gtk-settings=true
+search-filter-time-type='last_modified'
+
+[gnome/nautilus/window-state]
+initial-size=(2924, 1783)
+maximized=false
+
+[gnome/portal/filechooser/org.gnome.Settings]
+last-folder-path='/home/fabrizio/.config'
+
+[gnome/portal/filechooser/ulauncher]
+last-folder-path='/home/fabrizio/.config'
+
+[gnome/settings-daemon/plugins/media-keys]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']
+screensaver=['<Alt>Escape']
+terminal=@as []
+
+[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Alt>Return'
+command='kitty'
+name='kitty launch'
+
+[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
+binding='<Shift><Alt>Return'
+command='firefox'
+name='firefox'
+
+[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
+binding='<Alt>space'
+command='ulauncher-toggle'
+name='ulauncher'
+
+[gnome/settings-daemon/plugins/power]
+sleep-inactive-ac-timeout=3600
+sleep-inactive-ac-type='nothing'
+
+[gnome/shell]
+disabled-extensions=['ubuntu-dock@ubuntu.com', 'blur-my-shell@aunetx']
+enabled-extensions=['forge@jmmaranan.com', 'rounded-window-corners@fxgn', 'space-bar@luchrioh', 'ding@rastersoft.com', 'tiling-assistant@ubuntu.com']
+welcome-dialog-last-shown-version='46.0'
+
+[gnome/shell/extensions/blur-my-shell]
+hacks-level=2
+settings-version=2
+
+[gnome/shell/extensions/blur-my-shell/appfolder]
+brightness=0.59999999999999998
+sigma=30
+
+[gnome/shell/extensions/blur-my-shell/applications]
+blur=true
+blur-on-overview=false
+brightness=0.0
+dynamic-opacity=false
+opacity=224
+sigma=100
+whitelist=['kitty']
+
+[gnome/shell/extensions/blur-my-shell/coverflow-alt-tab]
+pipeline='pipeline_default'
+
+[gnome/shell/extensions/blur-my-shell/dash-to-dock]
+blur=true
+brightness=0.59999999999999998
+pipeline='pipeline_default_rounded'
+sigma=30
+static-blur=true
+style-dash-to-dock=0
+
+[gnome/shell/extensions/blur-my-shell/lockscreen]
+pipeline='pipeline_default'
+
+[gnome/shell/extensions/blur-my-shell/overview]
+pipeline='pipeline_default'
+
+[gnome/shell/extensions/blur-my-shell/panel]
+brightness=0.59999999999999998
+pipeline='pipeline_default'
+sigma=30
+
+[gnome/shell/extensions/blur-my-shell/screenshot]
+pipeline='pipeline_default'
+
+[gnome/shell/extensions/blur-my-shell/window-list]
+brightness=0.59999999999999998
+sigma=30
+
+[gnome/shell/extensions/dash-to-dock]
+extend-height=false
+show-mounts=false
+
+[gnome/shell/extensions/ding]
+check-x11wayland=true
+
+[gnome/shell/extensions/forge]
+css-last-update=uint32 37
+css-updated='1731223037714'
+move-pointer-focus-enabled=true
+
+[gnome/shell/extensions/forge/keybindings]
+con-split-horizontal=['<Super>z']
+con-split-layout-toggle=['<Super>g']
+con-split-vertical=['<Super>v']
+con-stacked-layout-toggle=['<Shift><Super>s']
+con-tabbed-layout-toggle=['<Shift><Super>t']
+con-tabbed-showtab-decoration-toggle=['<Control><Alt>y']
+focus-border-toggle=['<Super>x']
+prefs-tiling-toggle=['<Super>w']
+window-focus-down=['<Super>j']
+window-focus-left=['<Super>h']
+window-focus-right=['<Super>l']
+window-focus-up=['<Super>k']
+window-gap-size-decrease=['<Control><Super>minus']
+window-gap-size-increase=['<Control><Super>plus']
+window-move-down=['<Shift><Super>j']
+window-move-left=['<Shift><Super>h']
+window-move-right=['<Shift><Super>l']
+window-move-up=['<Shift><Super>k']
+window-resize-bottom-decrease=['<Shift><Control><Super>i']
+window-resize-bottom-increase=['<Control><Super>u']
+window-resize-left-decrease=['<Shift><Control><Super>o']
+window-resize-left-increase=['<Control><Super>y']
+window-resize-right-decrease=['<Shift><Control><Super>y']
+window-resize-right-increase=['<Control><Super>o']
+window-resize-top-decrease=['<Shift><Control><Super>u']
+window-resize-top-increase=['<Control><Super>i']
+window-snap-center=['<Control><Alt>c']
+window-snap-one-third-left=['<Control><Alt>d']
+window-snap-one-third-right=['<Control><Alt>g']
+window-snap-two-third-left=['<Control><Alt>e']
+window-snap-two-third-right=['<Control><Alt>t']
+window-swap-down=['<Control><Super>j']
+window-swap-last-active=['<Super>Return']
+window-swap-left=['<Control><Super>h']
+window-swap-right=['<Control><Super>l']
+window-swap-up=['<Control><Super>k']
+window-toggle-always-float=['<Shift><Super>c']
+window-toggle-float=['<Super>c']
+workspace-active-tile-toggle=['<Shift><Super>w']
+
+[gnome/shell/extensions/rounded-window-corners-reborn]
+settings-version=uint32 6
+
+[gnome/shell/extensions/space-bar/appearance]
+application-styles='.space-bar {\n  -natural-hpadding: 12px;\n}\n\n.space-bar-workspace-label.active {\n  margin: 0 4px;\n  background-color: rgba(255,255,255,0.3);\n  color: rgba(255,255,255,1);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}\n\n.space-bar-workspace-label.inactive {\n  margin: 0 4px;\n  background-color: rgba(0,0,0,0);\n  color: rgba(255,255,255,1);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}\n\n.space-bar-workspace-label.inactive.empty {\n  margin: 0 4px;\n  background-color: rgba(0,0,0,0);\n  color: rgba(255,255,255,0.5);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}'
+
+[gnome/shell/extensions/space-bar/state]
+version=31
+
+[gnome/shell/extensions/tiling-assistant]
+active-window-hint-color='rgb(211,70,21)'
+last-version-installed=46
+overridden-settings={'org.gnome.mutter.edge-tiling': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-left': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-right': <@mb nothing>}
+tiling-popup-all-workspace=true
+
+[gnome/shell/keybindings]
+show-screenshot-ui=['<Shift><Super>s']
+
+[gnome/shell/world-clocks]
+locations=@av []
+
+[gtk/gtk4/settings/color-chooser]
+custom-colors=[(0.066666670143604279, 0.78039216995239258, 0.87843137979507446, 1.0), (0.9686274528503418, 0.63529413938522339, 0.16862745583057404, 1.0), (1.0, 0.96470588445663452, 0.42352941632270813, 1.0), (0.70588237047195435, 0.65490198135375977, 0.83921569585800171, 1.0), (0.92549020051956177, 0.36862745881080627, 0.36862745881080627, 1.0)]
+selected-color=(true, 0.14901961386203766, 0.63529413938522339, 0.4117647111415863, 1.0)
+
+[gtk/gtk4/settings/file-chooser]
+date-format='regular'
+location-mode='path-bar'
+show-hidden=true
+sidebar-width=140
+sort-column='name'
+sort-directories-first=true
+sort-order='ascending'
+type-format='category'
+view-type='list'
+window-size=(1475, 1108)

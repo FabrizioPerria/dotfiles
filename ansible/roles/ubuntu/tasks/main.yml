@@ -298,6 +298,8 @@
   loop:
     - "{{playbook_dir}}/../kitty"
     - "{{playbook_dir}}/../fastfetch"
+    - "{{playbook_dir}}/../regolith3/desktop.jpeg"
+    - "{{playbook_dir}}/../autostart"
 
 # - name: Install Regolith
 #   include_role:
@@ -311,12 +313,10 @@
   loop:
     - 4481
     - 7048
-    - 3193
     - 5090
 
-- name: Set Caps Lock as Control
-  become: true
-  command: gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:nocaps']"
+- name: Restore gnome dconf settings
+  shell: cat "{{playbook_dir}}/../gnome.dconf" | dconf load /org/
 
 - pause:
     prompt: "Provide AZURE_PYPI_AUTH_URL"

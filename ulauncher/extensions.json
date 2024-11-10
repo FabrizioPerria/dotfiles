@@ -1,0 +1,30 @@
+{
+    "com.github.tuanpham-dev.ulauncher-better-calculator": {
+        "id": "com.github.tuanpham-dev.ulauncher-better-calculator",
+        "url": "https://github.com/tuanpham-dev/ulauncher-better-calculator",
+        "updated_at": "2024-11-10T08:28:32.879944",
+        "last_commit": "48f0592a2a8ac9ec2589a06b562141e1a2d9b25f",
+        "last_commit_time": "2023-04-24T13:55:30"
+    },
+    "com.github.hillaryychan.ulauncher-fzf": {
+        "id": "com.github.hillaryychan.ulauncher-fzf",
+        "url": "https://github.com/hillaryychan/ulauncher-fzf",
+        "updated_at": "2024-11-10T08:39:28.182961",
+        "last_commit": "e8137dae6448041fc53ae418263501b068857073",
+        "last_commit_time": "2023-05-16T12:35:35"
+    },
+    "com.github.ulauncher.ulauncher-timer": {
+        "id": "com.github.ulauncher.ulauncher-timer",
+        "url": "https://github.com/ulauncher/ulauncher-timer",
+        "updated_at": "2024-11-10T08:41:12.232865",
+        "last_commit": "2d3fe82fe1e38670e6eb8887cd2a4b4d1c2baa79",
+        "last_commit_time": "2023-03-25T08:07:41"
+    },
+    "com.github.tevenfeng.ulauncher-dc": {
+        "id": "com.github.tevenfeng.ulauncher-dc",
+        "url": "https://github.com/tevenfeng/ulauncher-dc",
+        "updated_at": "2024-11-10T08:41:53.973529",
+        "last_commit": "4cdeb58b1f79b64f2f6e3b4eecc3a38b81c886ea",
+        "last_commit_time": "2022-06-16T09:10:28"
+    }
+}
