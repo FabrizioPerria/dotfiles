@@ -203,9 +203,8 @@
 - name: Create symlink for tmux
   file:
     src: /usr/bin/tmux
-    dest: /usr/local/bin/tmux
+    dest: ${HOME}/.local/bin/tmux
     state: link
-  become: true
 
 - name: Create symlink for bat
   file:
@@ -220,12 +219,6 @@
     version: 1.23.0
     os: linux
     arch: "{{ go_arch }}"
-
-- name: Generate locale
-  locale_gen:
-    name: en_US.UTF-8
-    state: present
-  become: true
 
 - name: Install oh-my-zsh
   include_role:
@@ -291,6 +284,9 @@
     name: common/shared/nvim
   when: ansible_architecture != 'aarch64'
 
+- name: Install ulauncher deps
+  command: pip install py-expression-eval  --break-system-packages
+
 - name: Copy files
   copy:
     src: "{{ item }}"
@@ -300,23 +296,15 @@
     - "{{playbook_dir}}/../fastfetch"
     - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"
+    - "{{playbook_dir}}/../ulauncher"
 
 # - name: Install Regolith
 #   include_role:
 #     name: common/linux/regolith
 
-- name: Install gnome extensions cli
-  command: pip install gnome-extensions-cli --break-system-packages
-
-- name: Install gnome extensions
-  command: ${HOME}/.local/bin/gext install {{ item }}
-  loop:
-    - 4481
-    - 7048
-    - 5090
-
-- name: Restore gnome dconf settings
-  shell: cat "{{playbook_dir}}/../gnome.dconf" | dconf load /org/
+- name: Setup Gnome
+  include_role:
+    name: common/linux/gnome
 
 - pause:
     prompt: "Provide AZURE_PYPI_AUTH_URL"

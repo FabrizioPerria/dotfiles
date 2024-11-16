@@ -28,8 +28,8 @@ translate=true
 [gnome/desktop/background]
 color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
-picture-uri-dark='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
+picture-uri='file:///home/fabrizio/.config/desktop.jpeg'
+picture-uri-dark='file:///home/fabrizio/.config/desktop.jpeg'
 primary-color='#000000000000'
 secondary-color='#000000000000'
 
@@ -61,7 +61,7 @@ application-id='ulauncher.desktop'
 [gnome/desktop/screensaver]
 color-shading-type='solid'
 picture-options='zoom'
-picture-uri='file:///home/fabrizio/.local/share/backgrounds/2024-11-09-19-43-21-desktop.jpeg'
+picture-uri='file:///home/fabrizio/.config/desktop.jpeg'
 primary-color='#000000000000'
 secondary-color='#000000000000'
 
@@ -77,12 +77,20 @@ move-to-workspace-1=['<Shift><Alt>1']
 move-to-workspace-2=['<Shift><Alt>2']
 move-to-workspace-3=['<Shift><Alt>3']
 move-to-workspace-4=['<Shift><Alt>4']
+move-to-workspace-5=['<Shift><Alt>5']
+move-to-workspace-6=['<Shift><Alt>6']
+move-to-workspace-7=['<Shift><Alt>7']
+move-to-workspace-8=['<Shift><Alt>8']
 switch-input-source=@as []
 switch-input-source-backward=@as []
 switch-to-workspace-1=['<Alt>1']
 switch-to-workspace-2=['<Alt>2']
 switch-to-workspace-3=['<Alt>3']
 switch-to-workspace-4=['<Alt>4']
+switch-to-workspace-5=['<Alt>5']
+switch-to-workspace-6=['<Alt>6']
+switch-to-workspace-7=['<Alt>7']
+switch-to-workspace-8=['<Alt>8']
 toggle-on-all-workspaces=['<Shift><Alt>t']
 
 [gnome/desktop/wm/preferences]
@@ -123,7 +131,7 @@ terminal=@as []
 [gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Alt>Return'
 command='kitty'
-name='kitty launch'
+name='kitty'
 
 [gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Shift><Alt>Return'
@@ -140,55 +148,8 @@ sleep-inactive-ac-timeout=3600
 sleep-inactive-ac-type='nothing'
 
 [gnome/shell]
-disabled-extensions=['ubuntu-dock@ubuntu.com', 'blur-my-shell@aunetx']
 enabled-extensions=['forge@jmmaranan.com', 'rounded-window-corners@fxgn', 'space-bar@luchrioh', 'ding@rastersoft.com', 'tiling-assistant@ubuntu.com']
 welcome-dialog-last-shown-version='46.0'
-
-[gnome/shell/extensions/blur-my-shell]
-hacks-level=2
-settings-version=2
-
-[gnome/shell/extensions/blur-my-shell/appfolder]
-brightness=0.59999999999999998
-sigma=30
-
-[gnome/shell/extensions/blur-my-shell/applications]
-blur=true
-blur-on-overview=false
-brightness=0.0
-dynamic-opacity=false
-opacity=224
-sigma=100
-whitelist=['kitty']
-
-[gnome/shell/extensions/blur-my-shell/coverflow-alt-tab]
-pipeline='pipeline_default'
-
-[gnome/shell/extensions/blur-my-shell/dash-to-dock]
-blur=true
-brightness=0.59999999999999998
-pipeline='pipeline_default_rounded'
-sigma=30
-static-blur=true
-style-dash-to-dock=0
-
-[gnome/shell/extensions/blur-my-shell/lockscreen]
-pipeline='pipeline_default'
-
-[gnome/shell/extensions/blur-my-shell/overview]
-pipeline='pipeline_default'
-
-[gnome/shell/extensions/blur-my-shell/panel]
-brightness=0.59999999999999998
-pipeline='pipeline_default'
-sigma=30
-
-[gnome/shell/extensions/blur-my-shell/screenshot]
-pipeline='pipeline_default'
-
-[gnome/shell/extensions/blur-my-shell/window-list]
-brightness=0.59999999999999998
-sigma=30
 
 [gnome/shell/extensions/dash-to-dock]
 extend-height=false

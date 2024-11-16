@@ -1,0 +1,19 @@
+---
+- name: Generate locale
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: true
+
+- name: Install gnome extensions cli
+  command: pip install gnome-extensions-cli --break-system-packages
+
+- name: Install gnome extensions
+  command: ${HOME}/.local/bin/gext install {{ item }}
+  loop:
+    - 4481
+    - 7048
+    - 5090
+
+- name: Restore gnome dconf settings
+  shell: cat "{{playbook_dir}}/../gnome.dconf" | dconf load /org/
