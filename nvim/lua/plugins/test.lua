@@ -1,4 +1,3 @@
-
 local plugins = {
     -- Other plugins
     {
@@ -49,7 +48,7 @@ local plugins = {
             {
                 "<leader>tr",
                 function()
-                    require("neotest").run.run({ strategy = "dap" })
+                    require("neotest").run.run({ strategy = "integrated" })
                 end,
                 desc = "Run Nearest",
             },
@@ -87,6 +86,10 @@ local plugins = {
                 adapters = {
                     require("neotest-python")({
                         dap = { justMyCode = false },
+                        -- Use python from virtualenv
+                        python = ".venv/bin/python",
+                        args = { "--import-mode=importlib" },
+                        runner = "pytest",
                     }),
                     require("neotest-go")({
                         experimental = {
@@ -102,7 +105,7 @@ local plugins = {
     },
 }
 
-if require('config.utils').is_java_project() then
+if require("config.utils").is_java_project() then
     table.insert(plugins, {
         "fabrizioperria/neotest-jdtls",
         ft = "java",
@@ -114,8 +117,8 @@ if require('config.utils').is_java_project() then
         config = function()
             require("neotest").setup({
                 adapters = {
-                    require("neotest-jdtls")
-                }
+                    require("neotest-jdtls"),
+                },
             })
         end,
     })

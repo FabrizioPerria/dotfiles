@@ -43,7 +43,9 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     "debugpy",
-                    "pyright",
+                    -- "pyright",
+                    "basedpyright",
+                    -- "pylsp",
 
                     "gopls",
                     "goimports",

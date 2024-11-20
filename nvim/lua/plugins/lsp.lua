@@ -34,7 +34,7 @@ return {
                     null_ls.builtins.diagnostics.zsh,
                     null_ls.builtins.completion.spell,
                     null_ls.builtins.formatting.prettierd,
-                    null_ls.builtins.formatting.black,
+                    -- null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.isort,
                     -- null_ls.builtins.diagnostics.pylint,
                 },
@@ -51,7 +51,7 @@ return {
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
-            "fabrizioperria/nvim-java"
+            "fabrizioperria/nvim-java",
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
@@ -107,14 +107,29 @@ return {
                     },
                 },
             })
-            lspconfig.pyright.setup({
+            -- lspconfig.pyright.setup({
+            --     on_attach = lsp_attach_custom,
+            --     capabilities = lsp_capabilities,
+            --     settings = {
+            --         pyright = {
+            --             autoImportCompletion = true,
+            --         },
+            --         python = {
+            --             analysis = {
+            --                 autoSearchPaths = true,
+            --                 diagnosticMode = "openFilesOnly",
+            --                 useLibraryCodeForTypes = true,
+            --                 typeCheckingMode = "off",
+            --             },
+            --         },
+            --     },
+            -- })
+
+            lspconfig.basedpyright.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
                 settings = {
-                    pyright = {
-                        autoImportCompletion = true,
-                    },
-                    python = {
+                    basedpyright = {
                         analysis = {
                             autoSearchPaths = true,
                             diagnosticMode = "openFilesOnly",
