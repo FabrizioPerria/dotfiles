@@ -33,7 +33,8 @@ local plugins = {
                     elseif vim.fn.expand("%:e") == "java" then
                         require("java").test.debug_current_method()
                     else
-                        require("neotest").run.debug(vim.fn.expand("%"))
+                        -- require("neotest").run.debug(vim.fn.expand("%"))
+                        require("neotest").run.run({ strategy = "dap", file = vim.fn.expand("%") })
                     end
                 end,
                 desc = "Debug Nearest (Go)",
