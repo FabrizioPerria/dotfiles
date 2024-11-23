@@ -131,11 +131,31 @@ return {
                 settings = {
                     basedpyright = {
                         analysis = {
+                            autoImportCompletions = true,
                             autoSearchPaths = true,
-                            diagnosticMode = "openFilesOnly",
+                            diagnosticMode = "workspace",
+                            typeCheckingMode = "basic",
                             useLibraryCodeForTypes = true,
-                            typeCheckingMode = "off",
+                            completeFunctionParens = true,
                         },
+                        formatting = {
+                            maxLineLength = 88, -- PEP 8 default
+                            indentSize = 4,
+                        },
+                        pythonPath = "python",
+                        -- pythonPlatform = "Darwin",
+                        typeCheckingMode = "strict",
+                        stubPath = "typings",
+                        venvPath = "", -- Set this to your virtual environment path if needed
+                        reportMissingImports = true,
+                        reportMissingTypeStubs = true,
+                        reportUndefinedVariable = true,
+                        reportInvalidTypeVars = true,
+                        reportUnknownParameterType = true,
+                        reportUnknownArgumentType = true,
+                        reportUnknownLambdaType = true,
+                        reportUnknownVariableType = true,
+                        reportUnknownMemberType = true,
                     },
                 },
             })
