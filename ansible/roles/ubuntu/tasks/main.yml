@@ -320,6 +320,7 @@
 
     - name: Setup global pip conf
       shell: >
+        mkdir -p ${HOME}/.config/pip &&
         echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
         echo "index-url = {{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/pip/pip.conf
 

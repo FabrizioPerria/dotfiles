@@ -8,7 +8,7 @@
   block:
     - name: Download Bitdefender package
       get_url:
-        url: bitdefender_location.user_input
+        url: "{{bitdefender_location.user_input}}"
         dest: "/tmp/bitdefender.tar"
         mode: "0644"
       register: download_result
