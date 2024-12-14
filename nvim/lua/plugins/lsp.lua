@@ -107,55 +107,25 @@ return {
                     },
                 },
             })
-            -- lspconfig.pyright.setup({
-            --     on_attach = lsp_attach_custom,
-            --     capabilities = lsp_capabilities,
-            --     settings = {
-            --         pyright = {
-            --             autoImportCompletion = true,
-            --         },
-            --         python = {
-            --             analysis = {
-            --                 autoSearchPaths = true,
-            --                 diagnosticMode = "openFilesOnly",
-            --                 useLibraryCodeForTypes = true,
-            --                 typeCheckingMode = "off",
-            --             },
-            --         },
-            --     },
-            -- })
-
-            lspconfig.basedpyright.setup({
+            lspconfig.pylsp.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
                 settings = {
-                    basedpyright = {
-                        analysis = {
-                            autoImportCompletions = true,
-                            autoSearchPaths = true,
-                            diagnosticMode = "workspace",
-                            typeCheckingMode = "basic",
-                            useLibraryCodeForTypes = true,
-                            completeFunctionParens = true,
+                    pylsp = {
+                        plugins = {
+                            pyflakes = { enabled = false },
+                            pycodestyle = { enabled = false },
+                            autopep8 = { enabled = false },
+                            yapf = { enabled = false },
+                            mccabe = { enabled = false },
+                            pylsp_mypy = { enabled = false },
+                            pylsp_black = { enabled = false },
+                            pylsp_isort = { enabled = true },
+                            rope_autoimport = { enabled = true },
+                            pylint = { enabled = true, executable = "pylint" },
+                            jedi_completion = { fuzzy = true },
+                            pyls_isort = { enabled = true },
                         },
-                        formatting = {
-                            maxLineLength = 88, -- PEP 8 default
-                            indentSize = 4,
-                        },
-                        pythonPath = "python",
-                        -- pythonPlatform = "Darwin",
-                        typeCheckingMode = "strict",
-                        stubPath = "typings",
-                        venvPath = "", -- Set this to your virtual environment path if needed
-                        reportMissingImports = true,
-                        reportMissingTypeStubs = true,
-                        reportUndefinedVariable = true,
-                        reportInvalidTypeVars = true,
-                        reportUnknownParameterType = true,
-                        reportUnknownArgumentType = true,
-                        reportUnknownLambdaType = true,
-                        reportUnknownVariableType = true,
-                        reportUnknownMemberType = true,
                     },
                 },
             })
@@ -221,9 +191,9 @@ return {
         -- event = "VeryLazy",
         lazy = true,
         config = function()
-            require("luasnip/loaders/from_vscode").lazy_load()
-            require("luasnip/loaders/from_snipmate").lazy_load()
-            require("luasnip_snippets.common.snip_utils").setup()
+            -- require("luasnip/loaders/from_vscode").lazy_load()
+            -- require("luasnip/loaders/from_snipmate").lazy_load()
+            -- require("luasnip_snippets.common.snip_utils").setup()
         end,
         opts = function()
             local cmp = require("cmp")

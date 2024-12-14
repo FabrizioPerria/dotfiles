@@ -44,8 +44,9 @@ return {
                 ensure_installed = {
                     "debugpy",
                     -- "pyright",
-                    "basedpyright",
-                    -- "pylsp",
+                    -- "basedpyright",
+                    "ruff",
+                    "pylsp",
 
                     "gopls",
                     "goimports",
@@ -91,6 +92,7 @@ return {
 
                     "css-lsp",
                     -- "tsserver",
+                    "ts_ls",
                     "tailwindcss",
                     "eslint-lsp",
                     "prettierd",
