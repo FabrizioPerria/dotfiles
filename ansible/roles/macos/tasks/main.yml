@@ -38,9 +38,9 @@
   include_role:
     name: common/shared/ripgrep
 
-- name: Download and install NVM
+- name: Download and install fnm
   include_role:
-    name: common/shared/nvm
+    name: common/shared/fnm
 
 - name: Create symlink for python
   shell: >
