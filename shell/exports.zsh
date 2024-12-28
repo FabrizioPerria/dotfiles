@@ -1,9 +1,12 @@
+export ZSH="$HOME/.oh-my-zsh"
+export ZSH_DISABLE_COMPFIX=true
+export DISABLE_AUTO_UPDATE=true
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude .git --exclude node_modules --exclude .venv"
 export FZF_DEFAULT_OPTS="--preview 'bat --color=always {}'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type d --hidden --exclude .git --exclude node_modules --exclude .venv"
 
-export PATH="/opt/homebrew/bin:$HOME/.local/bin:/opt/homebrew/opt/gawk/libexec/gnubin:/opt/homebrew/opt/llvm/bin:$PATH:/opt/local/bin:$HOME/.cargo/bin"
+export PATH="/usr/local/go/bin:~/.fnm:/opt/homebrew/bin:$HOME/.local/bin:/opt/homebrew/opt/gawk/libexec/gnubin:/opt/homebrew/opt/llvm/bin:$PATH:/opt/local/bin:$HOME/.cargo/bin"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 
@@ -23,3 +26,4 @@ export CXX=/usr/bin/c++
 export GDK_SCALE=2
 export GDK_DPI_SCALE=0.5
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
+export VIRTUAL_ENV_DISABLE_PROMPT=1
