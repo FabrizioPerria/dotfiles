@@ -10,19 +10,19 @@
     state: absent
 
 - name: Add source commands to .zshrc
-  blockinfile:
-    path: "${HOME}/.zshrc"
-    block: |
-      source ${HOME}/.config/shell/aliases.zsh
-      source ${HOME}/.config/shell/exports.zsh
-      source ${HOME}/.config/shell/zsh.zsh
-      source ${HOME}/.config/shell/p10k.zsh
-      source ${HOME}/.config/shell/colors.zsh
-      source ${HOME}/.config/fzf/completion.sh
-      source ${HOME}/.config/fzf/keybindings.sh
-      eval "$(fnm env)"
-      export PATH=$FNM_MULTISHELL_PATH:$PATH
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.zshrc"
+    line: "{{ item }}"
+    insertafter: EOF
     create: true
+  with_items:
+    - "source ${HOME}/.config/shell/aliases.zsh"
+    - "source ${HOME}/.config/shell/exports.zsh"
+    - "source ${HOME}/.config/shell/zsh.zsh"
+    - "source ${HOME}/.config/shell/p10k.zsh"
+    - "source ${HOME}/.config/shell/colors.zsh"
+    - "source ${HOME}/.config/fzf/completion.sh"
+    - "source ${HOME}/.config/fzf/keybindings.sh"
 
 - name: Set default shell to zsh
   user:

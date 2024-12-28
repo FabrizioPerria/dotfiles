@@ -30,10 +30,6 @@
       dest: "${HOME}/.oh-my-zsh/custom/plugins/zsh-autosuggestions",
     }
     - {
-      repo: "https://github.com/wfxr/forgit.git",
-      dest: "${HOME}/.oh-my-zsh/custom/plugins/forgit",
-    }
-    - {
       repo: "https://github.com/fabrizioperria/zsh-venv-autoswitch.git",
       dest: "${HOME}/.oh-my-zsh/custom/plugins/autoswitch_virtualenv",
     }

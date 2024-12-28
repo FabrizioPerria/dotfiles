@@ -173,10 +173,6 @@
   include_role:
     name: common/linux/weasis
 
-- name: Download and install fnm
-  include_role:
-    name: common/shared/fnm
-
 - name: Create local bin directory
   file:
     path: ${HOME}/.local/bin
@@ -243,6 +239,10 @@
 - name: Setup zsh
   include_role:
     name: common/shared/zsh
+
+- name: Download and install fnm
+  include_role:
+    name: common/shared/fnm
 
 - name: Install lazySQL
   include_role:

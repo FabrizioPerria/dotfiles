@@ -38,10 +38,6 @@
   include_role:
     name: common/shared/ripgrep
 
-- name: Download and install fnm
-  include_role:
-    name: common/shared/fnm
-
 - name: Create symlink for python
   shell: >
     rm -f $(dirname $(which python3))/python &&
@@ -85,6 +81,10 @@
 - name: Setup zsh
   include_role:
     name: common/shared/zsh
+
+- name: Download and install fnm
+  include_role:
+    name: common/shared/fnm
 
 - name: Install lazySQL
   include_role:
