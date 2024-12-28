@@ -4,6 +4,11 @@
     src: "{{playbook_dir}}/../shell"
     dest: "${HOME}/.config/"
 
+- name: Delete previous .zshrc
+  file:
+    path: ${HOME}/.zshrc
+    state: absent
+
 - name: Add source commands to .zshrc
   blockinfile:
     path: "${HOME}/.zshrc"
@@ -15,8 +20,8 @@
       source ${HOME}/.config/shell/colors.zsh
       source ${HOME}/.config/fzf/completion.sh
       source ${HOME}/.config/fzf/keybindings.sh
-      export PATH="$PATH:/usr/local/go/bin:$HOME/.local/bin"
-      export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh"
+      eval "$(fnm env)"
+      export PATH=$FNM_MULTISHELL_PATH:$PATH
     create: true
 
 - name: Set default shell to zsh
