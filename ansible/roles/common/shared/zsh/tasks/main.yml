@@ -4,6 +4,29 @@
     src: "{{playbook_dir}}/../shell"
     dest: "${HOME}/.config/"
 
+- name: Remove existing Zinit installation
+  file:
+    path: "{{ ansible_env.HOME }}/.zinit"
+    state: absent
+
+- name: Create Zinit directory
+  file:
+    path: "{{ ansible_env.HOME }}/.zinit/bin"
+    state: directory
+    mode: '0755'
+
+- name: Clone Zinit repository
+  git:
+    repo: https://github.com/ryanstreur/zinit.git
+    dest: "{{ ansible_env.HOME }}/.zinit/bin"
+    depth: 1
+
+- name: Ensure Zinit executable permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.zinit/bin/zinit.zsh"
+    mode: '0755'
+    state: file
+
 - name: Delete previous .zshrc
   file:
     path: ${HOME}/.zshrc
@@ -18,9 +41,9 @@
   with_items:
     - "source ${HOME}/.config/shell/aliases.zsh"
     - "source ${HOME}/.config/shell/exports.zsh"
-    - "source ${HOME}/.config/shell/zsh.zsh"
     - "source ${HOME}/.config/shell/p10k.zsh"
     - "source ${HOME}/.config/shell/colors.zsh"
+    - "source ${HOME}/.config/shell/zinit.zsh"
     - "source ${HOME}/.config/fzf/completion.sh"
     - "source ${HOME}/.config/fzf/keybindings.sh"
 

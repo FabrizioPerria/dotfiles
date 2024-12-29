@@ -218,10 +218,6 @@
     os: linux
     arch: "{{ go_arch }}"
 
-- name: Install oh-my-zsh
-  include_role:
-    name: common/shared/oh-my-zsh
-
 - name: Setup Font
   include_role:
     name: common/linux/fonts

@@ -60,9 +60,9 @@
     os: darwin
     arch: arm64
 
-- name: Install oh-my-zsh
-  include_role:
-    name: common/shared/oh-my-zsh
+    #- name: Install oh-my-zsh
+    #  include_role:
+    #    name: common/shared/oh-my-zsh
 
 - name: Copy font files
   copy:
