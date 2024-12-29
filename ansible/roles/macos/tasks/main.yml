@@ -16,7 +16,6 @@
       - bottom
       - cmake
       - unzip
-      - thefuck
       - bat
       - wget
       - gnu-tar
@@ -25,6 +24,8 @@
       - luarocks
       - axel
       - rust
+      # - alacritty
+      # - ghostty
     state: present
 
 - name: Install cask
@@ -125,6 +126,8 @@
     dest: "${HOME}/.config/"
   loop:
     - "{{playbook_dir}}/../kitty"
+    # - "{{playbook_dir}}/../alacritty"
+    # - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
     - "{{playbook_dir}}/../aerospace"
 
