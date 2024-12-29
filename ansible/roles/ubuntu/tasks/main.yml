@@ -287,6 +287,10 @@
 - name: Install ulauncher deps
   command: pip install py-expression-eval  --break-system-packages
 
+- name: Setup Gnome
+  include_role:
+    name: common/linux/gnome
+
 - name: Copy files
   copy:
     src: "{{ item }}"
@@ -297,14 +301,7 @@
     - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"
     - "{{playbook_dir}}/../ulauncher"
-
-# - name: Install Regolith
-#   include_role:
-#     name: common/linux/regolith
-
-- name: Setup Gnome
-  include_role:
-    name: common/linux/gnome
+    - "{{playbook_dir}}/../forge"
 
 - pause:
     prompt: "Provide AZURE_PYPI_AUTH_URL"
@@ -323,26 +320,6 @@
         mkdir -p ${HOME}/.config/pip &&
         echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
         echo "index-url = {{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/pip/pip.conf
-
-- pause:
-    prompt: "Provide CLOUD_USERNAME"
-    echo: true
-  register: cloud_username
-
-- name: Set Cloud Username
-  shell: >
-    echo "export CLOUD_USERNAME={{ cloud_username.user_input }}" >> ${HOME}/.config/shell/exports.zsh
-  when: cloud_username.user_input is defined
-
-- pause:
-    prompt: "Provide CLOUD_PASSWORD"
-    echo: true
-  register: cloud_password
-
-- name: Set Cloud Password
-  shell: >
-    echo "export CLOUD_PASSWORD={{ cloud_password.user_input }}" >> ${HOME}/.config/shell/exports.zsh
-  when: cloud_password.user_input is defined
 
 - name: Install Bitdefender
   include_role:

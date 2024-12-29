@@ -1,3 +1,4 @@
 ---
 os: Darwin
 arch: arm64
+version: 0.44.1

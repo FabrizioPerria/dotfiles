@@ -1,31 +1,38 @@
-[gnome/Extensions]
-window-height=1783
-window-width=1458
+[apps/update-manager]
+launch-count=1
+launch-time=int64 1735458067
 
-[gnome/control-center]
+[com/ubuntu/update-notifier]
+release-check-time=uint32 1735458246
+
+[org/gnome/Extensions]
+window-height=1783
+window-width=1447
+
+[org/gnome/control-center]
 last-panel='background'
 window-state=(1458, 1783, false)
 
-[gnome/desktop/app-folders]
+[org/gnome/desktop/app-folders]
 folder-children=['Utilities', 'YaST', 'Pardus']
 
-[gnome/desktop/app-folders/folders/Pardus]
+[org/gnome/desktop/app-folders/folders/Pardus]
 categories=['X-Pardus-Apps']
 name='X-Pardus-Apps.directory'
 translate=true
 
-[gnome/desktop/app-folders/folders/Utilities]
+[org/gnome/desktop/app-folders/folders/Utilities]
 apps=['gnome-abrt.desktop', 'gnome-system-log.desktop', 'nm-connection-editor.desktop', 'org.gnome.baobab.desktop', 'org.gnome.Connections.desktop', 'org.gnome.DejaDup.desktop', 'org.gnome.Dictionary.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Evince.desktop', 'org.gnome.FileRoller.desktop', 'org.gnome.fonts.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.seahorse.Application.desktop', 'org.gnome.tweaks.desktop', 'org.gnome.Usage.desktop', 'vinagre.desktop']
 categories=['X-GNOME-Utilities']
 name='X-GNOME-Utilities.directory'
 translate=true
 
-[gnome/desktop/app-folders/folders/YaST]
+[org/gnome/desktop/app-folders/folders/YaST]
 categories=['X-SuSE-YaST']
 name='suse-yast.directory'
 translate=true
 
-[gnome/desktop/background]
+[org/gnome/desktop/background]
 color-shading-type='solid'
 picture-options='zoom'
 picture-uri='file:///home/fabrizio/.config/desktop.jpeg'
@@ -33,11 +40,11 @@ picture-uri-dark='file:///home/fabrizio/.config/desktop.jpeg'
 primary-color='#000000000000'
 secondary-color='#000000000000'
 
-[gnome/desktop/input-sources]
+[org/gnome/desktop/input-sources]
 sources=[('xkb', 'us')]
 xkb-options=['ctrl:nocaps']
 
-[gnome/desktop/interface]
+[org/gnome/desktop/interface]
 color-scheme='prefer-dark'
 document-font-name='JetBrainsMono Nerd Font Mono 14'
 font-name='JetBrainsMono Nerd Font Mono 14'
@@ -46,29 +53,29 @@ icon-theme='Yaru-prussiangreen'
 monospace-font-name='JetBrainsMono Nerd Font Mono 14'
 text-scaling-factor=1.0
 
-[gnome/desktop/notifications]
+[org/gnome/desktop/notifications]
 application-children=['kitty', 'ulauncher', 'firefox-firefox']
 
-[gnome/desktop/notifications/application/firefox-firefox]
+[org/gnome/desktop/notifications/application/firefox-firefox]
 application-id='firefox_firefox.desktop'
 
-[gnome/desktop/notifications/application/kitty]
+[org/gnome/desktop/notifications/application/kitty]
 application-id='kitty.desktop'
 
-[gnome/desktop/notifications/application/ulauncher]
+[org/gnome/desktop/notifications/application/ulauncher]
 application-id='ulauncher.desktop'
 
-[gnome/desktop/screensaver]
+[org/gnome/desktop/screensaver]
 color-shading-type='solid'
 picture-options='zoom'
 picture-uri='file:///home/fabrizio/.config/desktop.jpeg'
 primary-color='#000000000000'
 secondary-color='#000000000000'
 
-[gnome/desktop/session]
+[org/gnome/desktop/session]
 idle-delay=uint32 900
 
-[gnome/desktop/wm/keybindings]
+[org/gnome/desktop/wm/keybindings]
 activate-window-menu=@as []
 cycle-windows=@as []
 cycle-windows-backward=@as []
@@ -93,77 +100,104 @@ switch-to-workspace-7=['<Alt>7']
 switch-to-workspace-8=['<Alt>8']
 toggle-on-all-workspaces=['<Shift><Alt>t']
 
-[gnome/desktop/wm/preferences]
+[org/gnome/desktop/wm/preferences]
 button-layout=':minimize,maximize,close'
 focus-mode='sloppy'
 workspace-names=@as []
 
-[gnome/evolution-data-server]
+[org/gnome/evolution-data-server]
 migrated=true
 
-[gnome/mutter]
+[org/gnome/mutter]
 edge-tiling=false
 
-[gnome/mutter/keybindings]
+[org/gnome/mutter/keybindings]
 toggle-tiled-left=@as []
 toggle-tiled-right=@as []
 
-[gnome/nautilus/preferences]
+[org/gnome/nautilus/preferences]
 default-folder-viewer='icon-view'
 migrated-gtk-settings=true
 search-filter-time-type='last_modified'
 
-[gnome/nautilus/window-state]
+[org/gnome/nautilus/window-state]
 initial-size=(2924, 1783)
 maximized=false
 
-[gnome/portal/filechooser/org.gnome.Settings]
+[org/gnome/portal/filechooser/org.gnome.Settings]
 last-folder-path='/home/fabrizio/.config'
 
-[gnome/portal/filechooser/ulauncher]
+[org/gnome/portal/filechooser/ulauncher]
 last-folder-path='/home/fabrizio/.config'
 
-[gnome/settings-daemon/plugins/media-keys]
+[org/gnome/settings-daemon/plugins/media-keys]
 custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/', '/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/']
 screensaver=['<Alt>Escape']
 terminal=@as []
 
-[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
 binding='<Alt>Return'
 command='kitty'
 name='kitty'
 
-[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1]
 binding='<Shift><Alt>Return'
 command='firefox'
 name='firefox'
 
-[gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2]
 binding='<Alt>space'
 command='ulauncher-toggle'
 name='ulauncher'
 
-[gnome/settings-daemon/plugins/power]
+[org/gnome/settings-daemon/plugins/power]
 sleep-inactive-ac-timeout=3600
 sleep-inactive-ac-type='nothing'
 
-[gnome/shell]
-enabled-extensions=['forge@jmmaranan.com', 'rounded-window-corners@fxgn', 'space-bar@luchrioh', 'ding@rastersoft.com', 'tiling-assistant@ubuntu.com']
+[org/gnome/shell]
+disabled-extensions=@as []
+enabled-extensions=['forge@jmmaranan.com', 'rounded-window-corners@fxgn', 'space-bar@luchrioh', 'ding@rastersoft.com', 'tiling-assistant@ubuntu.com', 'dash-to-dock@micxgx.gmail.com', 'ubuntu-dock@ubuntu.com']
 welcome-dialog-last-shown-version='46.0'
 
-[gnome/shell/extensions/dash-to-dock]
+[org/gnome/shell/extensions/dash-to-dock]
+application-counter-overrides-notifications=false
+autohide=false
+background-opacity=0.80000000000000004
+custom-theme-shrink=false
+dance-urgent-applications=false
+dash-max-icon-size=48
+disable-overview-on-startup=true
+dock-fixed=false
+dock-position='LEFT'
 extend-height=false
+height-fraction=0.90000000000000002
+hot-keys=false
+intellihide=false
+preferred-monitor=-2
+preferred-monitor-by-connector='Virtual-1'
+scroll-action='do-nothing'
+scroll-to-focused-application=false
+show-favorites=false
+show-icons-emblems=false
 show-mounts=false
+show-mounts-only-mounted=false
+show-running=false
+show-show-apps-button=false
+show-trash=false
+show-windows-preview=false
+workspace-agnostic-urgent-windows=false
 
-[gnome/shell/extensions/ding]
+[org/gnome/shell/extensions/ding]
 check-x11wayland=true
 
-[gnome/shell/extensions/forge]
+[org/gnome/shell/extensions/forge]
 css-last-update=uint32 37
-css-updated='1731223037714'
+css-updated='1735459719682'
 move-pointer-focus-enabled=true
+window-gap-size=uint32 4
+window-gap-size-increment=uint32 1
 
-[gnome/shell/extensions/forge/keybindings]
+[org/gnome/shell/extensions/forge/keybindings]
 con-split-horizontal=['<Super>z']
 con-split-layout-toggle=['<Super>g']
 con-split-vertical=['<Super>v']
@@ -204,32 +238,32 @@ window-toggle-always-float=['<Shift><Super>c']
 window-toggle-float=['<Super>c']
 workspace-active-tile-toggle=['<Shift><Super>w']
 
-[gnome/shell/extensions/rounded-window-corners-reborn]
+[org/gnome/shell/extensions/rounded-window-corners-reborn]
 settings-version=uint32 6
 
-[gnome/shell/extensions/space-bar/appearance]
+[org/gnome/shell/extensions/space-bar/appearance]
 application-styles='.space-bar {\n  -natural-hpadding: 12px;\n}\n\n.space-bar-workspace-label.active {\n  margin: 0 4px;\n  background-color: rgba(255,255,255,0.3);\n  color: rgba(255,255,255,1);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}\n\n.space-bar-workspace-label.inactive {\n  margin: 0 4px;\n  background-color: rgba(0,0,0,0);\n  color: rgba(255,255,255,1);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}\n\n.space-bar-workspace-label.inactive.empty {\n  margin: 0 4px;\n  background-color: rgba(0,0,0,0);\n  color: rgba(255,255,255,0.5);\n  border-color: rgba(0,0,0,0);\n  font-weight: 700;\n  border-radius: 4px;\n  border-width: 0px;\n  padding: 3px 8px;\n}'
 
-[gnome/shell/extensions/space-bar/state]
-version=31
+[org/gnome/shell/extensions/space-bar/state]
+version=32
 
-[gnome/shell/extensions/tiling-assistant]
+[org/gnome/shell/extensions/tiling-assistant]
 active-window-hint-color='rgb(211,70,21)'
 last-version-installed=46
 overridden-settings={'org.gnome.mutter.edge-tiling': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-left': <@mb nothing>, 'org.gnome.mutter.keybindings.toggle-tiled-right': <@mb nothing>}
 tiling-popup-all-workspace=true
 
-[gnome/shell/keybindings]
+[org/gnome/shell/keybindings]
 show-screenshot-ui=['<Shift><Super>s']
 
-[gnome/shell/world-clocks]
+[org/gnome/shell/world-clocks]
 locations=@av []
 
-[gtk/gtk4/settings/color-chooser]
-custom-colors=[(0.066666670143604279, 0.78039216995239258, 0.87843137979507446, 1.0), (0.9686274528503418, 0.63529413938522339, 0.16862745583057404, 1.0), (1.0, 0.96470588445663452, 0.42352941632270813, 1.0), (0.70588237047195435, 0.65490198135375977, 0.83921569585800171, 1.0), (0.92549020051956177, 0.36862745881080627, 0.36862745881080627, 1.0)]
-selected-color=(true, 0.14901961386203766, 0.63529413938522339, 0.4117647111415863, 1.0)
+[org/gtk/gtk4/settings/color-chooser]
+custom-colors=[(0.18823529779911041, 0.50980395078659058, 0.50196081399917603, 1.0), (0.066666670143604279, 0.78039216995239258, 0.87843137979507446, 1.0), (0.9686274528503418, 0.63529413938522339, 0.16862745583057404, 1.0), (1.0, 0.96470588445663452, 0.42352941632270813, 1.0), (0.70588237047195435, 0.65490198135375977, 0.83921569585800171, 1.0), (0.92549020051956177, 0.36862745881080627, 0.36862745881080627, 1.0)]
+selected-color=(true, 0.18823529779911041, 0.50980395078659058, 0.50196081399917603, 1.0)
 
-[gtk/gtk4/settings/file-chooser]
+[org/gtk/gtk4/settings/file-chooser]
 date-format='regular'
 location-mode='path-bar'
 show-hidden=true
