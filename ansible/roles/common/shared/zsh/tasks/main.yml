@@ -44,8 +44,8 @@
     - "source ${HOME}/.config/shell/p10k.zsh"
     - "source ${HOME}/.config/shell/colors.zsh"
     - "source ${HOME}/.config/shell/zinit.zsh"
-    - "source ${HOME}/.config/fzf/completion.sh"
-    - "source ${HOME}/.config/fzf/keybindings.sh"
+    # - "source ${HOME}/.config/fzf/completion.sh"
+    # - "source ${HOME}/.config/fzf/keybindings.sh"
 
 - name: Set default shell to zsh
   user:

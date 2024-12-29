@@ -7,6 +7,8 @@ zinit wait lucid atload"zicompinit; zicdreplay" for zsh-users/zsh-completions
 zmodload -i zsh/complist
 
 zinit wait lucid for "junegunn/fzf"
+zinit snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh
+zinit snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh
 
 zinit wait lucid for "fabrizioperria/zsh-venv-autoswitch"
 zinit wait lucid for "zsh-users/zsh-syntax-highlighting"
