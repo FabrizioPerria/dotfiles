@@ -269,9 +269,9 @@
   vars:
     arch: "{{fastfetch_arch}}"
 
-- name: Install fzf
-  include_role:
-    name: common/shared/fzf
+# - name: Install fzf
+#   include_role:
+#     name: common/shared/fzf
 
 - name: Setup tmux
   include_role:
@@ -298,7 +298,7 @@
     # - "{{playbook_dir}}/../alacritty"
     # - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
-    - "{{playbook_dir}}/../regolith3/desktop.jpeg"
+    # - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"
     - "{{playbook_dir}}/../ulauncher"
     - "{{playbook_dir}}/../forge"
