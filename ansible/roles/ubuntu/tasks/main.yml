@@ -269,10 +269,6 @@
   vars:
     arch: "{{fastfetch_arch}}"
 
-# - name: Install fzf
-#   include_role:
-#     name: common/shared/fzf
-
 - name: Setup tmux
   include_role:
     name: common/shared/tpm
