@@ -44,9 +44,10 @@ return {
                 ensure_installed = {
                     "debugpy",
                     -- "pyright",
-                    -- "basedpyright",
+                    "basedpyright",
                     "ruff",
-                    "pylsp",
+                    -- "pylsp",
+                    "volar",
 
                     "gopls",
                     "goimports",

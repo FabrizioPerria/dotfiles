@@ -1,0 +1,25 @@
+{
+    "include": [],
+    "exclude": [],
+    "extraPaths": [],
+    "ignore": [],
+    "defineConstant": {
+        "DEBUG": true
+    },
+    "reportMissingImports": "error",
+    "reportMissingTypeStubs": false,
+    "reportMissingTypeArgument": "none",
+    "reportArgumentType": "none",
+    "reportGeneralTypeIssues": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnannotatedClassAttribute": "none",
+    "reportReturnType": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownParameterType": "none",
+    "reportMissingParameterType": "none",
+    "reportUnknownLambdaType": "none",
+    "reportUnknownMemberType": "none",
+    "reportAny": "none",
+    "pythonVersion": "3.11"
+}

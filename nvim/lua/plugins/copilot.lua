@@ -3,7 +3,11 @@ return {
         "CopilotC-Nvim/CopilotChat.nvim",
         -- Will be merged to main branch soon
         -- branch = "canary",
-        version = "v3.0.0",
+        version = "v3.4.0",
+        dependencies = {
+            { "zbirenbaum/copilot.lua" },
+            { "nvim-lua/plenary.nvim" }
+        },
         opts = {
             mode = "float",
             show_help = "yes",
@@ -70,17 +74,17 @@ return {
                 show_diff = {
                     normal = "gd",
                 },
-                show_system_prompt = {
+                show_info = {
                     normal = "gp",
                 },
-                show_user_selection = {
+                show_user_context = {
                     normal = "gs",
                 },
             },
         },
 
         build = function()
-            -- vim.cmd("make tiktoken")
+            vim.cmd("make tiktoken")
             vim.defer_fn(function()
                 vim.cmd("UpdateRemotePlugins")
                 vim.notify("CopilotChat - Updated remote plugins. Please restart Neovim.")

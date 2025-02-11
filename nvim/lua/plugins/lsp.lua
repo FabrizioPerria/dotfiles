@@ -11,7 +11,53 @@ return {
         },
     },
     {
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        keys = {
+            {
+                -- Customize or remove this keymap to your liking
+                "<leader>fo",
+                function()
+                    require("conform").format({ async = true })
+                end,
+                mode = "",
+                desc = "Format buffer",
+            },
+        },
+        -- This will provide type hinting with LuaLS
+        ---@module "conform"
+        ---@type conform.setupOpts
+        opts = {
+            -- Define your formatters
+            formatters_by_ft = {
+                lua = { "stylua" },
+                python = { "autopep8", "ruff" },
+                javascript = { "prettierd", "prettier", stop_after_first = true },
+            },
+            -- Set default options
+            default_format_opts = {
+                lsp_format = "fallback",
+            },
+            -- Set up format-on-save
+            format_on_save = { timeout_ms = 1000 },
+            -- Customize formatters
+            formatters = {
+                shfmt = {
+                    prepend_args = { "-i", "4" },
+                },
+            },
+        },
+        init = function()
+            -- If you want the formatexpr, here is the place to set it
+            vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+        end,
+    },
+    {
         "nvimtools/none-ls.nvim",
+        dependencies = {
+            "nvimtools/none-ls-extras.nvim",
+        },
         event = "VeryLazy",
         opts = function()
             local null_ls = require("null-ls")
@@ -21,8 +67,8 @@ return {
                     null_ls.builtins.code_actions.proselint,
                     null_ls.builtins.code_actions.refactoring,
                     -- null_ls.builtins.code_actions.textlint,
-                    null_ls.builtins.formatting.stylua,
                     null_ls.builtins.completion.luasnip,
+
                     null_ls.builtins.diagnostics.codespell,
                     null_ls.builtins.diagnostics.markdownlint,
                     null_ls.builtins.diagnostics.write_good,
@@ -33,10 +79,6 @@ return {
                     null_ls.builtins.diagnostics.yamllint,
                     null_ls.builtins.diagnostics.zsh,
                     null_ls.builtins.completion.spell,
-                    null_ls.builtins.formatting.prettierd,
-                    -- null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.isort,
-                    -- null_ls.builtins.diagnostics.pylint,
                 },
             })
         end,
@@ -66,7 +108,7 @@ return {
                     require("actions-preview").code_actions()
                 end, opts)
                 vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-                vim.keymap.set("n", "<leader>fo", "<cmd> lua vim.lsp.buf.format()<cr>", opts)
+                -- vim.keymap.set("n", "<leader>fo", "<cmd> lua vim.lsp.buf.format()<cr>", opts)
                 vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", opts)
                 vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", opts)
                 vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
@@ -107,28 +149,28 @@ return {
                     },
                 },
             })
-            lspconfig.pylsp.setup({
-                on_attach = lsp_attach_custom,
-                capabilities = lsp_capabilities,
-                settings = {
-                    pylsp = {
-                        plugins = {
-                            pyflakes = { enabled = false },
-                            pycodestyle = { enabled = false },
-                            autopep8 = { enabled = false },
-                            yapf = { enabled = false },
-                            mccabe = { enabled = false },
-                            pylsp_mypy = { enabled = false },
-                            pylsp_black = { enabled = false },
-                            pylsp_isort = { enabled = true },
-                            rope_autoimport = { enabled = true },
-                            pylint = { enabled = true, executable = "pylint" },
-                            jedi_completion = { fuzzy = true },
-                            pyls_isort = { enabled = true },
-                        },
-                    },
-                },
-            })
+            -- lspconfig.pylsp.setup({
+            --     on_attach = lsp_attach_custom,
+            --     capabilities = lsp_capabilities,
+            --     settings = {
+            --         pylsp = {
+            --             plugins = {
+            --                 pyflakes = { enabled = false },
+            --                 pycodestyle = { enabled = false },
+            --                 autopep8 = { enabled = false },
+            --                 yapf = { enabled = false },
+            --                 mccabe = { enabled = false },
+            --                 pylsp_mypy = { enabled = false },
+            --                 pylsp_black = { enabled = false },
+            --                 pylsp_isort = { enabled = true },
+            --                 rope_autoimport = { enabled = true },
+            --                 pylint = { enabled = true, executable = "pylint" },
+            --                 jedi_completion = { fuzzy = true },
+            --                 pyls_isort = { enabled = true },
+            --             },
+            --         },
+            --     },
+            -- })
             lspconfig.gopls.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,
