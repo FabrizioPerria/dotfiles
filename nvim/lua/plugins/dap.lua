@@ -38,7 +38,7 @@ return {
                     args = { "--port", "${port}" },
                 },
             }
-            dap.configurations.c = {
+            dap.configurations.cpp = {
                 {
                     name = "Debug with codelldb",
                     type = "codelldb",
@@ -55,7 +55,16 @@ return {
                     stopOnEntry = false,
                 },
             }
-            dap.configurations.cpp = dap.configurations.c
+            dap.configurations.c = {
+                {
+                    type = "codelldb",
+                    request = "attach",
+                    name = "Run kernel",
+                    targetCreateCommands = { "target create ${workspaceFolder}/kernel" },
+                    processCreateCommands = { "gdb-remote localhost:1234" },
+                    sourceMap = { src = "${workspaceFolder}/src" },
+                },
+            }
 
             local bash_apater_path = require("mason-registry").get_package("bash-debug-adapter"):get_install_path()
             local bash_adapter = bash_apater_path .. "/bash-debug-adapter"
@@ -111,14 +120,14 @@ return {
                     console = "integratedTerminal",
                     env = {
                         PYTHONPATH = "${workspaceFolder}:${workspaceFolder}/src",
-                    }
+                    },
                 },
             }
             vim.g.dap_virtual_text = true
         end,
         lazy = true,
         keys = {
-            { "<F5>",    ":DapContinue<CR>",                                 desc = "Run/Continue Debug" },
+            { "<F5>", ":DapContinue<CR>", desc = "Run/Continue Debug" },
             {
                 "<F8>",
                 function()
@@ -126,11 +135,11 @@ return {
                 end,
                 desc = "Conditional Breakpoint",
             },
-            { "<F9>",    ":DapToggleBreakpoint<CR>",                         desc = "Toggle Breakpoint" },
-            { "<F10>",   ":DapStepOver<CR>",                                 desc = "Debug step over" },
-            { "<F11>",   ":DapStepInto<CR>",                                 desc = "Debug step into" },
-            { "<C-F11>", ":DapStepOut<CR>",                                  desc = "Debug step out" },
-            { "<F12>",   ':DapTerminate<CR>:lua require"dapui".close()<CR>', desc = "Stop debugger" },
+            { "<F9>", ":DapToggleBreakpoint<CR>", desc = "Toggle Breakpoint" },
+            { "<F10>", ":DapStepOver<CR>", desc = "Debug step over" },
+            { "<F11>", ":DapStepInto<CR>", desc = "Debug step into" },
+            { "<C-F11>", ":DapStepOut<CR>", desc = "Debug step out" },
+            { "<F12>", ':DapTerminate<CR>:lua require"dapui".close()<CR>', desc = "Stop debugger" },
         },
     },
 }
