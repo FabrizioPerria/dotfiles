@@ -43,11 +43,8 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     "debugpy",
-                    -- "pyright",
                     "basedpyright",
                     "ruff",
-                    -- "pylsp",
-                    "volar",
 
                     "gopls",
                     "goimports",

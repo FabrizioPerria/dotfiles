@@ -29,7 +29,7 @@ return {
             dap.listeners.before.event_exited["dapui_config"] = function()
                 dapui.close()
             end
-            local codelldb = require("mason-registry").get_package("codelldb"):get_install_path() .. "/codelldb"
+            local codelldb = vim.fn.expand("$MASON/packages/codelldb/codelldb")
             dap.adapters.codelldb = {
                 type = "server",
                 port = "${port}",
@@ -66,7 +66,7 @@ return {
                 },
             }
 
-            local bash_apater_path = require("mason-registry").get_package("bash-debug-adapter"):get_install_path()
+            local bash_apater_path = vim.fn.expand("$MASON/packages/bash-debug-adapter")
             local bash_adapter = bash_apater_path .. "/bash-debug-adapter"
             local bashdb_path = bash_apater_path .. "/extension/bashdb_dir"
             dap.adapters.sh = {
