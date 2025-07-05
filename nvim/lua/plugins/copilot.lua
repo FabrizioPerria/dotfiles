@@ -1,12 +1,10 @@
 return {
     {
         "CopilotC-Nvim/CopilotChat.nvim",
-        -- Will be merged to main branch soon
-        -- branch = "canary",
-        version = "v3.4.0",
+        build = "make tiktoken",
         dependencies = {
             { "zbirenbaum/copilot.lua" },
-            { "nvim-lua/plenary.nvim" }
+            { "nvim-lua/plenary.nvim" },
         },
         opts = {
             mode = "float",
@@ -77,7 +75,7 @@ return {
                 show_info = {
                     normal = "gp",
                 },
-                show_user_context = {
+                show_context = {
                     normal = "gs",
                 },
             },
@@ -121,8 +119,8 @@ return {
                     debounce = 75,
                     keymap = {
                         accept = "<Tab>",
-                        accept_word = "<M-w>",
-                        accept_line = "<M-l>",
+                        accept_word = "<M-W>",
+                        accept_line = "<M-L>",
                         next = "<M-]>",
                         prev = "<M-[>",
                         dismiss = "<C-]>",

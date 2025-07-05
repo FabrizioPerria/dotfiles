@@ -125,18 +125,14 @@ return {
                 vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
             end
             local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-            require("mason-lspconfig").setup({
-                handlers = {
-                    function(server_name)
-                        if server_name == "jdtls" and not is_java_project then
-                            return
-                        end
-                        lspconfig[server_name].setup({
-                            on_attach = lsp_attach_custom,
-                            capabilities = lsp_capabilities,
-                        })
-                    end,
-                },
+            -- require("mason-lspconfig").setup({})
+            lspconfig.basedpyright.setup({
+                on_attach = lsp_attach_custom,
+                capabilities = lsp_capabilities,
+            })
+            lspconfig.jdtls.setup({
+                on_attach = lsp_attach_custom,
+                capabilities = lsp_capabilities,
             })
             lspconfig.lua_ls.setup({
                 on_attach = lsp_attach_custom,
@@ -149,28 +145,6 @@ return {
                     },
                 },
             })
-            -- lspconfig.pylsp.setup({
-            --     on_attach = lsp_attach_custom,
-            --     capabilities = lsp_capabilities,
-            --     settings = {
-            --         pylsp = {
-            --             plugins = {
-            --                 pyflakes = { enabled = false },
-            --                 pycodestyle = { enabled = false },
-            --                 autopep8 = { enabled = false },
-            --                 yapf = { enabled = false },
-            --                 mccabe = { enabled = false },
-            --                 pylsp_mypy = { enabled = false },
-            --                 pylsp_black = { enabled = false },
-            --                 pylsp_isort = { enabled = true },
-            --                 rope_autoimport = { enabled = true },
-            --                 pylint = { enabled = true, executable = "pylint" },
-            --                 jedi_completion = { fuzzy = true },
-            --                 pyls_isort = { enabled = true },
-            --             },
-            --         },
-            --     },
-            -- })
             lspconfig.gopls.setup({
                 on_attach = lsp_attach_custom,
                 capabilities = lsp_capabilities,

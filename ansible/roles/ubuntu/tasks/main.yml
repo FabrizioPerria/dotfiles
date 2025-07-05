@@ -139,8 +139,8 @@
       - code
       - azure-cli
       # - alacritty
-      - kitty
-      # - ghostty
+      # - kitty
+      - ghostty
       - sassc
       - gnome-themes-extra
       - gtk2-engines-murrine
@@ -290,9 +290,9 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    - "{{playbook_dir}}/../kitty"
+    # - "{{playbook_dir}}/../kitty"
     # - "{{playbook_dir}}/../alacritty"
-    # - "{{playbook_dir}}/../ghostty"
+    - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
     # - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"

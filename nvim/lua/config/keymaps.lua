@@ -2,10 +2,7 @@ vim.g.mapleader = " "
 
 vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>", { desc = "Lazy Dashboard" })
 
-vim.keymap.set("n", "J", "mzJ`z", {
-    noremap = true,
-    desc = "Join lines"
-})
+vim.keymap.set("n", "J", "mzJ`z", { noremap = true, desc = "Join lines" })
 
 --
 vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Vertical split" })
@@ -24,7 +21,6 @@ vim.keymap.set("n", "Y", "yy", { desc = "Yank line" })
 vim.keymap.set("n", "<leader>fe", ":E<CR>", { desc = "Explore" })
 vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]], { desc = "Copy Selection to clipboard" })
 vim.keymap.set({ "n" }, "<leader>Y", [["+Y]], { desc = "Copy Line to clipboard" })
-
 
 vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz", { desc = "Scroll down" })
 vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz", { desc = "Scroll up" })
@@ -47,28 +43,41 @@ vim.keymap.set("n", "<leader>dd", function()
     end
 end, { desc = "Toggle diagnostics" })
 
--- nnoremap <silent><C-Left> :<C-u>call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%^','bW')<CR>
 vim.keymap.set({ "i", "n" }, "<C-Left>", function()
     vim.api.nvim_feedkeys(
-        "<cmd>call search(\'\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^\\','bW')<CR>", "n", true)
+        "<cmd>call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^\\','bW')<CR>",
+        "n",
+        true
+    )
 end, { desc = "Move to previous word" })
 
--- nnoremap <silent><C-Right> :<C-u>call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%$','W')<CR>
 vim.keymap.set({ "i", "n" }, "<C-Right>", function()
     vim.api.nvim_feedkeys(
-        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>", "n", true)
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>",
+        "n",
+        true
+    )
 end, { desc = "Move to next word" })
 
--- inoremap <silent><C-Left> <C-o>:call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%^','bW')<CR>
 vim.keymap.set({ "i", "n" }, "<C-Left>", function()
     vim.api.nvim_feedkeys(
-        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^','bW')<CR>", "n", true)
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^','bW')<CR>",
+        "n",
+        true
+    )
 end, { desc = "Move to previous word" })
--- inoremap <silent><C-Right> <C-o>:call search('\<\<Bar>\U\@<=\u\<Bar>\u\ze\%(\U\&\>\@!\)\<Bar>\%$','W')<CR>
+
 vim.keymap.set({ "i", "n" }, "<C-Right>", function()
     vim.api.nvim_feedkeys(
-        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>", "n", true)
+        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>",
+        "n",
+        true
+    )
 end, { desc = "Move to next word" })
 
-vim.keymap.set('c', 'wsudo', "<cmd>lua require'config.utils'.sudo_write()<CR>",
-    { desc = "Save file as sudo", silent = true })
+vim.keymap.set(
+    "c",
+    "wsudo",
+    "<cmd>lua require'config.utils'.sudo_write()<CR>",
+    { desc = "Save file as sudo", silent = true }
+)

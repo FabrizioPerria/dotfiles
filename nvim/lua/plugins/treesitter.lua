@@ -40,7 +40,6 @@ return {
                     "meson",
                     "ninja",
                     "nix",
-                    "org",
                     "python",
                     "regex",
                     "rust",

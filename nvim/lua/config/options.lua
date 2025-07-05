@@ -1,5 +1,5 @@
 vim.opt.guicursor =
-"n-v-c:block-blinkwait1000-blinkon100-blinkoff50,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff150,r-cr-o:hor20"
+    "n-v-c:block-blinkwait1000-blinkon100-blinkoff50,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff150,r-cr-o:hor20"
 vim.opt.cursorline = true
 
 vim.opt.nu = true
@@ -34,7 +34,7 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
-vim.opt.updatetime = 50
+vim.opt.updatetime = 10
 
 vim.opt.colorcolumn = "120"
 
@@ -54,4 +54,4 @@ vim.opt.list = true
 
 vim.opt.mouse = ""
 
-vim.g.gitblame_delay = 2
+vim.g.gitblame_delay = 0
