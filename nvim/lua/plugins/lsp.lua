@@ -16,7 +16,6 @@ return {
         cmd = { "ConformInfo" },
         keys = {
             {
-                -- Customize or remove this keymap to your liking
                 "<leader>fo",
                 function()
                     require("conform").format({ async = true })
@@ -25,23 +24,16 @@ return {
                 desc = "Format buffer",
             },
         },
-        -- This will provide type hinting with LuaLS
-        ---@module "conform"
-        ---@type conform.setupOpts
         opts = {
-            -- Define your formatters
             formatters_by_ft = {
                 lua = { "stylua" },
                 python = { "autopep8", "ruff" },
                 javascript = { "prettierd", "prettier", stop_after_first = true },
             },
-            -- Set default options
             default_format_opts = {
                 lsp_format = "fallback",
             },
-            -- Set up format-on-save
             format_on_save = { timeout_ms = 1000 },
-            -- Customize formatters
             formatters = {
                 shfmt = {
                     prepend_args = { "-i", "4" },
@@ -49,7 +41,6 @@ return {
             },
         },
         init = function()
-            -- If you want the formatexpr, here is the place to set it
             vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
         end,
     },
@@ -84,115 +75,198 @@ return {
         end,
     },
     {
-        "neovim/nvim-lspconfig",
+        "williamboman/mason-lspconfig.nvim",
         dependencies = {
             "llllvvuu/nvim-cmp",
             "hrsh7th/cmp-nvim-lsp",
             "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
-            "fabrizioperria/nvim-java",
+            { "fabrizioperria/nvim-java", cond = is_java_project },
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
             if is_java_project then
                 require("java").setup()
             end
+            require("mason").setup()
             local lspconfig = require("lspconfig")
-            require("mason").setup({})
-            local lsp_attach_custom = function(client, bufnr)
-                local opts = { buffer = bufnr }
-                vim.keymap.set("n", "<leader>a", function()
-                    require("actions-preview").code_actions()
-                end, opts)
-                vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-                -- vim.keymap.set("n", "<leader>fo", "<cmd> lua vim.lsp.buf.format()<cr>", opts)
-                vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", opts)
-                vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", opts)
-                vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-                vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-                vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-                vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-                vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-                vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-                vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-                vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
+            require("mason-lspconfig").setup({
+                automatic_enable = {
+                    exclude = {
+                        "lua_ls",
+                        "jdtls",
+                    },
+                },
+            })
+            if is_java_project then
+                lspconfig.jdtls.setup({
+                    init_options = {
+                        documentSymbol = {
+                            dynamicRegistration = false,
+                            hierarchicalDocumentSymbolSupport = true,
+                            labelSupport = true,
 
-                vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-                vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-                vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
+                            symbolKind = {
+                                valueSet = {
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    8,
+                                    9,
+                                    10,
+                                    11,
+                                    12,
+                                    13,
+                                    14,
+                                    15,
+                                    16,
+                                    17,
+                                    18,
+                                    19,
+                                    20,
+                                    21,
+                                    22,
+                                    23,
+                                    24,
+                                    25,
+                                    26,
+                                    27,
+                                    28,
+                                    29,
+                                    30,
+                                    31,
+                                },
+                                tagSupport = {
+                                    valueSet = {},
+                                },
+                            },
+                        },
+                    },
+
+                    -- NOTE: custom java settings
+                    -- https://github.com/ray-x/lsp_signature.nvim/issues/97
+                    -- all options:
+                    -- https://github.com/mfussenegger/nvim-jdtls
+                    -- https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
+                    single_file_support = true,
+                    settings = {
+                        java = {
+                            autobuild = { enabled = false },
+                            server = { launchMode = "Hybrid" },
+                            eclipse = {
+                                downloadSources = true,
+                            },
+                            maven = {
+                                downloadSources = true,
+                            },
+                            import = {
+                                gradle = {
+                                    enabled = true,
+                                },
+                                maven = {
+                                    enabled = true,
+                                },
+                                exclusions = {
+                                    "**/node_modules/**",
+                                    "**/.metadata/**",
+                                    "**/archetype-resources/**",
+                                    "**/META-INF/maven/**",
+                                    "/**/test/**",
+                                },
+                            },
+                            -- configuration = {
+                            --     runtimes = {
+                            --         {
+                            --             name = 'JavaSE-1.8',
+                            --             path = '~/.sdkman/candidates/java/8.0.402-tem',
+                            --         },
+                            --         {
+                            --             name = 'JavaSE-11',
+                            --             path = '~/.sdkman/candidates/java/11.0.22-tem',
+                            --         },
+                            --         {
+                            --             name = 'JavaSE-17',
+                            --             path = '~/.sdkman/candidates/java/17.0.10-tem',
+                            --         },
+                            --         {
+                            --             name = 'JavaSE-21',
+                            --             path = '~/.sdkman/candidates/java/21.0.3-tem',
+                            --         },
+                            --     },
+                            -- },
+                            references = {
+                                includeDecompiledSources = true,
+                            },
+                            workspace = {
+                                symbolsFindInJavaFiles = true, -- enables workspace-wide symbol search
+                                symbolsFindInLibs = true, -- include symbols from dependencies
+                            },
+                            implementationsCodeLens = {
+                                enabled = false,
+                            },
+                            referenceCodeLens = {
+                                enabled = false,
+                            },
+                            -- https://github.com/eclipse-jdtls/eclipse.jdt.ls/issues/2948
+                            inlayHints = {
+                                parameterNames = {
+                                    ---@type "none" | "literals" | "all"
+                                    enabled = "all",
+                                },
+                            },
+                            signatureHelp = {
+                                enabled = true,
+                                description = {
+                                    enabled = true,
+                                },
+                            },
+                            symbols = {
+                                includeSourceMethodDeclarations = true,
+                            },
+                            -- https://stackoverflow.com/questions/74844019/neovim-setting-up-jdtls-with-lsp-zero-mason
+                            rename = { enabled = true },
+
+                            contentProvider = {
+                                preferred = "fernflower",
+                            },
+                            sources = {
+                                organizeImports = {
+                                    starThreshold = 9999,
+                                    staticStarThreshold = 9999,
+                                },
+                            },
+                        },
+                        redhat = { telemetry = { enabled = false } },
+                    },
+                })
             end
-            local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-            -- require("mason-lspconfig").setup({})
-            lspconfig.basedpyright.setup({
-                on_attach = lsp_attach_custom,
-                capabilities = lsp_capabilities,
-            })
-            lspconfig.jdtls.setup({
-                on_attach = lsp_attach_custom,
-                capabilities = lsp_capabilities,
-            })
             lspconfig.lua_ls.setup({
-                on_attach = lsp_attach_custom,
-                capabilities = lsp_capabilities,
                 settings = {
                     Lua = {
                         diagnostics = {
                             globals = { "vim" },
                         },
-                    },
-                },
-            })
-            lspconfig.gopls.setup({
-                on_attach = lsp_attach_custom,
-                capabilities = lsp_capabilities,
-                settings = {
-                    gopls = {
-                        gofumpt = true,
-                        codelenses = {
-                            gc_details = false,
-                            generate = true,
-                            regenerate_cgo = true,
-                            run_govulncheck = true,
-                            test = true,
-                            tidy = true,
-                            upgrade_dependency = true,
-                            vendor = true,
+                        workspace = {
+                            checkThirdParty = false,
                         },
-                        hints = {
-                            assignVariableTypes = true,
-                            compositeLiteralFields = true,
-                            compositeLiteralTypes = true,
-                            constantValues = true,
-                            functionTypeParameters = true,
-                            parameterNames = true,
-                            rangeVariableTypes = true,
+                        telemetry = {
+                            enable = false,
                         },
-                        analyses = {
-                            fieldalignment = true,
-                            nilness = true,
-                            unusedparams = true,
-                            unusedwrite = true,
-                            useany = true,
-                        },
-                        usePlaceholders = true,
-                        completeUnimported = true,
-                        staticcheck = true,
-                        directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-                        semanticTokens = true,
-                        -- },
                     },
                 },
             })
         end,
-        -- event = "VeryLazy",
     },
     {
         "llllvvuu/nvim-cmp",
         branch = "feat/above",
-        -- "hrsh7th/nvim-cmp",
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
             "onsails/lspkind.nvim",

@@ -203,7 +203,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vS",
+                "<leader>bS",
                 function()
                     require("telescope.builtin").lsp_dynamic_workspace_symbols({
                         symbol_width = 60,
@@ -215,7 +215,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vs",
+                "<leader>bs",
                 function()
                     require("telescope.builtin").lsp_document_symbols({
                         symbol_width = 60,
@@ -227,7 +227,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vr",
+                "<leader>br",
                 function()
                     require("telescope.builtin").lsp_references({ fname_width = 80 })
                 end,
@@ -235,7 +235,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vd",
+                "<leader>bd",
                 function()
                     require("telescope.builtin").lsp_definitions({ jump_type = "vsplit", fname_width = 80 })
                 end,
@@ -243,7 +243,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vt",
+                "<leader>bt",
                 function()
                     require("telescope.builtin").lsp_type_definitions({ fname_width = 80 })
                 end,
@@ -251,7 +251,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>vi",
+                "<leader>bi",
                 function()
                     require("telescope.builtin").lsp_implementations({ fname_width = 80 })
                 end,
@@ -259,7 +259,7 @@ return {
                 mode = { "n" },
             },
             {
-                "<leader>ve",
+                "<leader>be",
                 function()
                     require("telescope.builtin").diagnostics()
                 end,
