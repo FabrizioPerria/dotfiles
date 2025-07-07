@@ -91,6 +91,7 @@ local plugins = {
                         python = ".venv/bin/python",
                         args = { "--import-mode=importlib" },
                         runner = "pytest",
+                        args = { "--color=yes", "--tb=short", "--rbfracture-docker-image=radioboticsdev.azurecr.io/radiobotics/rbfracture:2.4.0-test-1314" },
                     }),
                     require("neotest-go")({
                         experimental = {
@@ -108,7 +109,8 @@ local plugins = {
 
 if require("config.utils").is_java_project() then
     table.insert(plugins, {
-        "fabrizioperria/neotest-jdtls",
+        -- "fabrizioperria/neotest-jdtls",
+        "atm1020/neotest-jdtls",
         ft = "java",
         lazy = true,
         event = { "BufReadPre", "BufNewFile" },
