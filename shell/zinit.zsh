@@ -3,7 +3,7 @@ source ${HOME}/.zinit/bin/zinit.zsh
 # Ensure completion system is initialized lazily
 skip_global_compinit=1
 
-zinit wait lucid atload"zicompinit; zicdreplay" depth=1 for zsh-users/zsh-completions
+# zinit wait lucid atload"zicompinit; zicdreplay" depth=1 for zsh-users/zsh-completions
 zmodload -i zsh/complist
 
 zinit wait lucid as=program \
@@ -23,6 +23,7 @@ zinit wait lucid depth=1 for "fabrizioperria/zsh-venv-autoswitch"
 zinit wait lucid depth=1 for "zsh-users/zsh-history-substring-search"
 zinit wait lucid depth=1 for "zsh-users/zsh-syntax-highlighting"
 zinit wait lucid depth=1 for "zsh-users/zsh-autosuggestions"
+zinit wait lucid depth=1 for "zsh-users/zsh-completions"
 
 zinit ice depth"1" && zinit light "romkatv/powerlevel10k"
 

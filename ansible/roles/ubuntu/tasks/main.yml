@@ -9,7 +9,7 @@
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-    neovim_ppa: "{{ 'stable' if ansible_architecture == 'aarch64' else 'unstable' }}"
+    neovim_ppa: "{{ 'stable' if ansible_architecture == 'aarch64' else 'stable' }}"
 
 - name: Set timezone to Europe/Copenhagen
   become: true
