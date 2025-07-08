@@ -79,6 +79,22 @@
     filename: vscode
     state: present
 
+- name: Add Albert repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: >-
+      deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_24.04/ /
+    filename: home:manuelschneid3r
+    state: present
+
+- name: Install Albert key
+  become: true
+  ansible.builtin.get_url:
+    url: 'https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_24.04/Release.key'
+    dest: '/etc/apt/keyrings/albert.key'
+    mode: 'u=rw,go=r'
+    force: true
+
 - name: Update apt cache again
   apt:
     update_cache: true
@@ -146,7 +162,8 @@
       - gtk2-engines-murrine
       - gnome-tweaks
       - gnome-shell-extensions
-      - ulauncher
+      # - ulauncher
+      - albert
     state: present
   become: true
 
@@ -296,7 +313,8 @@
     - "{{playbook_dir}}/../fastfetch"
     # - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"
-    - "{{playbook_dir}}/../ulauncher"
+    # - "{{playbook_dir}}/../ulauncher"
+    - "{{playbook_dir}}/../albert"
     - "{{playbook_dir}}/../forge"
 
 - pause:
