@@ -3,9 +3,12 @@ vim.g.mapleader = " "
 vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>", { desc = "Lazy Dashboard" })
 
 vim.keymap.set("n", "J", "mzJ`z", { noremap = true, desc = "Join lines" })
-
 --
-vim.keymap.set("n", "<leader>v", "<C-v>", { desc = "Vertical split" })
+vim.keymap.set("n", "<leader>bv", ":vsplit<CR>", { desc = "Vertical split" })
+vim.keymap.set("n", "<leader>bh", ":split<CR>", { desc = "Horizontal split" })
+
+vim.keymap.set("v", "<", "<gv", { desc = "reindent left and select" })
+vim.keymap.set("v", ">", ">gv", { desc = "reindent right and select" })
 
 vim.keymap.set("n", "<M-h>", "10<C-w><", { desc = "Resize window(To Left)" })
 vim.keymap.set("n", "<M-j>", "10<C-w>-", { desc = "Resize window(To Down)" })
