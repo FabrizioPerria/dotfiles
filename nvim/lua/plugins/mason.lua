@@ -43,56 +43,37 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     "debugpy",
-                    "basedpyright",
-                    "ruff",
 
-                    "gopls",
                     "goimports",
                     "gofumpt",
                     "impl",
                     "gomodifytags",
                     "delve",
 
-                    "cmake-language-server",
-
                     "stylua",
-                    "lua-language-server",
 
-                    "json-lsp",
                     "jsonlint",
                     "jq",
-                    "yaml-language-server",
                     "yamllint",
                     "yamlfmt",
 
                     "commitlint",
                     "gitlint",
 
-                    "marksman",
                     "markdownlint",
                     "vale",
                     "write-good",
                     "cspell",
                     "proselint",
 
-                    "bash-language-server",
                     "bash-debug-adapter",
                     "beautysh",
                     "shfmt",
                     "shellcheck",
 
-                    "ansible-language-server",
                     "codespell",
-                    "docker-compose-language-service",
-                    "dockerfile-language-server",
-                    "dot-language-server",
                     "editorconfig-checker",
 
-                    "css-lsp",
-                    -- "tsserver",
-                    "ts_ls",
-                    "tailwindcss",
-                    "eslint-lsp",
                     "prettierd",
                 },
             })

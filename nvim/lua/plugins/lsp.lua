@@ -29,6 +29,11 @@ return {
                 lua = { "stylua" },
                 python = { "autopep8", "ruff" },
                 javascript = { "prettierd", "prettier", stop_after_first = true },
+                typescript = { "prettierd", "prettier", stop_after_first = true },
+                json = { "prettierd", "prettier" },
+                yaml = { "prettierd", "prettier" },
+                markdown = { "prettierd", "prettier" },
+                html = { "prettierd", "prettier" },
             },
             default_format_opts = {
                 lsp_format = "fallback",
@@ -94,12 +99,77 @@ return {
             require("mason").setup()
             local lspconfig = require("lspconfig")
             require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "bashls",
+                    "basedpyright",
+                    "ruff",
+                    "gopls",
+                    "cmake",
+                    "lua_ls",
+                    "jsonls",
+                    "yamlls",
+                    "marksman",
+                    "ansiblels",
+                    "docker_compose_language_service",
+                    "dockerls",
+                    "dotls",
+                    "cssls",
+                    "ts_ls",
+                    "tailwindcss",
+                    "eslint",
+                    "vue_ls",
+                    -- NOTE: java is handled separately
+                },
                 automatic_enable = {
                     exclude = {
                         "lua_ls",
                         "jdtls",
+                        "ts_ls",
+                        "vue_ls",
                     },
                 },
+            })
+            local vue_language_server =
+                vim.fn.expand("$MASON/packages/vue-language-server/node_modules/@vue/language-server")
+
+            lspconfig.ts_ls.setup({
+                init_options = {
+                    plugins = {
+                        {
+                            name = "@vue/typescript-plugin",
+                            location = vue_language_server,
+                            languages = { "vue" },
+                        },
+                    },
+                },
+                filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+                settings = {
+                    typescript = {
+                        inlayHints = {
+                            includeInlayParameterNameHints = "all",
+                            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                            includeInlayFunctionParameterTypeHints = true,
+                            includeInlayVariableTypeHints = true,
+                            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                            includeInlayPropertyDeclarationTypeHints = true,
+                            includeInlayFunctionLikeReturnTypeHints = true,
+                            includeInlayEnumMemberValueHints = true,
+                        },
+                    },
+                    javascript = {
+                        inlayHints = {
+                            includeInlayParameterNameHints = "all",
+                            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                            includeInlayFunctionParameterTypeHints = true,
+                            includeInlayVariableTypeHints = true,
+                            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                            includeInlayPropertyDeclarationTypeHints = true,
+                            includeInlayFunctionLikeReturnTypeHints = true,
+                            includeInlayEnumMemberValueHints = true,
+                        },
+                    },
+                },
+                root_dir = require("lspconfig.util").root_pattern("package.json", "vue.config.js", "vite.config.ts"),
             })
             if is_java_project then
                 lspconfig.jdtls.setup({
@@ -281,9 +351,9 @@ return {
         -- event = "VeryLazy",
         lazy = true,
         config = function()
-            -- require("luasnip/loaders/from_vscode").lazy_load()
-            -- require("luasnip/loaders/from_snipmate").lazy_load()
-            -- require("luasnip_snippets.common.snip_utils").setup()
+            require("luasnip/loaders/from_vscode").lazy_load()
+            require("luasnip/loaders/from_snipmate").lazy_load()
+            require("luasnip_snippets.common.snip_utils").setup()
         end,
         opts = function()
             local cmp = require("cmp")
@@ -314,11 +384,11 @@ return {
                     completion = cmp.config.window.bordered(),
                 },
                 sources = {
-                    { name = "luasnip" },
-                    { name = "path" },
-                    { name = "nvim_lsp" },
-                    { name = "buffer" },
-                    { name = "nvim_lua" },
+                    { name = "nvim_lsp", priority = 1000 },
+                    { name = "luasnip", priority = 750 },
+                    { name = "buffer", priority = 500 },
+                    { name = "path", priority = 250 },
+                    { name = "nvim_lua", priority = 750 },
                 },
                 snippet = {
                     expand = function(args)
