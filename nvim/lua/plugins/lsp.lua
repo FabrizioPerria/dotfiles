@@ -229,6 +229,9 @@ return {
                     settings = {
                         java = {
                             autobuild = { enabled = false },
+                            format = {
+                                enabled = false,
+                            },
                             server = { launchMode = "Hybrid" },
                             eclipse = {
                                 downloadSources = true,
