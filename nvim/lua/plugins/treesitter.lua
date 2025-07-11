@@ -1,6 +1,9 @@
 return {
     {
         "nvim-treesitter/nvim-treesitter",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter-textobjects",
+        },
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
@@ -59,7 +62,7 @@ return {
                 sync_install = false,
                 auto_install = true,
                 highlight = {
-                    enable = function(lang, bufnr) -- Disable in files with more than 5K
+                    enable = function(_, bufnr) -- Disable in files with more than 5K
                         return vim.api.nvim_line_count(bufnr) <= 5000
                     end,
                     additional_vim_regex_highlighting = false,
