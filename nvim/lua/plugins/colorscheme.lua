@@ -1,117 +1,73 @@
 return {
     {
-        "norcalli/nvim-colorizer.lua",
-        config = function()
-            require("colorizer").setup()
-        end,
-    },
-    {
         "folke/tokyonight.nvim",
         lazy = false,
         priority = 1000,
-
         config = function()
+            -- Set colorscheme
             vim.cmd("colorscheme tokyonight-storm")
-            vim.api.nvim_set_hl(0, "RainbowRed", {
-                fg = "#891d25",
-            })
-            vim.api.nvim_set_hl(0, "RainbowYellow", {
-                fg = "#936a1b",
-            })
-            vim.api.nvim_set_hl(0, "RainbowBlue", {
-                fg = "#0f5b99",
-            })
-            vim.api.nvim_set_hl(0, "RainbowOrange", {
-                fg = "#784d24",
-            })
-            vim.api.nvim_set_hl(0, "RainbowGreen", {
-                fg = "#4a6d31",
-            })
-            vim.api.nvim_set_hl(0, "RainbowViolet", {
-                fg = "#712288",
-            })
-            vim.api.nvim_set_hl(0, "RainbowCyan", {
-                fg = "#256067",
-            })
-
-            vim.api.nvim_set_hl(0, "DiffText", {
-                bg = "#373640",
-                fg = "#e0af68",
-            })
-            vim.api.nvim_set_hl(0, "DiffAdd", {
-                bg = "#233745",
-                fg = "#1abc9c",
-            })
-            vim.api.nvim_set_hl(0, "DiffChange", {
-                bg = "#232323",
-            })
-            vim.api.nvim_set_hl(0, "DiffDelete", {
-                bg = "#362c3d",
-                fg = "#db4b4b",
-            })
-            vim.api.nvim_set_hl(0, "DiffDelete", {
-                bg = "#360000",
-                fg = "#db4b4b",
-            })
-            vim.api.nvim_set_hl(0, "DapBreakpoint", {
-                ctermbg = 0,
-                fg = "#993939",
-                bg = "#31353f",
-            })
-            vim.api.nvim_set_hl(0, "DapLogPoint", {
-                ctermbg = 0,
-                fg = "#61afef",
-                bg = "#31353f",
-            })
-            vim.api.nvim_set_hl(0, "DapStopped", {
-                ctermbg = 0,
-                fg = "#98c379",
-                bg = "#31353f",
-            })
-            vim.api.nvim_set_hl(0, "LineNr", {
-                fg = "#6f99bb",
-            })
-            vim.api.nvim_set_hl(0, "CursorLineNr", {
-                bg = "#697fff",
-                fg = "#ffffff",
-            })
-            vim.api.nvim_set_hl(0, "CmpItemKindCopilot", {
-                fg = "#6CC644",
-            })
-            vim.api.nvim_set_hl(0, "SpecialKey", {
-                fg = "#444444",
-            })
             vim.cmd([[highlight Normal guibg=none]])
-            vim.fn.sign_define("DapBreakpoint", {
-                text = "",
-                texthl = "DapBreakpoint",
-                linehl = "DapBreakpoint",
-                numhl = "DapBreakpoint",
-            })
-            vim.fn.sign_define("DapBreakpointCondition", {
-                text = "ﳁ",
-                texthl = "DapBreakpoint",
-                linehl = "DapBreakpoint",
-                numhl = "DapBreakpoint",
-            })
-            vim.fn.sign_define("DapBreakpointRejected", {
-                text = "",
-                texthl = "DapBreakpoint",
-                linehl = "DapBreakpoint",
-                numhl = "DapBreakpoint",
-            })
-            vim.fn.sign_define("DapLogPoint", {
-                text = "",
-                texthl = "DapLogPoint",
-                linehl = "DapLogPoint",
-                numhl = "DapLogPoint",
-            })
-            vim.fn.sign_define("DapStopped", {
-                text = "",
-                texthl = "DapStopped",
-                linehl = "DapStopped",
-                numhl = "DapStopped",
-            })
+
+            -- Define all highlight groups
+            local highlights = {
+                -- Diff colors
+                DiffText = { bg = "#373640", fg = "#e0af68" },
+                DiffAdd = { bg = "#233745", fg = "#1abc9c" },
+                DiffChange = { bg = "#232323" },
+                DiffDelete = { bg = "#360000", fg = "#db4b4b" },
+
+                -- DAP colors
+                DapBreakpoint = { fg = "#993939", bg = "#31353f" },
+                DapLogPoint = { fg = "#61afef", bg = "#31353f" },
+                DapStopped = { fg = "#98c379", bg = "#31353f" },
+
+                -- UI elements
+                LineNr = { fg = "#6f99bb" },
+                CursorLineNr = { bg = "#697fff", fg = "#ffffff" },
+                CmpItemKindCopilot = { fg = "#6CC644" },
+                SpecialKey = { fg = "#444444" },
+            }
+
+            -- Apply all highlights
+            for group, colors in pairs(highlights) do
+                vim.api.nvim_set_hl(0, group, colors)
+            end
+
+            local dap_signs = {
+                Breakpoint = {
+                    text = "",
+                    texthl = "DapBreakpoint",
+                    linehl = "DapBreakpoint",
+                    numhl = "DapBreakpoint",
+                },
+                BreakpointCondition = {
+                    text = "ﳁ",
+                    texthl = "DapBreakpoint",
+                    linehl = "DapBreakpoint",
+                    numhl = "DapBreakpoint",
+                },
+                BreakpointRejected = {
+                    text = "",
+                    texthl = "DapBreakpoint",
+                    linehl = "DapBreakpoint",
+                    numhl = "DapBreakpoint",
+                },
+                LogPoint = {
+                    text = "",
+                    texthl = "DapLogPoint",
+                    linehl = "DapLogPoint",
+                    numhl = "DapLogPoint",
+                },
+                Stopped = {
+                    text = "",
+                    texthl = "DapStopped",
+                    linehl = "DapStopped",
+                    numhl = "DapStopped",
+                },
+            }
+            for name, sign in pairs(dap_signs) do
+                vim.fn.sign_define("Dap" .. name, sign)
+            end
 
             vim.diagnostic.config({
                 signs = {
@@ -119,7 +75,7 @@ return {
                         [vim.diagnostic.severity.ERROR] = " ",
                         [vim.diagnostic.severity.WARN] = " ",
                         [vim.diagnostic.severity.HINT] = " ",
-                        [vim.diagnostic.severity.INFO] = " "
+                        [vim.diagnostic.severity.INFO] = " ",
                     },
                     linehl = {
                         [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",

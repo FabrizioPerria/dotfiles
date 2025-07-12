@@ -257,20 +257,8 @@ return {
                             -- configuration = {
                             --     runtimes = {
                             --         {
-                            --             name = 'JavaSE-1.8',
-                            --             path = '~/.sdkman/candidates/java/8.0.402-tem',
-                            --         },
-                            --         {
-                            --             name = 'JavaSE-11',
-                            --             path = '~/.sdkman/candidates/java/11.0.22-tem',
-                            --         },
-                            --         {
                             --             name = 'JavaSE-17',
                             --             path = '~/.sdkman/candidates/java/17.0.10-tem',
-                            --         },
-                            --         {
-                            --             name = 'JavaSE-21',
-                            --             path = '~/.sdkman/candidates/java/21.0.3-tem',
                             --         },
                             --     },
                             -- },
@@ -290,7 +278,6 @@ return {
                             -- https://github.com/eclipse-jdtls/eclipse.jdt.ls/issues/2948
                             inlayHints = {
                                 parameterNames = {
-                                    ---@type "none" | "literals" | "all"
                                     enabled = "all",
                                 },
                             },

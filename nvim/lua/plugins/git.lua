@@ -77,7 +77,7 @@ return {
         config = function()
             require("blame").setup({
                 date_format = "%d.%m.%Y",
-                virtual_style = "right_align",
+                virtual_style = "float",
                 focus_blame = true,
                 merge_consecutive = false,
                 max_summary_width = 40,

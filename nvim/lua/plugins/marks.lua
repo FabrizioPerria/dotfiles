@@ -1,13 +1,13 @@
 return {
     {
-        'chentoast/marks.nvim',
+        "chentoast/marks.nvim",
         lazy = true,
-        event = 'BufRead',
+        event = "BufRead",
         config = function()
-            require('marks').setup({
+            require("marks").setup({
                 default_mappings = true,
-                default_view = 'relative',
-                default_highlight_group = 'Visual',
+                default_view = "relative",
+                default_highlight_group = "Visual",
             })
         end,
     },
