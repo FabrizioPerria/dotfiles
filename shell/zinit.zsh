@@ -3,7 +3,10 @@ source ${HOME}/.zinit/bin/zinit.zsh
 # Ensure completion system is initialized lazily
 skip_global_compinit=1
 
-# zinit wait lucid atload"zicompinit; zicdreplay" depth=1 for zsh-users/zsh-completions
+if [[ ! -f $HOME/.zinit/ran_once ]]; then
+    zinit wait lucid atload"zicompinit; zicdreplay" depth=1 for zsh-users/zsh-completions
+    touch $HOME/.zinit/ran_once
+fi
 zmodload -i zsh/complist
 
 zinit wait lucid as=program \
