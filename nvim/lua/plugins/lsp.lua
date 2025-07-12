@@ -173,6 +173,8 @@ return {
             })
             if is_java_project then
                 lspconfig.jdtls.setup({
+                    -- if you get an error about resolveClasses, you need to comment out the init_options,
+                    -- restart neovim, and then uncomment the init_options again
                     init_options = {
                         documentSymbol = {
                             dynamicRegistration = false,
