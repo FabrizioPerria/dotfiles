@@ -1,5 +1,51 @@
 local current_file = ""
 
+local function show_answer(answer)
+    local buf = vim.api.nvim_create_buf(false, true) -- create new (scratch) buffer
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, vim.split(answer, "\n"))
+    vim.api.nvim_buf_set_option(buf, "modifiable", false)
+
+    local width = 0
+    for _, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+        if #line > width then
+            width = #line
+        end
+    end
+    width = math.min(width, 120)
+    local height = 10
+    local opts = {
+        style = "minimal",
+        border = "single",
+        title = "Copilot Chat Quick Answer",
+        relative = "editor",
+        width = width,
+        height = height,
+        row = (vim.o.lines - height) / 2,
+        col = (vim.o.columns - width) / 2,
+    }
+
+    vim.api.nvim_open_win(buf, true, opts)
+    vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+end
+
+local function chat_inline()
+    local input = vim.fn.input("CopilotChat: ")
+    if input and input ~= "" then
+        require("CopilotChat").ask(input, {
+            headless = true,
+            callback = function(response)
+                if response then
+                    show_answer(response)
+                else
+                    show_answer("No response received.")
+                end
+            end,
+        })
+    else
+        show_answer("No input provided.")
+    end
+end
+
 local function find_copilot_chats()
     local telescope = require("telescope.builtin")
     local chats_dir = vim.fn.stdpath("data") .. "/copilotchat_history"
@@ -21,8 +67,8 @@ local function find_copilot_chats()
                 vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, vim.split(formatted, "\n"))
             end,
         }),
-        attach_mappings = function(_, map)
-            map("i", "<CR>", function(prompt_bufnr)
+        attach_mappings = function(prompt_bufnr, map)
+            map("i", "<CR>", function()
                 local selection = require("telescope.actions.state").get_selected_entry()
                 require("telescope.actions").close(prompt_bufnr)
                 local filename = vim.fn.fnamemodify(selection.value, ":t:r")
@@ -31,6 +77,13 @@ local function find_copilot_chats()
                 vim.fn.system("rm " .. vim.fn.stdpath("data") .. "/copilotchat_history/" .. selection.value)
                 current_file = filename
                 print("Loaded CopilotChat session: " .. filename)
+            end)
+            map("i", "<A-d>", function()
+                local action_state = require("telescope.actions.state")
+                local selection = action_state.get_selected_entry()
+                local file_path = chats_dir .. "/" .. selection.value
+                vim.fn.system("rm " .. file_path)
+                require("telescope.actions").close(prompt_bufnr)
             end)
             return true
         end,
@@ -107,8 +160,8 @@ return {
             separator = "───", -- Separator to use in chat
             auto_follow_cursor = false, -- Don't follow the cursor after getting response
 
-            -- model = "gpt-4o", -- GPT model to use, see ':CopilotChatModels' for available models
-            model = "claude-3.5-sonnet",
+            model = "gpt-4.1", -- GPT model to use, see ':CopilotChatModels' for available models
+            -- model = "claude-3.5-sonnet",
             temperature = 0.1, -- GPT temperature
 
             show_folds = true, -- Shows folds for sections in chat
@@ -185,6 +238,7 @@ return {
             { "<leader>c", ":CopilotChatToggle<CR>", desc = "CopilotChat Toggle prompt" },
             { "<leader>cc", open_new_copilot_chat, desc = "CopilotChat New Chat" },
             { "<leader>fc", find_copilot_chats, desc = "Find Copilot Chats" },
+            { "<leader>ci", chat_inline, desc = "CopilotChat Inline" },
         },
     },
     {
