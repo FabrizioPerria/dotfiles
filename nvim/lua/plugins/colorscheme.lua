@@ -5,33 +5,30 @@ return {
         priority = 1000,
         config = function()
             -- Set colorscheme
-            vim.cmd("colorscheme tokyonight-storm")
-            vim.cmd([[highlight Normal guibg=none]])
+            require("tokyonight").setup({
+                style = "storm",
+                on_highlights = function(hl, _)
+                    -- Diff colors
+                    hl.DiffText = { bg = "#373640", fg = "#e0af68" }
+                    hl.DiffAdd = { bg = "#233745", fg = "#1abc9c" }
+                    hl.DiffChange = { bg = "#232323" }
+                    hl.DiffDelete = { bg = "#360000", fg = "#db4b4b" }
 
-            -- Define all highlight groups
-            local highlights = {
-                -- Diff colors
-                DiffText = { bg = "#373640", fg = "#e0af68" },
-                DiffAdd = { bg = "#233745", fg = "#1abc9c" },
-                DiffChange = { bg = "#232323" },
-                DiffDelete = { bg = "#360000", fg = "#db4b4b" },
+                    -- DAP colors
+                    hl.DapBreakpoint = { fg = "#993939", bg = "#31353f" }
+                    hl.DapLogPoint = { fg = "#61afef", bg = "#31353f" }
+                    hl.DapStopped = { fg = "#98c379", bg = "#31353f" }
 
-                -- DAP colors
-                DapBreakpoint = { fg = "#993939", bg = "#31353f" },
-                DapLogPoint = { fg = "#61afef", bg = "#31353f" },
-                DapStopped = { fg = "#98c379", bg = "#31353f" },
-
-                -- UI elements
-                LineNr = { fg = "#6f99bb" },
-                CursorLineNr = { bg = "#697fff", fg = "#ffffff" },
-                CmpItemKindCopilot = { fg = "#6CC644" },
-                SpecialKey = { fg = "#444444" },
-            }
-
-            -- Apply all highlights
-            for group, colors in pairs(highlights) do
-                vim.api.nvim_set_hl(0, group, colors)
-            end
+                    -- UI elements
+                    hl.LineNr = { fg = "#61afef" }
+                    hl.LineNrAbove = { fg = "#61afef" }
+                    hl.LineNrBelow = { fg = "#61afef" }
+                    hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
+                    hl.CmpItemKindCopilot = { fg = "#6CC644" }
+                    hl.SpecialKey = { fg = "#444444" }
+                end,
+            })
+            vim.cmd("colorscheme tokyonight")
 
             local dap_signs = {
                 Breakpoint = {

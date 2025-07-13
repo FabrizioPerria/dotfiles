@@ -1,3 +1,96 @@
+local current_file = ""
+
+local function find_copilot_chats()
+    local telescope = require("telescope.builtin")
+    local chats_dir = vim.fn.stdpath("data") .. "/copilotchat_history"
+
+    telescope.find_files({
+        prompt_title = "Copilot Chats",
+        cwd = chats_dir,
+        hidden = false,
+        find_command = { "find", ".", "-type", "f", "-name", "*.json", "-exec", "ls", "-t", "{}", "+" },
+        previewer = require("telescope.previewers").new_buffer_previewer({
+            define_preview = function(self, entry)
+                vim.api.nvim_buf_set_option(self.state.bufnr, "filetype", "json")
+                vim.api.nvim_buf_set_option(self.state.bufnr, "wrap", true)
+                vim.wo.wrap = true
+                local content = vim.fn.readfile(chats_dir .. "/" .. entry.value)
+                local json_str = table.concat(content, "\n")
+                local formatted = vim.fn.system({ "jq", "." }, json_str)
+                formatted = formatted:gsub("%s+$", "")
+                vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, vim.split(formatted, "\n"))
+            end,
+        }),
+        attach_mappings = function(_, map)
+            map("i", "<CR>", function(prompt_bufnr)
+                local selection = require("telescope.actions.state").get_selected_entry()
+                require("telescope.actions").close(prompt_bufnr)
+                local filename = vim.fn.fnamemodify(selection.value, ":t:r")
+                vim.cmd("CopilotChatLoad " .. filename)
+                vim.cmd("CopilotChatToggle")
+                vim.fn.system("rm " .. vim.fn.stdpath("data") .. "/copilotchat_history/" .. selection.value)
+                current_file = filename
+                print("Loaded CopilotChat session: " .. filename)
+            end)
+            return true
+        end,
+    })
+end
+
+local function open_new_copilot_chat()
+    vim.cmd("CopilotChatReset") -- Reset any existing chat session
+    current_file = "" -- Reset current file name
+    vim.cmd("CopilotChatToggle") -- Open the CopilotChat window
+end
+
+-- Auto-save CopilotChat sessions when chat buffer is closed
+vim.api.nvim_create_autocmd("BufWinLeave", {
+    callback = function(args)
+        local buf = args.buf
+        local ft = vim.bo[buf].filetype
+
+        if ft == "copilot-chat" then
+            local bufContent = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+            bufContent = table.concat(bufContent, "\n")
+
+            -- Create a new buffer for the chat content
+            local chat_buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_lines(chat_buf, 0, -1, false, vim.split(bufContent, "\n"))
+
+            if current_file == "" then
+                current_file = "" .. os.date("%Y-%m-%d__%H-%M-%S")
+            end
+            vim.cmd("silent! CopilotChatSave " .. current_file)
+            -- if current_file ~= "" then
+            --     vim.cmd("CopilotChatSave " .. current_file)
+            --     print("[same file] Saved CopilotChat session as: " .. current_file)
+            -- else
+            --     -- Ask for summary and wait for response
+            --     require("CopilotChat").ask(
+            --         "Summarize in 8 words or less(only say those exact words, i'm using it as file name). If the input is empty or you have nothing to summarize, just say no:"
+            --             .. bufContent({
+            --                 headless = true,
+            --                 buffer = chat_buf,
+            --                 callback = function(response)
+            --                     local topic = response:gsub("[^%w%s]", ""):gsub("%s+", "_")
+            --                     if topic == "" or topic:lower() == "no" then
+            --                         print("No topic provided, not saving session.")
+            --                         return
+            --                     end
+            --                     local filename = os.date("%Y-%m-%d___") .. topic
+            --                     vim.schedule(function()
+            --                         vim.cmd("CopilotChatSave " .. filename)
+            --                         print("[new file] Saved CopilotChat session as: " .. filename)
+            --                         current_file = filename
+            --                     end)
+            --                 end,
+            --             })
+            --     )
+            -- end
+        end
+    end,
+})
+
 return {
     {
         "CopilotC-Nvim/CopilotChat.nvim",
@@ -30,8 +123,8 @@ return {
 
             window = {
                 layout = "float", -- 'vertical', 'horizontal', 'float', 'replace'
-                width = 0.5, -- fractional width of parent, or absolute width in columns when > 1
-                height = 0.5, -- fractional height of parent, or absolute height in rows when > 1
+                width = 0.6, -- fractional width of parent, or absolute width in columns when > 1
+                height = 0.6, -- fractional height of parent, or absolute height in rows when > 1
                 -- Options below only apply to floating windows
                 relative = "editor", -- 'editor', 'win', 'cursor', 'mouse'
                 border = "single", -- 'none', single', 'double', 'rounded', 'solid', 'shadow'
@@ -90,9 +183,8 @@ return {
         lazy = true,
         keys = {
             { "<leader>c", ":CopilotChatToggle<CR>", desc = "CopilotChat Toggle prompt" },
-            { "<leader>cc", ":CopilotChat ", desc = "CopilotChat Inline" },
-            { "<leader>cs", ":CopilotChatSave ", desc = "CopilotChat Save" },
-            { "<leader>cl", ":CopilotChatLoad ", desc = "CopilotChat Load" },
+            { "<leader>cc", open_new_copilot_chat, desc = "CopilotChat New Chat" },
+            { "<leader>fc", find_copilot_chats, desc = "Find Copilot Chats" },
         },
     },
     {
