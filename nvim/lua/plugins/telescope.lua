@@ -148,9 +148,15 @@ return {
                 mode = { "n", "v" },
             },
             {
-                "<leader>fr",
+                "<leader>fR",
                 "<cmd> Telescope registers<CR>",
                 desc = "Peek Register contents",
+                mode = { "n", "v" },
+            },
+            {
+                "<leader>fr",
+                "<cmd> Telescope oldfiles<CR>",
+                desc = "Show recently opened files",
                 mode = { "n", "v" },
             },
             {
@@ -386,6 +392,30 @@ return {
                         },
                     },
                 },
+            })
+        end,
+    },
+    {
+        "aznhe21/actions-preview.nvim",
+        event = "VeryLazy",
+        keys = {
+            {
+                "<leader>fa",
+                function()
+                    require("actions-preview").code_actions()
+                end,
+                desc = "Show code actions",
+                mode = { "n", "v" },
+            },
+        },
+        config = function()
+            require("actions-preview").setup({
+                use_diagnostic_signs = true,
+                show_server_name = true,
+                show_icon = true,
+                border = "rounded",
+                max_height = 20,
+                min_width = 50,
             })
         end,
     },

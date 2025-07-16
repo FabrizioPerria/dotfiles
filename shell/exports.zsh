@@ -1,3 +1,6 @@
+bindkey "^[[1;3D" backward-word
+bindkey "^[[1;3C" forward-word
+
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_DISABLE_COMPFIX=true
 export DISABLE_AUTO_UPDATE=true

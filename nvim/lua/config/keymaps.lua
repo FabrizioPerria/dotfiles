@@ -15,13 +15,9 @@ vim.keymap.set("n", "<M-j>", "10<C-w>-", { desc = "Resize window(To Down)" })
 vim.keymap.set("n", "<M-k>", "10<C-w>+", { desc = "Resize window(To Up)" })
 vim.keymap.set("n", "<M-l>", "10<C-w>>", { desc = "Resize window(To Right)" })
 
-vim.keymap.set("n", "<leader>s", ":%s///gI<Left><Left><Left><Left>", { desc = "Search and replace" })
-vim.keymap.set("x", "<leader>s", ":s///gI<Left><Left><Left><Left>", { desc = "Search and replace" })
-
 vim.keymap.set("x", "J", ":m '>+1<CR>gv=gv", { desc = "Move selected lines down" })
 vim.keymap.set("x", "K", ":m '<-2<CR>gv=gv", { desc = "Move selected lines up" })
-vim.keymap.set("n", "Y", "yy", { desc = "Yank line" })
-vim.keymap.set("n", "<leader>fe", ":E<CR>", { desc = "Explore" })
+
 vim.keymap.set({ "n", "x" }, "<leader>y", [["+y]], { desc = "Copy Selection to clipboard" })
 vim.keymap.set({ "n" }, "<leader>Y", [["+Y]], { desc = "Copy Line to clipboard" })
 
