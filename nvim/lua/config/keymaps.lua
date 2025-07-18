@@ -33,7 +33,7 @@ vim.keymap.set("n", "<leader>=", function()
 end, { desc = "Add separator" })
 
 local diagnostics_active = true
-vim.keymap.set("n", "<leader>dd", function()
+vim.keymap.set("n", "<leader>DD", function()
     diagnostics_active = not diagnostics_active
     if diagnostics_active then
         vim.diagnostic.enable()
