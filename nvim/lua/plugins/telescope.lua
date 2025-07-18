@@ -1,3 +1,89 @@
+local sorting_comparator = function(opts)
+    local current_buf = vim.api.nvim_get_current_buf()
+    local comparators = {
+        -- sort results by bufnr (prioritize cur buf), severity, lnum
+        buffer = function(a, b)
+            if a.bufnr == b.bufnr then
+                if a.type == b.type then
+                    return a.lnum < b.lnum
+                else
+                    return a.type < b.type
+                end
+            else
+                if a.bufnr == current_buf then
+                    return true
+                end
+                if b.bufnr == current_buf then
+                    return false
+                end
+                return a.bufnr < b.bufnr
+            end
+        end,
+        severity = function(a, b)
+            if a.type < b.type then
+                return true
+            elseif a.type > b.type then
+                return false
+            end
+
+            if a.bufnr == b.bufnr then
+                return a.lnum < b.lnum
+            elseif a.bufnr == current_buf then
+                return true
+            elseif b.bufnr == current_buf then
+                return false
+            else
+                return a.bufnr < b.bufnr
+            end
+        end,
+    }
+
+    local sort_by = vim.F.if_nil(opts.sort_by, "buffer")
+    return comparators[sort_by]
+end
+
+local function results(prompt_bufnr)
+    local items = {}
+    local opts = {}
+    opts.root_dir = opts.root_dir == true and vim.loop.cwd() or opts.root_dir
+
+    local bufnr_name_map = {}
+    local filter_diag = function(diagnostic)
+        if bufnr_name_map[diagnostic.bufnr] == nil then
+            bufnr_name_map[diagnostic.bufnr] = vim.api.nvim_buf_get_name(diagnostic.bufnr)
+        end
+
+        local root_dir_test = not opts.root_dir
+            or string.sub(bufnr_name_map[diagnostic.bufnr], 1, #opts.root_dir) == opts.root_dir
+        local listed_test = not opts.no_unlisted or vim.api.nvim_buf_get_option(diagnostic.bufnr, "buflisted")
+
+        return root_dir_test and listed_test
+    end
+
+    local preprocess_diag = function(diagnostic)
+        print(vim.inspect(diagnostic))
+        return {
+            bufnr = diagnostic.bufnr,
+            filename = bufnr_name_map[diagnostic.bufnr],
+            lnum = diagnostic.lnum + 1,
+            col = diagnostic.col + 1,
+            text = vim.trim(diagnostic.message:gsub("[\n]", "")),
+            type = severities[diagnostic.severity] or severities[1],
+            code = diagnostic.code,
+        }
+    end
+
+    for _, d in ipairs(vim.diagnostic.get(opts.bufnr, diagnosis_opts)) do
+        if filter_diag(d) then
+            table.insert(items, preprocess_diag(d))
+        end
+    end
+
+    table.sort(items, sorting_comparator(opts))
+
+    return items
+end
+
 local function match_path()
     local clients = vim.lsp.get_active_clients()
     for _, client in ipairs(clients) do
@@ -331,7 +417,12 @@ return {
                 },
                 pickers = {
                     diagnostics = {
+                        line_width = "full",
+                        wrap_results = true,
                         path_display = { "hidden" },
+                        -- finder = {
+                        --     results = results(),
+                        -- },
                     },
                     buffers = {
                         mappings = {
