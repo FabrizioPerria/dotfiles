@@ -1,4 +1,4 @@
-vim.lsp.config("lua_ls", {
+local config = {
     settings = {
         Lua = {
             diagnostics = {
@@ -12,4 +12,6 @@ vim.lsp.config("lua_ls", {
             },
         },
     },
-})
+}
+vim.lsp.config("lua_ls", config)
+return config

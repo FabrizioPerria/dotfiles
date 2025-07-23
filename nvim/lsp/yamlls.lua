@@ -1,4 +1,4 @@
-vim.lsp.config("yamlls", {
+local config = {
     cmd = { "yaml-language-server", "--stdio" },
     filetypes = { "yaml" },
     root_markers = { ".git/", "yamllint.yaml", "yamlconfig.yaml" },
@@ -16,4 +16,6 @@ vim.lsp.config("yamlls", {
             },
         },
     },
-})
+}
+vim.lsp.config("yamlls", config)
+return config

@@ -1,4 +1,4 @@
-vim.lsp.config("dotls", {
+local config = {
     cmd = { "dot-language-server", "--stdio" },
     filetypes = { "dot" },
     root_markers = { ".git/", "dotfile" },
@@ -10,4 +10,6 @@ vim.lsp.config("dotls", {
             validate = true,
         },
     },
-})
+}
+vim.lsp.config("dotls", config)
+return config

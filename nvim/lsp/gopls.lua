@@ -1,4 +1,4 @@
-vim.lsp.config("gopls", {
+local config = {
     cmd = { "gopls" },
     filetypes = { "go", "gomod", "gowork", "gotmpl" },
     root_markers = { "go.mod", "go.work", ".git/" },
@@ -18,4 +18,6 @@ vim.lsp.config("gopls", {
             completeUnimported = true,
         },
     },
-})
+}
+vim.lsp.config("gopls", config)
+return config

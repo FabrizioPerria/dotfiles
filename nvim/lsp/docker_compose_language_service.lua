@@ -1,4 +1,4 @@
-vim.lsp.config("docker_compose_language_service", {
+local config = {
     cmd = { "docker-compose-langserver", "--stdio" },
     filetypes = { "yaml", "yml" },
     root_markers = { ".git/", "docker-compose.yml", "docker-compose.yaml" },
@@ -15,4 +15,6 @@ vim.lsp.config("docker_compose_language_service", {
             },
         },
     },
-})
+}
+vim.lsp.config("docker_compose_language_service", config)
+return config

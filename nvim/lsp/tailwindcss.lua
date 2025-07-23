@@ -1,4 +1,4 @@
-vim.lsp.config("tailwindcss", {
+local config = {
     cmd = { "tailwindcss-language-server", "--stdio" },
     filetypes = {
         "aspnetcorerazor",
@@ -89,4 +89,6 @@ vim.lsp.config("tailwindcss", {
             validate = true,
         },
     },
-})
+}
+vim.lsp.config("tailwindcss", config)
+return config

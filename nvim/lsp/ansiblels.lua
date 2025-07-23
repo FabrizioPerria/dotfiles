@@ -1,4 +1,4 @@
-vim.lsp.config("ansiblels", {
+local config = {
     cmd = { "ansible-language-server", "--stdio" },
     filetypes = { "yaml.ansible" },
     root_markers = { "ansible.cfg", ".ansible-lint" },
@@ -22,4 +22,6 @@ vim.lsp.config("ansiblels", {
             },
         },
     },
-})
+}
+vim.lsp.config("ansiblels", config)
+return config

@@ -1,4 +1,4 @@
-vim.lsp.config("marksman", {
+local config = {
     cmd = { "marksman", "server" },
     filetypes = { "markdown" },
     root_markers = { ".git/", "README.md", "index.md" },
@@ -18,4 +18,6 @@ vim.lsp.config("marksman", {
             },
         },
     },
-})
+}
+vim.lsp.config("marksman", config)
+return config

@@ -1,4 +1,4 @@
-vim.lsp.config("dockerls", {
+local config = {
     cmd = { "docker-langserver", "--stdio" },
     filetypes = { "dockerfile" },
     root_markers = { ".git/", "Dockerfile" },
@@ -15,4 +15,6 @@ vim.lsp.config("dockerls", {
             },
         },
     },
-})
+}
+vim.lsp.config("dockerls", config)
+return config

@@ -1,4 +1,4 @@
-vim.lsp.config("eslint", {
+local config = {
     cmd = { "vscode-eslint-language-server", "--stdio" },
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     root_markers = { ".eslintrc.js", ".eslintrc.json", ".eslintrc.yaml", ".eslintrc.yml", "package.json" },
@@ -48,4 +48,6 @@ vim.lsp.config("eslint", {
             mode = "location",
         },
     },
-})
+}
+vim.lsp.config("eslint", config)
+return config

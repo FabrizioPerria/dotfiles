@@ -1,4 +1,4 @@
-vim.lsp.config("cssls", {
+local config = {
     cmd = { "vscode-css-language-server", "--stdio" },
     filetypes = {
         "css",
@@ -25,4 +25,6 @@ vim.lsp.config("cssls", {
             validate = true,
         },
     },
-})
+}
+vim.lsp.config("cssls", config)
+return config

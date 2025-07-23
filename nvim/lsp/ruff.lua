@@ -1,4 +1,4 @@
-vim.lsp.config("ruff", {
+local config = {
     cmd = { "ruff-lsp", "--stdio" },
     filetypes = { "python" },
     root_markers = { ".git/", "pyproject.toml", "ruff.toml", "ruff.yaml", "ruff.yml" },
@@ -13,4 +13,6 @@ vim.lsp.config("ruff", {
             },
         },
     },
-})
+}
+vim.lsp.config("ruff", config)
+return config
