@@ -104,7 +104,6 @@ local config = {
             },
         },
     },
-    root_dir = require("lspconfig.util").root_pattern("package.json", "vue.config.js", "vite.config.ts"),
 }
 vim.lsp.config("ts_ls", config)
 return config

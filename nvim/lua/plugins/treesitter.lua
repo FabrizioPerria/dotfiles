@@ -58,6 +58,7 @@ return {
                     "vimdoc",
                     "kdl",
                     "c_sharp",
+                    "vue",
                 },
                 sync_install = false,
                 auto_install = true,

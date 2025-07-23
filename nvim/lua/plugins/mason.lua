@@ -2,8 +2,7 @@ return {
     {
         "williamboman/mason.nvim",
         config = function()
-            require("mason").setup({
-            })
+            require("mason").setup({})
         end,
     },
     {
@@ -11,6 +10,8 @@ return {
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
+                    "vue-language-server",
+
                     "debugpy",
                     "basedpyright",
                     "ruff",
@@ -61,8 +62,8 @@ return {
                     "editorconfig-checker",
 
                     "css-lsp",
-                    "ts_ls",
-                    "tailwindcss",
+                    "typescript-language-server",
+                    "tailwindcss-language-server",
                     "eslint-lsp",
                     "prettierd",
                 },

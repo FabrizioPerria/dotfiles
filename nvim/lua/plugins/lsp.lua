@@ -79,46 +79,8 @@ return {
     },
     { "mfussenegger/nvim-jdtls" },
     {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = {
-            "llllvvuu/nvim-cmp",
-            "hrsh7th/cmp-nvim-lsp",
-            "williamboman/mason.nvim",
-            "neovim/nvim-lspconfig",
-            "L3MON4D3/LuaSnip",
-            "luckasRanarison/clear-action.nvim",
-            "aznhe21/actions-preview.nvim",
-        },
+        "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
-        config = function()
-            require("mason").setup()
-            local lspconfig = require("lspconfig")
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "bashls",
-                    "basedpyright",
-                    "ruff",
-                    "gopls",
-                    "cmake",
-                    "lua_ls",
-                    "jsonls",
-                    "yamlls",
-                    "marksman",
-                    "ansiblels",
-                    "docker_compose_language_service",
-                    "dockerls",
-                    "dotls",
-                    "cssls",
-                    "ts_ls",
-                    "tailwindcss",
-                    "eslint",
-                    "vue_ls",
-                    "jdtls",
-                    -- NOTE: java is handled separately
-                },
-                automatic_enable = false,
-            })
-        end,
     },
     {
         "llllvvuu/nvim-cmp",
