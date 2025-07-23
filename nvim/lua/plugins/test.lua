@@ -1,5 +1,14 @@
-local plugins = {
-    -- Other plugins
+return {
+    {
+        "rcasia/neotest-java",
+        ft = "java",
+        dependencies = {
+            "mfussenegger/nvim-jdtls",
+            "mfussenegger/nvim-dap", -- for the debugger
+            "rcarriga/nvim-dap-ui", -- recommended
+            "theHamsta/nvim-dap-virtual-text", -- recommended
+        },
+    },
     {
         "nvim-neotest/neotest",
         lazy = true,
@@ -11,6 +20,7 @@ local plugins = {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
+            "rcasia/neotest-java",
             "alfaix/neotest-gtest",
         },
         keys = {
@@ -18,7 +28,7 @@ local plugins = {
                 "<leader>tt",
                 function()
                     if vim.fn.expand("%:e") == "java" then
-                        require("ftplugin.java").test.run_current_class()
+                        require("jdtls").test_class()
                     else
                         require("neotest").run.run(vim.fn.expand("%"))
                     end
@@ -31,7 +41,7 @@ local plugins = {
                     if vim.fn.expand("%:e") == "go" then
                         require("dap-go").debug_test()
                     elseif vim.fn.expand("%:e") == "java" then
-                        require("ftplugin.java").test.debug_current_method()
+                        require("jdtls").test_nearest_method()
                     else
                         -- require("neotest").run.debug(vim.fn.expand("%"))
                         require("neotest").run.run({ strategy = "dap", file = vim.fn.expand("%") })
@@ -100,29 +110,11 @@ local plugins = {
                         -- recursive_run = true
                     }),
                     require("neotest-gtest"),
+                    require("neotest-java")({
+                        incremental_build = true,
+                    }),
                 },
             })
         end,
     },
 }
-
--- if require("config.utils").is_java_project() then
---     table.insert(plugins, {
---         "fabrizioperria/neotest-jdtls",
---         ft = "java",
---         lazy = true,
---         event = { "BufReadPre", "BufNewFile" },
---         dependencies = {
---             "nvim-neotest/neotest",
---         },
---         config = function()
---             require("neotest").setup({
---                 adapters = {
---                     require("neotest-jdtls"),
---                 },
---             })
---         end,
---     })
--- end
---
-return plugins
