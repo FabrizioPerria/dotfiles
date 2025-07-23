@@ -14,6 +14,24 @@ vim.opt.rtp:prepend(lazypath)
 require("config.keymaps")
 require("config.options")
 require("config.autocmds")
-if not vim.g.vscode then
-    require("lazy").setup("plugins")
-end
+
+vim.lsp.enable({
+    "ansiblels",
+    "basedpyright",
+    "bashls",
+    "cmake",
+    "cssls",
+    "docker_compose_language_service",
+    "dockerls",
+    "dotls",
+    "eslint",
+    "gopls",
+    "jsonls",
+    "lua_ls",
+    "marksman",
+    "ruff",
+    "tailwindcss",
+    "ts_ls",
+    "yamlls",
+})
+require("lazy").setup("plugins")

@@ -20,7 +20,6 @@ local function get_workspace()
     local workspace_path = home .. "/.cache/nvim/jdtls/workspace/"
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
     local workspace_dir = workspace_path .. project_name
-    print("Workspace Directory: " .. workspace_dir)
     return workspace_dir
 end
 
@@ -89,26 +88,6 @@ local function java_keymaps()
     )
     vim.keymap.set("n", "<leader>JT", "<Cmd> lua require('jdtls').test_class()<CR>", { desc = "[J]ava [T]est Class" })
     vim.keymap.set("n", "<leader>Ju", "<Cmd> JdtUpdateConfig<CR>", { desc = "[J]ava [U]pdate Config" })
-    local opts = {}
-    vim.keymap.set("n", "<leader>a", function()
-        require("actions-preview").code_actions()
-    end, opts)
-    vim.keymap.set("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-    -- vim.keymap.set("n", "<leader>fo", "<cmd> lua vim.lsp.buf.format()<cr>", opts)
-    vim.keymap.set("n", "<leader>li", "<cmd>LspInfo<cr>", opts)
-    vim.keymap.set("n", "<leader>lr", "<cmd>LspRestart<cr>", opts)
-    vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-    vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-    vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-    vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-    vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-    vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-    vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-    vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-
-    vim.keymap.set("n", "gl", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-    vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", opts)
-    vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", opts)
 end
 
 local on_attach = function(_, bufnr)
