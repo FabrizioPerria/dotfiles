@@ -106,23 +106,23 @@ local plugins = {
     },
 }
 
-if require("config.utils").is_java_project() then
-    table.insert(plugins, {
-        "fabrizioperria/neotest-jdtls",
-        ft = "java",
-        lazy = true,
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = {
-            "nvim-neotest/neotest",
-        },
-        config = function()
-            require("neotest").setup({
-                adapters = {
-                    require("neotest-jdtls"),
-                },
-            })
-        end,
-    })
-end
-
+-- if require("config.utils").is_java_project() then
+--     table.insert(plugins, {
+--         "fabrizioperria/neotest-jdtls",
+--         ft = "java",
+--         lazy = true,
+--         event = { "BufReadPre", "BufNewFile" },
+--         dependencies = {
+--             "nvim-neotest/neotest",
+--         },
+--         config = function()
+--             require("neotest").setup({
+--                 adapters = {
+--                     require("neotest-jdtls"),
+--                 },
+--             })
+--         end,
+--     })
+-- end
+--
 return plugins

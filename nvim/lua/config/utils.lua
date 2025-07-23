@@ -59,28 +59,6 @@ M.sudo_write = function(tmpfile, filepath)
     vim.fn.delete(tmpfile)
 end
 
-M.is_java_project = function()
-    local function find_file_in_ancestors(filename, path)
-        path = path or vim.fn.getcwd()
-        if vim.fn.glob(path .. "/" .. filename) ~= "" then
-            return true
-        end
-        local parent = vim.fn.fnamemodify(path, ":h")
-        if parent == path then
-            return false
-        end
-        return find_file_in_ancestors(filename, parent)
-    end
-
-    local java_files = { "build.gradle", "pom.xml", "src/main/java", "settings.gradle" }
-    for _, file in ipairs(java_files) do
-        if find_file_in_ancestors(file) then
-            return true
-        end
-    end
-    return false
-end
-
 M.find_python_executable = function()
     local python_executable = vim.fn.exepath("python3")
     if python_executable == "" then

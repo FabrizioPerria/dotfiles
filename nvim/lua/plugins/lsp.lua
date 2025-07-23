@@ -1,5 +1,3 @@
-local is_java_project = require("config.utils").is_java_project()
-
 return {
     {
         "L3MON4D3/LuaSnip",
@@ -79,6 +77,7 @@ return {
             })
         end,
     },
+    { "mfussenegger/nvim-jdtls" },
     {
         "williamboman/mason-lspconfig.nvim",
         dependencies = {
@@ -89,13 +88,9 @@ return {
             "L3MON4D3/LuaSnip",
             "luckasRanarison/clear-action.nvim",
             "aznhe21/actions-preview.nvim",
-            { "fabrizioperria/nvim-java", cond = is_java_project },
         },
         event = { "BufReadPre", "BufNewFile" },
         config = function()
-            if is_java_project then
-                require("java").setup()
-            end
             require("mason").setup()
             local lspconfig = require("lspconfig")
             require("mason-lspconfig").setup({
@@ -118,6 +113,7 @@ return {
                     "tailwindcss",
                     "eslint",
                     "vue_ls",
+                    "jdtls",
                     -- NOTE: java is handled separately
                 },
                 automatic_enable = {
@@ -171,144 +167,6 @@ return {
                 },
                 root_dir = require("lspconfig.util").root_pattern("package.json", "vue.config.js", "vite.config.ts"),
             })
-            if is_java_project then
-                lspconfig.jdtls.setup({
-                    -- if you get an error about resolveClasses, you need to comment out the init_options,
-                    -- restart neovim, and then uncomment the init_options again
-                    init_options = {
-                        documentSymbol = {
-                            dynamicRegistration = false,
-                            hierarchicalDocumentSymbolSupport = true,
-                            labelSupport = true,
-
-                            symbolKind = {
-                                valueSet = {
-                                    1,
-                                    2,
-                                    3,
-                                    4,
-                                    5,
-                                    6,
-                                    7,
-                                    8,
-                                    9,
-                                    10,
-                                    11,
-                                    12,
-                                    13,
-                                    14,
-                                    15,
-                                    16,
-                                    17,
-                                    18,
-                                    19,
-                                    20,
-                                    21,
-                                    22,
-                                    23,
-                                    24,
-                                    25,
-                                    26,
-                                    27,
-                                    28,
-                                    29,
-                                    30,
-                                    31,
-                                },
-                                tagSupport = {
-                                    valueSet = {},
-                                },
-                            },
-                        },
-                    },
-
-                    -- NOTE: custom java settings
-                    -- https://github.com/ray-x/lsp_signature.nvim/issues/97
-                    -- all options:
-                    -- https://github.com/mfussenegger/nvim-jdtls
-                    -- https://github.com/eclipse/eclipse.jdt.ls/wiki/Running-the-JAVA-LS-server-from-the-command-line#initialize-request
-                    single_file_support = true,
-                    settings = {
-                        java = {
-                            autobuild = { enabled = false },
-                            format = {
-                                enabled = false,
-                            },
-                            server = { launchMode = "Hybrid" },
-                            eclipse = {
-                                downloadSources = true,
-                            },
-                            maven = {
-                                downloadSources = true,
-                            },
-                            import = {
-                                gradle = {
-                                    enabled = true,
-                                },
-                                maven = {
-                                    enabled = true,
-                                },
-                                exclusions = {
-                                    "**/node_modules/**",
-                                    "**/.metadata/**",
-                                    "**/archetype-resources/**",
-                                    "**/META-INF/maven/**",
-                                    "/**/test/**",
-                                },
-                            },
-                            -- configuration = {
-                            --     runtimes = {
-                            --         {
-                            --             name = 'JavaSE-17',
-                            --             path = '~/.sdkman/candidates/java/17.0.10-tem',
-                            --         },
-                            --     },
-                            -- },
-                            references = {
-                                includeDecompiledSources = true,
-                            },
-                            workspace = {
-                                symbolsFindInJavaFiles = true, -- enables workspace-wide symbol search
-                                symbolsFindInLibs = true, -- include symbols from dependencies
-                            },
-                            implementationsCodeLens = {
-                                enabled = false,
-                            },
-                            referenceCodeLens = {
-                                enabled = false,
-                            },
-                            -- https://github.com/eclipse-jdtls/eclipse.jdt.ls/issues/2948
-                            inlayHints = {
-                                parameterNames = {
-                                    enabled = "all",
-                                },
-                            },
-                            signatureHelp = {
-                                enabled = true,
-                                description = {
-                                    enabled = true,
-                                },
-                            },
-                            symbols = {
-                                includeSourceMethodDeclarations = true,
-                            },
-                            -- https://stackoverflow.com/questions/74844019/neovim-setting-up-jdtls-with-lsp-zero-mason
-                            rename = { enabled = true },
-
-                            contentProvider = {
-                                preferred = "fernflower",
-                            },
-                            sources = {
-                                organizeImports = {
-                                    starThreshold = 9999,
-                                    staticStarThreshold = 9999,
-                                },
-                            },
-                        },
-                        redhat = { telemetry = { enabled = false } },
-                    },
-                })
-            end
             lspconfig.lua_ls.setup({
                 settings = {
                     Lua = {
