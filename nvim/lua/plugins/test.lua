@@ -3,7 +3,7 @@ local plugins = {
     {
         "nvim-neotest/neotest",
         lazy = true,
-        event = "VeryLazy",
+        event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "nvim-neotest/nvim-nio",
             "nvim-lua/plenary.nvim",
@@ -18,7 +18,7 @@ local plugins = {
                 "<leader>tt",
                 function()
                     if vim.fn.expand("%:e") == "java" then
-                        require("java").test.run_current_class()
+                        require("ftplugin.java").test.run_current_class()
                     else
                         require("neotest").run.run(vim.fn.expand("%"))
                     end
@@ -31,7 +31,7 @@ local plugins = {
                     if vim.fn.expand("%:e") == "go" then
                         require("dap-go").debug_test()
                     elseif vim.fn.expand("%:e") == "java" then
-                        require("java").test.debug_current_method()
+                        require("ftplugin.java").test.debug_current_method()
                     else
                         -- require("neotest").run.debug(vim.fn.expand("%"))
                         require("neotest").run.run({ strategy = "dap", file = vim.fn.expand("%") })
@@ -111,7 +111,7 @@ if require("config.utils").is_java_project() then
         "fabrizioperria/neotest-jdtls",
         ft = "java",
         lazy = true,
-        event = "VeryLazy",
+        event = { "BufReadPre", "BufNewFile" },
         dependencies = {
             "nvim-neotest/neotest",
         },
