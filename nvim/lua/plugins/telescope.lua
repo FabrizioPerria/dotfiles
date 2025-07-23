@@ -1,86 +1,3 @@
--- local pickers = require("telescope.pickers")
--- local finders = require("telescope.finders")
--- local sorters = require("telescope.sorters")
--- local conf = require("telescope.config").values
--- local entry_display = require("telescope.pickers.entry_display")
--- local builtin = require("telescope.builtin")
---
--- local function custom_diagnostics(opts)
---     opts = opts or {}
---
---     local diagnostics = vim.diagnostic.get(nil, { severity = opts.severity })
---
---     local displayer = entry_display.create({
---         separator = "│",
---         items = {
---             { width = 6 }, -- line number
---             { remaining = true }, -- message
---             { width = 10 }, -- code
---         },
---     })
---
---     local make_display = function(entry)
---         return displayer({
---             { entry.lnum, "TelescopeResultsLineNr" },
---             { entry.col },
---             entry.text,
---             entry.code or "",
---         })
---     end
---
---     local function preprocess_diag(diagnostic)
---         local bufnr = diagnostic.bufnr
---         local lnum = diagnostic.lnum + 1
---         local col = diagnostic.col + 1
---         local text = diagnostic.message
---         local severities = vim.diagnostic.severity
---         local severity = severities[diagnostic.severity]
---         local filename = vim.api.nvim_buf_get_name(bufnr)
---
---         return {
---             value = diagnostic,
---             ordinal = text,
---             display = make_display,
---             filename = filename,
---             lnum = lnum,
---             col = col,
---             text = text,
---             severity = severity,
---             bufnr = bufnr,
---             code = diagnostic.code,
---             type = severities[diagnostic.severity] or severities[1],
---         }
---     end
---
---     local entries = vim.tbl_map(preprocess_diag, diagnostics)
---
---     pickers
---         .new(opts, {
---             prompt_title = "Diagnostics",
---             finder = finders.new_table({
---                 results = entries,
---                 entry_maker = function(entry)
---                     return {
---                         value = entry,
---                         ordinal = entry.text,
---                         display = entry.display,
---                         filename = entry.filename,
---                         lnum = entry.lnum,
---                         col = entry.col,
---                         text = entry.text,
---                         severity = entry.severity,
---                         bufnr = entry.bufnr,
---                         code = entry.code,
---                     }
---                 end,
---                 -- entry_maker = require("telescope.make_entry").gen_from_diagnostics(opts),
---             }),
---             previewer = conf.qflist_previewer(opts),
---             sorter = sorters.get_generic_fuzzy_sorter(),
---         })
---         :find()
--- end
-
 local function match_path()
     local clients = vim.lsp.get_active_clients()
     for _, client in ipairs(clients) do
@@ -138,7 +55,14 @@ return {
             require("telescope").load_extension("live_grep_args")
         end,
         keys = {
-            { "<leader>fs", "<cmd>Telescope live_grep_args<CR>", desc = "Grep search with arguments", mode = { "n" } },
+            {
+                "<leader>fs",
+                function()
+                    require("custom.livegrep").livegrep()
+                end,
+                desc = "Grep search with arguments",
+                mode = { "n" },
+            },
         },
     },
     {

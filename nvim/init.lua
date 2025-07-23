@@ -33,5 +33,7 @@ vim.lsp.enable({
     "tailwindcss",
     "ts_ls",
     "yamlls",
+    -- "vtsls",
+    -- "vue_ls",
 })
 require("lazy").setup("plugins")

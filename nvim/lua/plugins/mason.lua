@@ -10,6 +10,7 @@ return {
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
+                    "vtsls",
                     "vue-language-server",
 
                     "debugpy",
