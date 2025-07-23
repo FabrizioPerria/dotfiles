@@ -165,10 +165,10 @@ local jdtls_config = {
         java = {
             format = {
                 enabled = true,
-                -- settings = {
-                --     url = vim.fn.stdpath("config") .. "/lang_servers/intellij-java-google-style.xml",
-                --     profile = "GoogleStyle",
-                -- },
+                settings = {
+                    url = vim.fn.stdpath("config") .. "/styles/intellij-java-google-style.xml",
+                    profile = "GoogleStyle",
+                },
             },
             eclipse = {
                 downloadSource = true,
