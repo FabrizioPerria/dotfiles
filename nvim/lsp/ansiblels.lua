@@ -1,5 +1,6 @@
 local config = {
     cmd = { "ansible-language-server", "--stdio" },
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "yaml.ansible" },
     root_markers = { "ansible.cfg", ".ansible-lint" },
     settings = {

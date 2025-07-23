@@ -19,6 +19,15 @@ end
 function M.diagnostics(opts)
     opts = opts or {}
 
+    -- if severity is not provided, default to showing all diagnostics
+    if not opts.severity then
+        opts.severity = {
+            vim.diagnostic.severity.ERROR,
+            vim.diagnostic.severity.WARN,
+            vim.diagnostic.severity.INFO,
+            vim.diagnostic.severity.HINT,
+        }
+    end
     local diagnostics = vim.diagnostic.get(nil, { severity = opts.severity })
 
     local displayer = entry_display.create({
@@ -38,14 +47,14 @@ function M.diagnostics(opts)
             -- { tostring(entry.lnum) },
             -- { tostring(entry.col) },
             { entry.text, opts.highlight_entry and entry.severity_highlight or "Normal" },
-            { opts.show_code and entry.code or "", "Comment" },
+            { opts.show_code and tostring(entry.code) or "", "Comment" },
         })
     end
 
     local function preprocess_diag(diagnostic)
         local bufnr = diagnostic.bufnr
-        local lnum = diagnostic.lnum + 1
-        local col = diagnostic.col + 1
+        -- local lnum = diagnostic.lnum + 1
+        -- local col = diagnostic.col + 1
         local text = diagnostic.message or ""
         local severity = diagnostic.severity
         local filename = vim.api.nvim_buf_get_name(bufnr)

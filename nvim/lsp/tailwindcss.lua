@@ -1,5 +1,6 @@
 local config = {
     cmd = { "tailwindcss-language-server", "--stdio" },
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = {
         "aspnetcorerazor",
         "astro",
@@ -54,7 +55,7 @@ local config = {
     },
     root_markers = { "tailwind.config.js", "tailwind.config.ts", "postcss.config.js", "postcss.config.ts" },
     init_options = {
-        userLanguages = {
+        includeLanguages = {
             svelte = "html",
         },
     },

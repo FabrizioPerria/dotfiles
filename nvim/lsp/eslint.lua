@@ -1,5 +1,6 @@
 local config = {
     cmd = { "vscode-eslint-language-server", "--stdio" },
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
     root_markers = { ".eslintrc.js", ".eslintrc.json", ".eslintrc.yaml", ".eslintrc.yml", "package.json" },
     init_options = {

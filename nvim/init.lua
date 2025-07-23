@@ -29,11 +29,8 @@ vim.lsp.enable({
     "jsonls",
     "lua_ls",
     "marksman",
-    "ruff",
     "tailwindcss",
     "ts_ls",
     "yamlls",
-    -- "vtsls",
-    -- "vue_ls",
 })
 require("lazy").setup("plugins")

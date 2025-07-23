@@ -1,5 +1,6 @@
 local config = {
     cmd = { "marksman", "server" },
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "markdown" },
     root_markers = { ".git/", "README.md", "index.md" },
     init_options = {

@@ -244,6 +244,7 @@ return {
     {
         "zbirenbaum/copilot.lua",
         lazy = true,
+        event = "InsertEnter",
         keys = {
             { "<leader>shutup", ":Copilot disable<CR>", desc = "Copilot Disable" },
             { "<leader>help", ":Copilot enable<CR>", desc = "Copilot Enable" },
@@ -256,6 +257,7 @@ return {
                     json = true,
                     markdown = true,
                     help = true,
+                    ["*"] = true,
                 },
                 panel = { enabled = false },
                 suggestion = {

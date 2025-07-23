@@ -77,7 +77,7 @@ local config = {
             })
         end, {})
     end,
-
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     settings = {
         typescript = {
             inlayHints = {

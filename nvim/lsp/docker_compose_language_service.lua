@@ -1,5 +1,6 @@
 local config = {
     cmd = { "docker-compose-langserver", "--stdio" },
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "yaml", "yml" },
     root_markers = { ".git/", "docker-compose.yml", "docker-compose.yaml" },
     init_options = {

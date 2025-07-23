@@ -15,7 +15,6 @@ return {
 
                     "debugpy",
                     "basedpyright",
-                    "ruff",
                     "java-debug-adapter",
                     "jdtls",
                     "java-test",
