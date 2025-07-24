@@ -1,12 +1,3 @@
-local virtual_text_enabled = false
-
-function ToggleDiagnosticVirtualText()
-    virtual_text_enabled = not virtual_text_enabled
-    vim.diagnostic.config({
-        virtual_text = virtual_text_enabled and { spacing = 2, prefix = "●" } or false,
-    })
-end
-
 local refresh = vim.api.nvim_create_augroup("refresh", {
     clear = true,
 })
@@ -76,16 +67,23 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", {})
         vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", {})
 
-        vim.keymap.set("n", "<leader>dd", ShowDiagnosticsHover, { desc = "Toggle diagnostic virtual text" })
+        vim.keymap.set("n", "<C-k>", ShowDiagnosticsHover, { desc = "Show diagnostic hover" })
 
         vim.diagnostic.config({
             underline = false,
-            virtual_text = virtual_text_enabled,
+            virtual_text = {
+                spacing = 0,
+                prefix = "●",
+                format = function(diagnostic)
+                    return ""
+                end,
+                hl_mode = "blend",
+                virt_text_pos = "right_align",
+            },
             update_in_insert = false,
             severity_sort = true,
             signs = {
                 text = {
-                    -- Alas nerdfont icons don't render properly on Medium!
                     [vim.diagnostic.severity.ERROR] = " ",
                     [vim.diagnostic.severity.WARN] = " ",
                     [vim.diagnostic.severity.HINT] = " ",
@@ -93,17 +91,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 },
             },
         })
-        vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#1e222a", fg = "#5e81ac" })
-        vim.keymap.set("n", "gl", function()
-            vim.diagnostic.open_float(nil, {
-                border = "rounded",
-                scope = "line",
-                float_opts = {
-                    winblend = 0,
-                    highlight = { bg = "#1e222a" },
-                },
-            })
-        end, {})
         vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", {})
         vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", {})
     end,

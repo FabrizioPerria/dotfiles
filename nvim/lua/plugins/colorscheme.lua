@@ -26,6 +26,7 @@ return {
                     hl.CursorLineNr = { bg = "#697fff", fg = "#ffffff" }
                     hl.CmpItemKindCopilot = { fg = "#6CC644" }
                     hl.SpecialKey = { fg = "#444444" }
+                    hl.FloatBorder = { bg = "#1e222a", fg = "#5e81ac" }
                 end,
             })
             vim.cmd("colorscheme tokyonight")
@@ -99,5 +100,10 @@ return {
         keys = {
             { "<leader>C", ":ColorizerToggle<CR>", desc = "Show Colors" },
         },
+    },
+    {
+        "chentoast/marks.nvim",
+        event = "VeryLazy",
+        opts = {},
     },
 }

@@ -28,7 +28,20 @@ function M.diagnostics(opts)
             vim.diagnostic.severity.HINT,
         }
     end
-    local diagnostics = vim.diagnostic.get(nil, { severity = opts.severity })
+
+    local diagnostics_by_file = {}
+    for _, diag in ipairs(vim.diagnostic.get(nil, { severity = opts.severity })) do
+        local filename = vim.api.nvim_buf_get_name(diag.bufnr)
+        diagnostics_by_file[filename] = diagnostics_by_file[filename] or {}
+        table.insert(diagnostics_by_file[filename], diag)
+    end
+
+    local diagnostics = {}
+    for filename, diags in pairs(diagnostics_by_file) do
+        for _, diag in ipairs(diags) do
+            table.insert(diagnostics, diag)
+        end
+    end
 
     local displayer = entry_display.create({
         separator = "   ",
@@ -36,6 +49,7 @@ function M.diagnostics(opts)
             { width = 2 }, -- severity sign
             -- { width = 6 }, -- line
             -- { width = 4 }, -- column
+            { width = 15 }, -- filename
             { remaining = true }, -- message
             { remaining = true }, -- code
         },
@@ -46,6 +60,7 @@ function M.diagnostics(opts)
             { entry.severity_sign, entry.severity_highlight },
             -- { tostring(entry.lnum) },
             -- { tostring(entry.col) },
+            { vim.fn.fnamemodify(entry.filename, ":t"), "Comment" },
             { entry.text, opts.highlight_entry and entry.severity_highlight or "Normal" },
             { opts.show_code and tostring(entry.code) or "", "Comment" },
         })
@@ -84,6 +99,13 @@ function M.diagnostics(opts)
     end
 
     local entries = vim.tbl_map(preprocess_diag, diagnostics)
+    table.sort(entries, function(a, b)
+        if a.filename == b.filename then
+            return a.lnum < b.lnum
+        else
+            return a.filename < b.filename
+        end
+    end)
 
     pickers
         .new(opts, {
@@ -100,8 +122,12 @@ function M.diagnostics(opts)
                 horizontal = {
                     preview_width = 0.4,
                 },
+                vertical = {
+                    preview_height = 0.4,
+                },
             },
-            layout_strategy = "horizontal",
+            -- layout_strategy = "horizontal",
+            layout_strategy = "vertical",
         })
         :find()
 end

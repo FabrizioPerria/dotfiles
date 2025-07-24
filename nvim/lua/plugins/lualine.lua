@@ -14,7 +14,18 @@ return {
             },
             lualine_x = { "encoding", "fileformat", "filetype" },
             lualine_y = { "progress", "location" },
-            lualine_z = { "diagnostics" },
+            lualine_z = {
+                {
+                    "lsp_status",
+                    icon = "",
+                    symbols = {
+                        spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+                        done = "✓",
+                        separator = "  ",
+                    },
+                    ignore_lsp = { "null-ls" },
+                },
+            },
         },
     },
 }

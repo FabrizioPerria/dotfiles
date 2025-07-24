@@ -33,7 +33,7 @@ vim.opt.termguicolors = true
 
 vim.opt.scrolloff = 10
 vim.opt.sidescrolloff = 8
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "auto:2"
 vim.opt.showmatch = true
 vim.opt.matchtime = 2
 vim.opt.lazyredraw = true

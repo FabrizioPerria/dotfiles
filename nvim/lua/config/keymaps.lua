@@ -23,6 +23,7 @@ vim.keymap.set({ "n" }, "<leader>Y", [["+Y]], { desc = "Copy Line to clipboard" 
 
 vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz", { desc = "Scroll down" })
 vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz", { desc = "Scroll up" })
+
 vim.keymap.set("n", "<leader>=", function()
     local buf = vim.api.nvim_get_current_buf()
     local row = vim.api.nvim_win_get_cursor(0)[1]
@@ -32,35 +33,9 @@ vim.keymap.set("n", "<leader>=", function()
     vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
 end, { desc = "Add separator" })
 
-local diagnostics_active = true
-vim.keymap.set("n", "<leader>DD", function()
-    diagnostics_active = not diagnostics_active
-    if diagnostics_active then
-        vim.diagnostic.enable()
-    else
-        vim.diagnostic.hide()
-    end
-end, { desc = "Toggle diagnostics" })
-
 vim.keymap.set({ "i", "n" }, "<C-Left>", function()
     vim.api.nvim_feedkeys(
         "<cmd>call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^\\','bW')<CR>",
-        "n",
-        true
-    )
-end, { desc = "Move to previous word" })
-
-vim.keymap.set({ "i", "n" }, "<C-Right>", function()
-    vim.api.nvim_feedkeys(
-        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%$','W')<CR>",
-        "n",
-        true
-    )
-end, { desc = "Move to next word" })
-
-vim.keymap.set({ "i", "n" }, "<C-Left>", function()
-    vim.api.nvim_feedkeys(
-        "<C-o>:call search('\\<\\<Bar>\\U\\@<=\\u\\<Bar>\\u\\ze\\%(\\U\\&\\>\\@!\\)\\<Bar>\\%^','bW')<CR>",
         "n",
         true
     )
