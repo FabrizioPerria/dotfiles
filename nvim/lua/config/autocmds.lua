@@ -36,6 +36,24 @@ vim.api.nvim_create_autocmd("TermOpen", {
         vim.cmd([[nnoremap <buffer> <Esc> :bd!<CR>]])
     end,
 })
+function ShowDiagnosticsHover()
+    local opts = {
+        focusable = false,
+        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+        border = "rounded",
+        source = "if_many",
+        scope = "cursor",
+        max_width = 80,
+        max_height = 15,
+    }
+
+    local float_bufnr, float_winnr = vim.diagnostic.open_float(nil, opts)
+
+    if float_winnr and vim.api.nvim_win_is_valid(float_winnr) then
+        vim.api.nvim_win_set_option(float_winnr, "wrap", true)
+        vim.api.nvim_win_set_option(float_winnr, "linebreak", true)
+    end
+end
 
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function()
@@ -54,7 +72,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", {})
         vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", {})
 
-        vim.keymap.set("n", "<leader>dd", ToggleDiagnosticVirtualText, { desc = "Toggle diagnostic virtual text" })
+        vim.keymap.set("n", "<leader>dd", ShowDiagnosticsHover, { desc = "Toggle diagnostic virtual text" })
 
         vim.diagnostic.config({
             underline = false,

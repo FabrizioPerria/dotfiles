@@ -53,8 +53,8 @@ function M.diagnostics(opts)
 
     local function preprocess_diag(diagnostic)
         local bufnr = diagnostic.bufnr
-        -- local lnum = diagnostic.lnum + 1
-        -- local col = diagnostic.col + 1
+        local lnum = diagnostic.lnum + 1
+        local col = diagnostic.col + 1
         local text = diagnostic.message or ""
         local severity = diagnostic.severity
         local filename = vim.api.nvim_buf_get_name(bufnr)
@@ -96,6 +96,12 @@ function M.diagnostics(opts)
             }),
             previewer = conf.qflist_previewer(opts),
             sorter = sorters.get_generic_fuzzy_sorter(),
+            layout_config = {
+                horizontal = {
+                    preview_width = 0.4,
+                },
+            },
+            layout_strategy = "horizontal",
         })
         :find()
 end
