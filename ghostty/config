@@ -27,3 +27,9 @@ font-size = 12
 font-family = JetBrainsMono Nerd Font Mono
 font-family-bold = JetBrainsMono Nerd Font Mono Extra Bold
 font-family-bold-italic = JetBrainsMono Nerd Font Mono Extra Bold Italic
+
+window-theme = system
+window-decoration = false
+gtk-titlebar = false
+gtk-wide-tabs = false
+auto-update = off
