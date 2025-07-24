@@ -40,11 +40,11 @@
   include_role:
     name: common/shared/ripgrep
 
-- name: Create symlink for python
-  shell: >
-    rm -f $(dirname $(which python3))/python &&
-    ln -s $(which python3) $(dirname $(which python3))/python
-  become: true
+# - name: Create symlink for python
+#   shell: >
+#     rm -f $(dirname $(which python3))/python &&
+#     ln -s $(which python3) $(dirname $(which python3))/python
+#   become: true
 
 - name: Create symlink for tmux
   file:

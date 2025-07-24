@@ -22,6 +22,16 @@
 - name: Install ticktoken-core
   shell: "sudo luarocks install --lua-version 5.1 tiktoken_core"
 
+- name: Install pynvim on macOS
+  when: ansible_os_family == "Darwin"
+  shell: |
+    /opt/homebrew/bin/pip3.12 install --break-system-packages pynvim
+
+- name: Install pynvim on Linux
+  when: ansible_os_family != "Darwin"
+  shell: |
+    /usr/bin/python3 -m pip install --break-system-packages pynvim
+
 - name: Run nvim commands
   environment:
     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"

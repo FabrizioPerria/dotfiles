@@ -42,9 +42,13 @@ function ShowDiagnosticsHover()
         close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
         border = "rounded",
         source = "if_many",
-        scope = "cursor",
+        scope = "line",
         max_width = 80,
         max_height = 15,
+        float_opts = {
+            winblend = 0,
+            highlight = { bg = "#1e222a" },
+        },
     }
 
     local float_bufnr, float_winnr = vim.diagnostic.open_float(nil, opts)

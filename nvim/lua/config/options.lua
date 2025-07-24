@@ -71,4 +71,4 @@ vim.opt.list = true
 vim.opt.mouse = ""
 
 vim.g.gitblame_delay = 0
-vim.g.python3_host_prog = "/usr/bin/python3"
+vim.g.python3_host_prog = vim.fn.system("which python3.12"):gsub("\n", "")

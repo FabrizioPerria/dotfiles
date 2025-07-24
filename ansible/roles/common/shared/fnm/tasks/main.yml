@@ -1,11 +1,10 @@
 ---
 - name: Download and install fnm
   shell: >
-    curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "{{ansible_env.HOME}}/.fnm" --skip-shell --force-install
+    curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "{{ ansible_env.HOME }}/.fnm" --skip-shell --force-install
 
-- name: Install Node.js
-  shell: >
-    $HOME/.fnm/fnm install --lts
+- name: Install latest LTS Node.js version
+  shell: "$HOME/.fnm/fnm install --lts"
 
 - name: Append fnm commands to .zshrc
   lineinfile:
@@ -17,5 +16,8 @@
     - "export PATH=$FNM_MULTISHELL_PATH:$PATH"
 
 - name: Install neovim and tree-sitter
-  shell: >
-    $HOME/.fnm/fnm exec npm install -g neovim tree-sitter-cli
+  shell: |
+    export PATH="$HOME/.fnm:$PATH"
+    NODE_BIN_PATH=$(fnm env --json | jq -r '.path')
+    export PATH="$NODE_BIN_PATH:$PATH"
+    npm install -g neovim tree-sitter-cli
