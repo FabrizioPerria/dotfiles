@@ -19,6 +19,7 @@ vim.lsp.enable({
     "ansiblels",
     "basedpyright",
     "bashls",
+    "clangd",
     "cmake",
     "cssls",
     "docker_compose_language_service",

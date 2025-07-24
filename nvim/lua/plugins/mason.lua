@@ -66,6 +66,10 @@ return {
                     "tailwindcss-language-server",
                     "eslint-lsp",
                     "prettierd",
+
+                    "clangd",
+                    "clang-format",
+                    "codelldb",
                 },
             })
         end,
