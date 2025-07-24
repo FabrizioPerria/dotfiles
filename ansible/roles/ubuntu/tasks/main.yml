@@ -45,16 +45,16 @@
 - name: Create APT keyrings dir
   become: true
   ansible.builtin.file:
-    path: '/etc/apt/keyrings'
+    path: "/etc/apt/keyrings"
     state: directory
-    mode: 'u=rwx,go=rx'
+    mode: "u=rwx,go=rx"
 
 - name: Install vscode key
   become: true
   ansible.builtin.get_url:
-    url: 'https://packages.microsoft.com/keys/microsoft.asc'
-    dest: '/etc/apt/keyrings/'
-    mode: 'u=rw,go=r'
+    url: "https://packages.microsoft.com/keys/microsoft.asc"
+    dest: "/etc/apt/keyrings/"
+    mode: "u=rw,go=r"
     force: true
 
 - name: Install VS Code repo
@@ -90,9 +90,9 @@
 - name: Install Albert key
   become: true
   ansible.builtin.get_url:
-    url: 'https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_24.04/Release.key'
-    dest: '/etc/apt/keyrings/albert.key'
-    mode: 'u=rw,go=r'
+    url: "https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_24.04/Release.key"
+    dest: "/etc/apt/keyrings/albert.key"
+    mode: "u=rw,go=r"
     force: true
 
 - name: Update apt cache again
@@ -164,6 +164,7 @@
       - gnome-shell-extensions
       # - ulauncher
       - albert
+      - openjdk-21-jdk
     state: present
   become: true
 

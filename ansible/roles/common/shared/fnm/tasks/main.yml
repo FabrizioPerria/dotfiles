@@ -14,4 +14,8 @@
     insertafter: EOF
   with_items:
     - 'eval "$(fnm env)"'
-    - 'export PATH=$FNM_MULTISHELL_PATH:$PATH'
+    - "export PATH=$FNM_MULTISHELL_PATH:$PATH"
+
+- name: Install neovim and tree-sitter
+  shell: >
+    $HOME/.fnm/fnm exec npm install -g neovim tree-sitter-cli

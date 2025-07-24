@@ -1,13 +1,13 @@
 [apps/update-manager]
 first-run=false
-launch-count=1
-launch-time=int64 1735458067
+launch-count=3
+launch-time=int64 1753341016
 show-details=true
-window-height=832
+window-height=1043
 window-width=1920
 
 [com/ubuntu/update-notifier]
-release-check-time=uint32 1751880056
+release-check-time=uint32 1753089864
 
 [org/gnome/Extensions]
 window-height=1424
@@ -47,8 +47,8 @@ panel-id='world'
 size=(948, 1143)
 
 [org/gnome/control-center]
-last-panel='sound'
-window-state=(1268, 1424, false)
+last-panel='bluetooth'
+window-state=(948, 1064, false)
 
 [org/gnome/deja-dup]
 backend='google'
@@ -98,10 +98,16 @@ show-battery-percentage=true
 text-scaling-factor=1.0
 
 [org/gnome/desktop/notifications]
-application-children=['kitty', 'ulauncher', 'firefox-firefox', 'zen', 'org-gnome-characters', 'org-gnome-dejadup', 'slack-slack', 'org-gnome-extensions', 'albert', 'org-gnome-shell-extensions', 'org-gnome-nautilus', 'virtualbox']
+application-children=['kitty', 'ulauncher', 'firefox-firefox', 'zen', 'org-gnome-characters', 'org-gnome-dejadup', 'slack-slack', 'org-gnome-extensions', 'albert', 'org-gnome-shell-extensions', 'org-gnome-nautilus', 'virtualbox', 'apport-gtk', 'gnome-power-panel', 'org-gnome-texteditor']
 
 [org/gnome/desktop/notifications/application/albert]
 application-id='albert.desktop'
+
+[org/gnome/desktop/notifications/application/apport-gtk]
+application-id='apport-gtk.desktop'
+
+[org/gnome/desktop/notifications/application/code]
+application-id='code.desktop'
 
 [org/gnome/desktop/notifications/application/com-mitchellh-ghostty]
 application-id='com.mitchellh.ghostty.desktop'
@@ -306,12 +312,12 @@ toggle-tiled-left=@as []
 toggle-tiled-right=@as []
 
 [org/gnome/nautilus/preferences]
-default-folder-viewer='icon-view'
+default-folder-viewer='list-view'
 migrated-gtk-settings=true
 search-filter-time-type='last_modified'
 
 [org/gnome/nautilus/window-state]
-initial-size=(1268, 708)
+initial-size=(948, 1064)
 maximized=false
 
 [org/gnome/portal/filechooser/google-chrome]
@@ -361,7 +367,7 @@ command-history=['r']
 disable-user-extensions=false
 disabled-extensions=@as []
 enabled-extensions=['forge@jmmaranan.com', 'rounded-window-corners@fxgn', 'space-bar@luchrioh', 'ding@rastersoft.com', 'tiling-assistant@ubuntu.com', 'dash-to-dock@micxgx.gmail.com', 'ubuntu-dock@ubuntu.com']
-last-selected-power-profile='performance'
+last-selected-power-profile='power-saver'
 welcome-dialog-last-shown-version='46.0'
 
 [org/gnome/shell/extensions/clipboard-history]
@@ -612,7 +618,7 @@ open-application-menu=@as []
 open-new-window-application-2=@as []
 open-new-window-application-3=@as []
 screenshot=@as []
-show-screenshot-ui=['<Shift><Super>s']
+show-screenshot-ui=['Print']
 switch-to-application-1=@as []
 switch-to-application-2=@as []
 switch-to-application-3=@as []

@@ -60,16 +60,11 @@ return {
                 sources = {
                     null_ls.builtins.code_actions.proselint,
                     null_ls.builtins.code_actions.refactoring,
-                    -- null_ls.builtins.code_actions.textlint,
                     null_ls.builtins.completion.luasnip,
 
                     null_ls.builtins.diagnostics.codespell,
                     null_ls.builtins.diagnostics.markdownlint,
                     null_ls.builtins.diagnostics.write_good,
-                    null_ls.builtins.diagnostics.dotenv_linter,
-                    null_ls.builtins.diagnostics.sqlfluff.with({
-                        extra_args = { "--dialect", "postgres" }, -- change to your dialect
-                    }),
                     null_ls.builtins.diagnostics.yamllint,
                     null_ls.builtins.diagnostics.zsh,
                     null_ls.builtins.completion.spell,

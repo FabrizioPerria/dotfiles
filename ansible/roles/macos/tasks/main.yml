@@ -24,6 +24,7 @@
       - luarocks
       - axel
       - rust
+      - openjdk@21
       # - alacritty
       # - ghostty
     state: present
@@ -126,4 +127,3 @@
     - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
     - "{{playbook_dir}}/../aerospace"
-

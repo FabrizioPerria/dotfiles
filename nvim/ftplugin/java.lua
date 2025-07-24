@@ -5,7 +5,14 @@ local function get_launcher()
 end
 local function get_os_config()
     local jdtls_path = vim.fn.expand("$MASON/packages/jdtls")
-    local SYSTEM = "mac"
+    local uname = vim.loop.os_uname().sysname
+    local SYSTEM = "linux" -- default
+
+    if uname == "Darwin" then
+        SYSTEM = "mac"
+    elseif uname == "Linux" then
+        SYSTEM = "linux"
+    end
     local config = jdtls_path .. "/config_" .. SYSTEM
     return config
 end
