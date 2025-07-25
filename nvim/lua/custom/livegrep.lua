@@ -13,6 +13,7 @@ function M.livegrep()
         auto_quoting = true,
         -- No real default_text support, so we simulate it after open
         attach_mappings = function(prompt_bufnr, map)
+            local picker = action_state.get_current_picker(prompt_bufnr)
             -- Save input on <CR>
             map({ "i", "n" }, "<CR>", function()
                 local selection = action_state.get_selected_entry()
@@ -28,17 +29,17 @@ function M.livegrep()
             end)
 
             map({ "i", "n" }, "<C-x>", function()
-                local picker = action_state.get_current_picker(prompt_bufnr)
-                picker:set_prompt("")
                 last_query = ""
+                picker:set_prompt("")
             end)
 
             -- Simulate pre-fill after the picker is ready
             vim.defer_fn(function()
                 -- simulate typing the last query into the prompt
-                if last_query ~= "" then
-                    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(last_query, true, false, true), "t", false)
-                end
+                -- if last_query ~= "" then
+                picker:set_prompt(last_query)
+                -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(last_query, true, false, true), "t", false)
+                -- end
             end, 10)
 
             return true

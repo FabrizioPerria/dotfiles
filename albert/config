@@ -15,7 +15,7 @@ enabled=true
 enabled=true
 
 [datetime]
-enabled=true
+enabled=false
 
 [fallback_order]
 1\extension=websearch
@@ -27,7 +27,7 @@ enabled=true
 size=3
 
 [files]
-enabled=true
+enabled=false
 home\fabrizio\.config\followSymlinks=false
 home\fabrizio\.config\indexhidden=false
 home\fabrizio\.config\maxDepth=255
@@ -65,16 +65,16 @@ enabled=false
 enabled=true
 
 [ssh]
-enabled=true
+enabled=false
 
 [system]
 enabled=true
 
 [urlhandler]
-enabled=true
+enabled=false
 
 [websearch]
-enabled=true
+enabled=false
 
 [widgetsboxmodel]
 alwaysOnTop=true
