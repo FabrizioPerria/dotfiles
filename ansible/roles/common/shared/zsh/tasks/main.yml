@@ -13,7 +13,7 @@
   file:
     path: "{{ ansible_env.HOME }}/.zinit/bin"
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Clone Zinit repository
   git:
@@ -24,7 +24,7 @@
 - name: Ensure Zinit executable permissions
   file:
     path: "{{ ansible_env.HOME }}/.zinit/bin/zinit.zsh"
-    mode: '0755'
+    mode: "0755"
     state: file
 
 - name: Delete previous .zshrc
@@ -44,6 +44,16 @@
     - "source ${HOME}/.config/shell/p10k.zsh"
     - "source ${HOME}/.config/shell/colors.zsh"
     - "source ${HOME}/.config/shell/zinit.zsh"
+
+- name: set java_home for macOS
+  when: ansible_os_family == "Darwin"
+  shell: |
+    sed -i '' 's|<JAVA_HOME_PATH>|/opt/homebrew/opt/openjdk@21|g' ${HOME}/.config/shell/exports.zsh
+
+- name: set java_home for Linux
+  when: ansible_os_family == "Linux"
+  shell: |
+    sed -i 's|<JAVA_HOME_PATH>|/usr/lib/jvm/java-21-openjdk-amd64|g' ${HOME}/.config/shell/exports.zsh
 
 - name: Set default shell to zsh
   user:

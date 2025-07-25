@@ -9,7 +9,7 @@ export FZF_DEFAULT_OPTS="--preview 'bat --color=always {}'"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type d --hidden --exclude .git --exclude node_modules --exclude .venv"
 
-export JAVA_HOME="$(dirname $(dirname $(readlink -f $(which java))))"
+export JAVA_HOME="<JAVA_HOME_PATH>"
 export PATH="$JAVA_HOME/bin:$HOME/.zinit/bin:/usr/local/go/bin:$HOME/.fnm:/opt/homebrew/bin:$HOME/.local/bin:/opt/homebrew/opt/gawk/libexec/gnubin:/opt/homebrew/opt/llvm/bin:$PATH:/opt/local/bin:$HOME/.cargo/bin"
 export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
