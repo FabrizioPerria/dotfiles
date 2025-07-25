@@ -1,8 +1,11 @@
 local config = {
     cmd = { "ansible-language-server", "--stdio" },
     capabilities = require("cmp_nvim_lsp").default_capabilities(),
-    filetypes = { "yaml.ansible" },
-    root_markers = { "ansible.cfg", ".ansible-lint" },
+    filetypes = {
+        "yaml",
+        "yml",
+    },
+    root_markers = { "playbook.yml", "playbook.yaml", "ansible.cfg", ".ansible-lint" },
     settings = {
         ansible = {
             ansible = {
@@ -12,12 +15,12 @@ local config = {
                 enabled = false,
             },
             python = {
-                interpreterPath = "python",
+                interpreterPath = "python3.12",
             },
             validation = {
                 enabled = true,
                 lint = {
-                    enabled = true,
+                    enabled = false,
                     path = "ansible-lint",
                 },
             },

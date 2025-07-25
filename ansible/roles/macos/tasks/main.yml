@@ -19,14 +19,14 @@
       - bat
       - wget
       - gnu-tar
-      - kitty
+      # - kitty
       - fontconfig
       - luarocks
       - axel
       - rust
       - openjdk@21
       # - alacritty
-      # - ghostty
+      - ghostty
     state: present
 
 - name: Install cask

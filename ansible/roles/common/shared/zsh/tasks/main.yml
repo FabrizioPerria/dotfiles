@@ -51,7 +51,7 @@
     sed -i '' 's|<JAVA_HOME_PATH>|/opt/homebrew/opt/openjdk@21|g' ${HOME}/.config/shell/exports.zsh
 
 - name: set java_home for Linux
-  when: ansible_os_family == "Linux"
+  when: ansible_os_family == "Debian"
   shell: |
     sed -i 's|<JAVA_HOME_PATH>|/usr/lib/jvm/java-21-openjdk-amd64|g' ${HOME}/.config/shell/exports.zsh
 
