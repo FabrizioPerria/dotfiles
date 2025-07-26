@@ -7,7 +7,7 @@ alias lx='eza -lbhHigUmuSa@'
 alias lt='eza --tree $eza_params'
 alias tree='eza --tree $eza_params'
 
-alias vi=nvim
+alias vi='NVIM_APPNAME=mini nvim'
 alias vim=nvim
 alias tmux="tmux -u a || tmux -u "
 alias mon="btm"
