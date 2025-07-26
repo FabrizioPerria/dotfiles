@@ -67,7 +67,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", {})
         vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", {})
 
-        vim.keymap.set("n", "<C-k>", ShowDiagnosticsHover, { desc = "Show diagnostic hover" })
+        vim.keymap.set("n", "<M-S-K>", ShowDiagnosticsHover, { desc = "Show diagnostic hover" })
 
         vim.diagnostic.config({
             underline = false,

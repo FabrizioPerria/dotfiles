@@ -73,12 +73,12 @@ return {
         end,
     },
     { "mfussenegger/nvim-jdtls" },
+
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
     },
 
-    dependencies = {},
     {
         "llllvvuu/nvim-cmp",
         branch = "feat/above",
@@ -108,9 +108,8 @@ return {
             },
             { "abecodes/tabout.nvim", opts = { ignore_beginning = false, completion = false }, lazy = true },
         },
-        -- event = "VeryLazy",
         lazy = true,
-        -- event = { "InsertEnter", "CmdlineEnter" },
+        event = { "InsertEnter", "CmdlineEnter" },
 
         config = function()
             require("luasnip/loaders/from_vscode").lazy_load()
