@@ -267,6 +267,10 @@
     os: Linux
     arch: "{{ lazysql_arch }}"
 
+- name: Install lazyjournal
+  include_role:
+    name: common/shared/lazyjournal
+
 - name: Install lazydocker
   include_role:
     name: common/shared/lazydocker

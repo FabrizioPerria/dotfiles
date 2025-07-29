@@ -102,6 +102,10 @@
     os: Darwin
     arch: arm64
 
+- name: Install lazyjournal
+  include_role:
+    name: common/shared/lazyjournal
+
 - name: Install lazygit
   include_role:
     name: common/shared/lazygit
