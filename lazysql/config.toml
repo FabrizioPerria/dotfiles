@@ -1,0 +1,5 @@
+[[database]]
+Name = 'sqlite-rbgateway'
+Provider = 'sqlite3'
+DBName = ''
+URL = 'file:///home/fabrizio/.rbgateway/_cache_study.db'

@@ -1,6 +1,14 @@
 gui:
   nerdFontsVersion: "3"
+  returnImmediately: false
   theme:
     selectedLineBgColor:
       - "#424d8e"
       - bold
+
+customCommands:
+  containers:
+    - name: logs
+      attach: true
+      command: bash -c "clear; docker logs {{ .Container.ID }} | logalize"
+      serviceNames: []

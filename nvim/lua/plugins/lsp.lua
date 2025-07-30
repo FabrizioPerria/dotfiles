@@ -22,27 +22,42 @@ return {
                 desc = "Format buffer",
             },
         },
-        opts = {
-            formatters_by_ft = {
-                lua = { "stylua" },
-                python = { "autopep8", "ruff" },
-                javascript = { "prettierd", "prettier", stop_after_first = true },
-                typescript = { "prettierd", "prettier", stop_after_first = true },
-                json = { "prettierd", "prettier" },
-                yaml = { "prettierd", "prettier" },
-                markdown = { "prettierd", "prettier" },
-                html = { "prettierd", "prettier" },
-            },
-            default_format_opts = {
-                lsp_format = "never",
-            },
-            format_on_save = { timeout_ms = 1000 },
-            formatters = {
-                shfmt = {
-                    prepend_args = { "-i", "4" },
+        config = function()
+            require("conform").setup({
+                format_on_save = {
+                    timeout_ms = 1000,
+                    lsp_fallback = true,
                 },
-            },
-        },
+                formatters_by_ft = {
+                    java = { "google_java_format" },
+                    go = { "gofmt" },
+                    cpp = { "clang_format" },
+                    c = { "clang_format" },
+                    typescript = { "prettierd" },
+                    javascript = { "prettierd" },
+                    vue = { "prettierd" },
+                    json = { "prettierd" },
+                    yaml = { "prettierd" },
+                    markdown = { "prettierd" },
+                    html = { "prettierd" },
+                    lua = { "stylua" },
+                    python = { "black" },
+                },
+                formatters = {
+                    shfmt = {
+                        prepend_args = { "-i", "4" },
+                    },
+                    google_java_format = {
+                        command = "google-java-format",
+                        args = { "-" },
+                        stdin = true,
+                    },
+                },
+                default_format_opts = {
+                    lsp_format = "never",
+                },
+            })
+        end,
         init = function()
             vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
         end,
