@@ -1,0 +1,10 @@
+---
+- name: Download the latest release of albert
+  get_url:
+    url: https://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_24.04/{{arch}}/albert_0.31.1-0+718.1_{{arch}}.deb
+    dest: "/tmp/albert.deb"
+
+- name: Install albert deb
+  apt:
+    deb: "/tmp/albert.deb"
+  become: true

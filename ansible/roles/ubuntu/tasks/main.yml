@@ -5,7 +5,7 @@
     lazydocker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
-    regolith_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
+    albert_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
@@ -15,6 +15,7 @@
   become: true
   community.general.timezone:
     name: Europe/Copenhagen
+  when: not ansible_virtualization_type == "docker"
 
 - name: Update apt cache
   apt:
@@ -35,11 +36,6 @@
 - name: Add Neovim PPA
   apt_repository:
     repo: ppa:neovim-ppa/{{ neovim_ppa }}
-  become: true
-
-- name: Add ulauncher PPA
-  apt_repository:
-    repo: ppa:agornostal/ulauncher
   become: true
 
 - name: Create APT keyrings dir
@@ -86,14 +82,6 @@
       deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_24.04/ /
     filename: home:manuelschneid3r
     state: present
-
-- name: Install Albert key
-  become: true
-  ansible.builtin.get_url:
-    url: "https://download.opensuse.org/repositories/home:manuelschneid3r/xUbuntu_24.04/Release.key"
-    dest: "/etc/apt/keyrings/albert.key"
-    mode: "u=rw,go=r"
-    force: true
 
 - name: Update apt cache again
   apt:
@@ -160,7 +148,6 @@
       - gtk2-engines-murrine
       - gnome-tweaks
       - gnome-shell-extensions
-      - albert
       - openjdk-21-jdk
     state: present
   become: true
@@ -272,6 +259,12 @@
 - name: Install lazygit
   include_role:
     name: common/shared/lazygit
+
+- name: Install albert
+  include_role:
+    name: common/linux/albert
+  vars:
+    arch: "{{albert_arch}}"
 
 - name: Install fastfetch
   include_role:
