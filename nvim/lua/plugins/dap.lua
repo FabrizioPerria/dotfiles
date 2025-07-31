@@ -4,6 +4,58 @@ end
 
 return {
     {
+        "rcarriga/nvim-dap-ui",
+        opts = {
+            icons = { expanded = "▾", collapsed = "▸" },
+            mappings = {
+                expand = { "<CR>", "<2-LeftMouse>" },
+                open = "o",
+                remove = "d",
+                edit = "e",
+                repl = "r",
+                toggle = "t",
+                hover = "K",
+            },
+            layouts = {
+                {
+                    elements = {
+                        { id = "scopes", size = 0.5 },
+                        { id = "stacks", size = 0.25 },
+                        { id = "watches", size = 0.25 },
+                    },
+                    size = 40,
+                    position = "left",
+                },
+                {
+                    elements = { { id = "console", size = 1 } },
+                    size = 10,
+                    position = "bottom",
+                },
+            },
+        },
+        config = function(_, opts)
+            require("dapui").setup(opts)
+        end,
+        keys = {
+            {
+                "<leader>dh",
+                function()
+                    require("dapui").eval()
+                end,
+                desc = "Hover variable",
+            },
+        },
+        cmd = {
+            "DapUiOpen",
+            "DapUiClose",
+            "DapUiToggle",
+            "DapUiFloatElement",
+            "DapUiEval",
+            "DapUiHover",
+            "DapUiInspect",
+        },
+    },
+    {
         "mfussenegger/nvim-dap",
         dependencies = {
             "nvim-neotest/nvim-nio",
@@ -19,7 +71,6 @@ return {
             require("dap-python").setup("python")
             local dap = require("dap")
             local dapui = require("dapui")
-            dapui.setup()
             dap.listeners.after.event_initialized["dapui_config"] = function()
                 dapui.open()
             end

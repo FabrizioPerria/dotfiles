@@ -29,7 +29,7 @@ return {
                     lsp_fallback = true,
                 },
                 formatters_by_ft = {
-                    java = { "google_java_format" },
+                    -- java = { "google_java_format" },
                     go = { "gofmt" },
                     cpp = { "clang_format" },
                     c = { "clang_format" },
@@ -47,11 +47,11 @@ return {
                     shfmt = {
                         prepend_args = { "-i", "4" },
                     },
-                    google_java_format = {
-                        command = "google-java-format",
-                        args = { "-" },
-                        stdin = true,
-                    },
+                    -- google_java_format = {
+                    --     command = "google-java-format",
+                    --     args = { "-" },
+                    --     stdin = true,
+                    -- },
                 },
                 default_format_opts = {
                     lsp_format = "never",

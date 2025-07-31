@@ -64,7 +64,6 @@ return {
                     "css-lsp",
                     "typescript-language-server",
                     "tailwindcss-language-server",
-                    "eslint-lsp",
                     "prettierd",
 
                     "clangd",

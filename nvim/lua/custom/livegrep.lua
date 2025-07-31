@@ -11,6 +11,16 @@ function M.livegrep()
 
     lga.live_grep_args({
         auto_quoting = true,
+        -- additional_args = function()
+        --     return {
+        --         "--glob",
+        --         "!node_modules/*",
+        --         "--glob",
+        --         "!.git/*",
+        --         "--glob",
+        --         "!.venv/*",
+        --     }
+        -- end,
         -- No real default_text support, so we simulate it after open
         attach_mappings = function(prompt_bufnr, map)
             local picker = action_state.get_current_picker(prompt_bufnr)

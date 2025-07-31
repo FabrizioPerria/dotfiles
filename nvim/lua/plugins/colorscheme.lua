@@ -33,7 +33,7 @@ return {
 
             local dap_signs = {
                 Breakpoint = {
-                    text = "",
+                    text = "",
                     texthl = "DapBreakpoint",
                     linehl = "DapBreakpoint",
                     numhl = "DapBreakpoint",

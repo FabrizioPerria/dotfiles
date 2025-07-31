@@ -25,7 +25,6 @@ vim.lsp.enable({
     "docker_compose_language_service",
     "dockerls",
     "dotls",
-    "eslint",
     "gopls",
     "jsonls",
     "lua_ls",

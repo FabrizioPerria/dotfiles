@@ -13,6 +13,7 @@ local function get_os_config()
     elseif uname == "Linux" then
         SYSTEM = "linux"
     end
+    SYSTEM = "mac" -- force macOS for now
     local config = jdtls_path .. "/config_" .. SYSTEM
     return config
 end
@@ -100,16 +101,17 @@ end
 local on_attach = function(_, bufnr)
     java_keymaps()
 
-    require("jdtls.dap").setup_dap({ hotcodereplace = "auto" })
+    require("jdtls.dap").setup_dap({})
+    -- require("jdtls.dap").setup_dap({ hotcodereplace = "auto" })
 
     require("jdtls.dap").setup_dap_main_class_configs()
     require("jdtls.setup").add_commands()
-    vim.lsp.codelens.refresh()
+    -- vim.lsp.codelens.refresh()
 
     vim.api.nvim_create_autocmd("BufWritePost", {
         pattern = { "*.java", "pom.xml", "build.gradle", "settings.gradle" },
         callback = function()
-            local _, _ = pcall(vim.lsp.codelens.refresh)
+            -- local _, _ = pcall(vim.lsp.codelens.refresh)
             require("jdtls").compile("incremental")
         end,
     })
@@ -171,7 +173,7 @@ local jdtls_config = {
     settings = {
         java = {
             format = {
-                enabled = true,
+                enabled = false,
                 settings = {
                     url = vim.fn.stdpath("config") .. "/styles/intellij-java-google-style.xml",
                     profile = "GoogleStyle",
@@ -236,7 +238,7 @@ local jdtls_config = {
                 updateBuildConfiguration = "interactive",
             },
             referencesCodeLens = {
-                enabled = true,
+                enabled = false,
             },
             inlayHints = {
                 parameterNames = {
