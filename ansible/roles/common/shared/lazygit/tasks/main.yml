@@ -1,21 +1,10 @@
 ---
-- name: Download LazyGit tarball
-  get_url:
-    url: "https://github.com/jesseduffield/lazygit/releases/download/v{{ version }}/lazygit_{{ version }}_{{os}}_{{ arch }}.tar.gz"
-    dest: "/tmp/lazygit.tar.gz"
-
-- name: Extract LazyGit binary
-  unarchive:
-    src: "/tmp/lazygit.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazygit"
-    remote_src: true
-  when: lazygit_version.stdout is defined
-
-- name: Install LazyGit
-  command: install /tmp/lazygit /usr/local/bin
+- name: Install Lazygit
   become: true
-  when: lazygit_version.stdout is defined
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+  shell: |
+    /usr/local/go/bin/go install github.com/jesseduffield/lazygit@latest
 
 - name: Copy files
   copy:

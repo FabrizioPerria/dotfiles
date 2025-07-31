@@ -1,18 +1,12 @@
 ---
-- name: Download LazySQL tarball
-  get_url:
-    url: "https://github.com/jorgerojas26/lazysql/releases/download/{{ version }}/lazysql_{{ os }}_{{arch}}.tar.gz"
-    dest: "/tmp/lazysql.tar.gz"
-
-- name: Extract LazySQL binary
-  unarchive:
-    src: "/tmp/lazysql.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazysql"
-    remote_src: true
-  when: lazysql_version.stdout is defined
-
-- name: Install LazySQL
-  command: install /tmp/lazysql /usr/local/bin
+- name: Install Lazysql
   become: true
-  when: lazysql_version.stdout is defined
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+  shell: |
+    /usr/local/go/bin/go install github.com/jorgerojas26/lazysql@latest
+
+- name: Copy files
+  copy:
+    src: "{{playbook_dir}}/../lazysql"
+    dest: "${HOME}/.config/"

@@ -1,8 +1,7 @@
 ---
-- name: Download LazyJournal tarball
-  get_url:
-    url: "curl -sS https://raw.githubusercontent.com/Lifailon/lazyjournal/main/install.sh"
-    dest: "/tmp/install.sh"
-
-- name: Install LazyJournal
-  command: bash /tmp/install.sh
+- name: Install Lazyjournal
+  become: true
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+  shell: |
+    /usr/local/go/bin/go install github.com/Lifailon/lazyjournal@latest

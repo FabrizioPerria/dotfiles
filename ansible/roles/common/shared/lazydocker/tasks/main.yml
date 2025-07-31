@@ -1,21 +1,10 @@
 ---
-- name: Download LazyDocker tarball
-  get_url:
-    url: "https://github.com/jesseduffield/lazydocker/releases/download/v{{ version }}/lazydocker_{{ version }}_{{os}}_{{ arch }}.tar.gz"
-    dest: "/tmp/lazydocker.tar.gz"
-
-- name: Extract LazyDocker binary
-  unarchive:
-    src: "/tmp/lazydocker.tar.gz"
-    dest: "/tmp/"
-    creates: "/tmp/lazydocker"
-    remote_src: true
-  when: lazydocker_version.stdout is defined
-
-- name: Install LazyDocker
-  command: install /tmp/lazydocker /usr/local/bin
+- name: Install Lazydocker
   become: true
-  when: lazydocker_version.stdout is defined
+  environment:
+    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+  shell: |
+    /usr/local/go/bin/go install github.com/jesseduffield/lazydocker@latest
 
 - name: Copy files
   copy:

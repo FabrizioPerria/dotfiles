@@ -91,16 +91,10 @@
 - name: Install lazySQL
   include_role:
     name: common/shared/lazysql
-  vars:
-    os: Darwin
-    arch: arm64
 
 - name: Install lazydocker
   include_role:
     name: common/shared/lazydocker
-  vars:
-    os: Darwin
-    arch: arm64
 
 - name: Install lazyjournal
   include_role:
@@ -109,9 +103,6 @@
 - name: Install lazygit
   include_role:
     name: common/shared/lazygit
-  vars:
-    os: Darwin
-    arch: arm64
 
 - name: Setup tmux
   include_role:
@@ -126,8 +117,6 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    # - "{{playbook_dir}}/../kitty"
-    # - "{{playbook_dir}}/../alacritty"
     - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
     - "{{playbook_dir}}/../aerospace"

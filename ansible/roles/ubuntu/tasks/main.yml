@@ -154,15 +154,12 @@
       - python3.12
       - code
       - azure-cli
-      # - alacritty
-      # - kitty
       - ghostty
       - sassc
       - gnome-themes-extra
       - gtk2-engines-murrine
       - gnome-tweaks
       - gnome-shell-extensions
-      # - ulauncher
       - albert
       - openjdk-21-jdk
     state: present
@@ -263,9 +260,6 @@
 - name: Install lazySQL
   include_role:
     name: common/shared/lazysql
-  vars:
-    os: Linux
-    arch: "{{ lazysql_arch }}"
 
 - name: Install lazyjournal
   include_role:
@@ -274,16 +268,10 @@
 - name: Install lazydocker
   include_role:
     name: common/shared/lazydocker
-  vars:
-    os: Linux
-    arch: "{{ lazydocker_arch }}"
 
 - name: Install lazygit
   include_role:
     name: common/shared/lazygit
-  vars:
-    os: Linux
-    arch: "{{ lazygit_arch }}"
 
 - name: Install fastfetch
   include_role:
@@ -312,13 +300,9 @@
     src: "{{ item }}"
     dest: "${HOME}/.config/"
   loop:
-    # - "{{playbook_dir}}/../kitty"
-    # - "{{playbook_dir}}/../alacritty"
     - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
-    # - "{{playbook_dir}}/../regolith3/desktop.jpeg"
     - "{{playbook_dir}}/../autostart"
-    # - "{{playbook_dir}}/../ulauncher"
     - "{{playbook_dir}}/../albert"
     - "{{playbook_dir}}/../forge"
 
