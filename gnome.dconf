@@ -47,8 +47,8 @@ panel-id='world'
 size=(948, 1143)
 
 [org/gnome/control-center]
-last-panel='bluetooth'
-window-state=(948, 1064, false)
+last-panel='applications'
+window-state=(1904, 1143, false)
 
 [org/gnome/deja-dup]
 backend='google'
@@ -98,7 +98,7 @@ show-battery-percentage=true
 text-scaling-factor=1.0
 
 [org/gnome/desktop/notifications]
-application-children=['kitty', 'ulauncher', 'firefox-firefox', 'zen', 'org-gnome-characters', 'org-gnome-dejadup', 'slack-slack', 'org-gnome-extensions', 'albert', 'org-gnome-shell-extensions', 'org-gnome-nautilus', 'virtualbox', 'apport-gtk', 'gnome-power-panel', 'org-gnome-texteditor']
+application-children=['kitty', 'ulauncher', 'firefox-firefox', 'zen', 'org-gnome-characters', 'org-gnome-dejadup', 'slack-slack', 'org-gnome-extensions', 'albert', 'org-gnome-shell-extensions', 'org-gnome-nautilus', 'virtualbox', 'apport-gtk', 'gnome-power-panel', 'org-gnome-texteditor', 'gnome-initial-setup']
 
 [org/gnome/desktop/notifications/application/albert]
 application-id='albert.desktop'
@@ -120,6 +120,9 @@ application-id='expressvpn.desktop'
 
 [org/gnome/desktop/notifications/application/firefox-firefox]
 application-id='firefox_firefox.desktop'
+
+[org/gnome/desktop/notifications/application/gnome-initial-setup]
+application-id='gnome-initial-setup.desktop'
 
 [org/gnome/desktop/notifications/application/gnome-power-panel]
 application-id='gnome-power-panel.desktop'

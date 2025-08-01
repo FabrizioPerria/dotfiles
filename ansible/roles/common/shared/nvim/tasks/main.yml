@@ -33,11 +33,18 @@
   shell: "sudo luarocks install --lua-version 5.1 tiktoken_core"
   environment:
     PATH: "${HOME}/.cargo/bin:{{ ansible_env.PATH }}"
+  when: ansible_os_family == "Darwin"
 
 - name: Install pynvim on macOS
   when: ansible_os_family == "Darwin"
   shell: |
     /opt/homebrew/bin/pip3.12 install --break-system-packages pynvim
+
+- name: Install ticktoken-core
+  shell: "luarocks install --lua-version 5.1 tiktoken_core --local"
+  environment:
+    PATH: "${HOME}/.cargo/bin:{{ ansible_env.PATH }}"
+  when: ansible_os_family != "Darwin"
 
 - name: Install pynvim on Linux
   when: ansible_os_family != "Darwin"

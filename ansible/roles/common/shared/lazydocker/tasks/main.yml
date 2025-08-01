@@ -1,6 +1,5 @@
 ---
 - name: Install Lazydocker
-  become: true
   environment:
     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
   shell: |

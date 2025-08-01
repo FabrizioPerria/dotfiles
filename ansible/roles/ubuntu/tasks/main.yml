@@ -55,14 +55,16 @@
 
 - name: Install VS Code repo
   become: true
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [arch=amd64,arm64
-      trusted=true
-      signed-by=/etc/apt/keyrings/microsoft.asc]
-      https://packages.microsoft.com/repos/code stable main
-    filename: vscode
-    state: present
+  ansible.builtin.copy:
+    dest: /etc/apt/sources.list.d/vscode.sources
+    content: |
+      Types: deb
+      URIs: https://packages.microsoft.com/repos/code
+      Suites: stable
+      Components: main
+      Architectures: amd64 arm64
+      Signed-By: /etc/apt/keyrings/microsoft.asc
+    mode: "0644"
 
 - name: Install azure-cli repo
   become: true
@@ -280,9 +282,6 @@
   include_role:
     name: common/shared/nvim
   when: ansible_architecture != 'aarch64'
-
-- name: Install ulauncher deps
-  command: pip install py-expression-eval  --break-system-packages
 
 - name: Setup Gnome
   include_role:
