@@ -10,6 +10,7 @@
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
     neovim_ppa: "{{ 'stable' if ansible_architecture == 'aarch64' else 'stable' }}"
+    ghostty_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
   become: true
@@ -134,7 +135,6 @@
       - python3.12
       - code
       - azure-cli
-      - ghostty
       - sassc
       - gnome-themes-extra
       - gtk2-engines-murrine
@@ -144,9 +144,15 @@
     state: present
   become: true
 
+- name: Install ghostty
+  include_role:
+    name: common/linux/ghostty
+  vars:
+    arch: "{{ ghostty_arch }}"
+
 - name: Set default terminal emulator
   become: true
-  command: update-alternatives --set x-terminal-emulator /usr/bin/kitty
+  command: update-alternatives --set x-terminal-emulator /usr/bin/ghostty
 
 - name: Install Docker
   include_role:
