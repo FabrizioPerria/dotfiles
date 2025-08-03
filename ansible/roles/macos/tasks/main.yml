@@ -40,6 +40,10 @@
   include_role:
     name: common/shared/ripgrep
 
+- name: Install zoxide
+  include_role:
+    name: common/shared/zoxide
+
 # - name: Create symlink for python
 #   shell: >
 #     rm -f $(dirname $(which python3))/python &&

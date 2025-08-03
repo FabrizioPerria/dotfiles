@@ -17,6 +17,7 @@ zinit wait lucid as=program \
       cp -vf bin/fzf(|-tmux) $ZPFX/bin &&
       cp -vf man/man1/fzf(|-tmux).1 $ZPFX/man/man1" \
     depth=1 \
+    atload"source <(fzf --zsh)" \
     for junegunn/fzf
 
 zinit snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh
@@ -34,3 +35,4 @@ zinit ice depth"1" && zinit light "romkatv/powerlevel10k"
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zcompdump
 
+eval "$(zoxide init zsh)"

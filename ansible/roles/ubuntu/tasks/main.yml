@@ -75,14 +75,6 @@
     filename: vscode
     state: present
 
-- name: Add Albert repository
-  become: true
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb http://download.opensuse.org/repositories/home:/manuelschneid3r/xUbuntu_24.04/ /
-    filename: home:manuelschneid3r
-    state: present
-
 - name: Update apt cache again
   apt:
     update_cache: true
@@ -172,6 +164,10 @@
 - name: Install ripgrep
   include_role:
     name: common/shared/ripgrep
+
+- name: Install zoxide
+  include_role:
+    name: common/shared/zoxide
 
 - name: Install Weasis
   include_role:

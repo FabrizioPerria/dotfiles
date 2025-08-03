@@ -1,3 +1,4 @@
+alias cd='z'
 alias ls='eza $eza_params'
 alias l='eza --git-ignore $eza_params'
 alias ll='eza --all --header --long $eza_params'
@@ -17,7 +18,7 @@ alias xcopy="xclip -selection clipboard"
 alias login-db="az account get-access-token --resource-type oss-rdbms --output tsv --query accessToken"
 
 alias login-db-token='echo "{}" | jq --arg token "$(login-db)" '\''.token=$token'\'' > token.json'
- 
+
 pid-port() {
     local port=${1:-8042}
     if [[ -z "$port" ]]; then
