@@ -15,22 +15,4 @@ require("config.keymaps")
 require("config.options")
 require("config.autocmds")
 
-vim.lsp.enable({
-    "ansiblels",
-    "basedpyright",
-    "bashls",
-    "clangd",
-    "cmake",
-    "cssls",
-    "docker_compose_language_service",
-    "dockerls",
-    "dotls",
-    "gopls",
-    "jsonls",
-    "lua_ls",
-    "marksman",
-    "tailwindcss",
-    "ts_ls",
-    "yamlls",
-})
 require("lazy").setup("plugins")

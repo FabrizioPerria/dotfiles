@@ -1,15 +1,5 @@
 return {
     {
-        "rcasia/neotest-java",
-        ft = "java",
-        dependencies = {
-            "mfussenegger/nvim-jdtls",
-            "mfussenegger/nvim-dap", -- for the debugger
-            "rcarriga/nvim-dap-ui", -- recommended
-            "theHamsta/nvim-dap-virtual-text", -- recommended
-        },
-    },
-    {
         "nvim-neotest/neotest",
         lazy = true,
         event = { "BufReadPre", "BufNewFile" },
@@ -20,18 +10,14 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            "rcasia/neotest-java",
+            "atm1020/neotest-jdtls",
             "alfaix/neotest-gtest",
         },
         keys = {
             {
                 "<leader>tt",
                 function()
-                    if vim.fn.expand("%:e") == "java" then
-                        require("jdtls").test_class()
-                    else
-                        require("neotest").run.run(vim.fn.expand("%"))
-                    end
+                    require("neotest").run.run(vim.fn.expand("%"))
                 end,
                 desc = "Run File",
             },
@@ -40,14 +26,11 @@ return {
                 function()
                     if vim.fn.expand("%:e") == "go" then
                         require("dap-go").debug_test()
-                    elseif vim.fn.expand("%:e") == "java" then
-                        require("jdtls").test_nearest_method()
                     else
-                        -- require("neotest").run.debug(vim.fn.expand("%"))
                         require("neotest").run.run({ strategy = "dap", file = vim.fn.expand("%") })
                     end
                 end,
-                desc = "Debug Nearest (Go)",
+                desc = "Debug Nearest",
             },
             {
                 "<leader>tT",
@@ -110,9 +93,7 @@ return {
                         -- recursive_run = true
                     }),
                     require("neotest-gtest"),
-                    require("neotest-java")({
-                        incremental_build = true,
-                    }),
+                    require("neotest-jdtls"),
                 },
             })
         end,
