@@ -87,14 +87,11 @@ return {
             })
         end,
     },
-
     { "mfussenegger/nvim-jdtls" },
-
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
     },
-
     {
         "llllvvuu/nvim-cmp",
         branch = "feat/above",
@@ -178,17 +175,17 @@ return {
                         priority = 150,
                         group_index = 1,
                     },
-                    {
-                        name = "lazydev",
-                        group_index = 0,
-                        entry_filter = function()
-                            if vim.bo.filetype ~= "lua" then
-                                return false
-                            end
-                            return true
-                        end,
-                        priority = 100,
-                    },
+                    -- {
+                    --     name = "lazydev",
+                    --     group_index = 0,
+                    --     entry_filter = function()
+                    --         if vim.bo.filetype ~= "lua" then
+                    --             return false
+                    --         end
+                    --         return true
+                    --     end,
+                    --     priority = 100,
+                    -- },
                     {
                         name = "nvim_lsp",
                         priority = 100,
@@ -237,54 +234,54 @@ return {
                         },
                         group_index = 4,
                     },
-                    {
-                        name = "git",
-                        entry_filter = function()
-                            if vim.bo.filetype ~= "gitcommit" then
-                                return false
-                            end
-                            return true
-                        end,
-                        priority = 40,
-                        group_index = 5,
-                    },
+                    -- {
+                    --     name = "git",
+                    --     entry_filter = function()
+                    --         if vim.bo.filetype ~= "gitcommit" then
+                    --             return false
+                    --         end
+                    --         return true
+                    --     end,
+                    --     priority = 40,
+                    --     group_index = 5,
+                    -- },
                     { name = "dap", priority = 40, group_index = 6 },
                     { name = "async_path", priority = 30, group_index = 5 },
-                    { name = "calc", priority = 10, group_index = 9 },
-                    {
-                        name = "conventionalcommits",
-                        priority = 10,
-                        group_index = 9,
-                        max_item_count = 5,
-                        entry_filter = function()
-                            if vim.bo.filetype ~= "gitcommit" then
-                                return false
-                            end
-                            return true
-                        end,
-                    },
-                    {
-                        name = "fish",
-                        priority = 10,
-                        group_index = 9,
-                        entry_filter = function()
-                            if vim.bo.filetype ~= "gitcommit" then
-                                return false
-                            end
-                            return true
-                        end,
-                    },
-                    {
-                        name = "emoji",
-                        priority = 10,
-                        group_index = 9,
-                        entry_filter = function()
-                            if vim.bo.filetype ~= "gitcommit" then
-                                return false
-                            end
-                            return true
-                        end,
-                    },
+                    -- { name = "calc", priority = 10, group_index = 9 },
+                    -- {
+                    --     name = "conventionalcommits",
+                    --     priority = 10,
+                    --     group_index = 9,
+                    --     max_item_count = 5,
+                    --     entry_filter = function()
+                    --         if vim.bo.filetype ~= "gitcommit" then
+                    --             return false
+                    --         end
+                    --         return true
+                    --     end,
+                    -- },
+                    -- {
+                    --     name = "fish",
+                    --     priority = 10,
+                    --     group_index = 9,
+                    --     entry_filter = function()
+                    --         if vim.bo.filetype ~= "gitcommit" then
+                    --             return false
+                    --         end
+                    --         return true
+                    --     end,
+                    -- },
+                    -- {
+                    --     name = "emoji",
+                    --     priority = 10,
+                    --     group_index = 9,
+                    --     entry_filter = function()
+                    --         if vim.bo.filetype ~= "gitcommit" then
+                    --             return false
+                    --         end
+                    --         return true
+                    --     end,
+                    -- },
                 }),
                 snippet = {
                     expand = function(args)

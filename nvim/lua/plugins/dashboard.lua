@@ -1,4 +1,12 @@
 -- vim:formatoptions-=o
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+    pattern = { "dashboard" },
+    group = refresh,
+
+    command = "lua vim.b.miniindentscope_disable=true",
+})
+
 return {
     "nvimdev/dashboard-nvim",
     config = function()
@@ -32,8 +40,8 @@ return {
             logo = string.rep("\n", 4) .. logo .. "\n\n"
 
             local open_config = function()
-                vim.cmd('e ~/.config')
-                vim.cmd('cd ~/.config')
+                vim.cmd("e ~/.config")
+                vim.cmd("cd ~/.config")
             end
 
             local opts = {
@@ -42,7 +50,6 @@ return {
                     -- this is taken care of by lualine
                     -- enabling this messes up the actual laststatus setting after loading a file
                     statusline = false,
-
                 },
                 config = {
                     header = vim.split(logo, "\n"),
@@ -58,14 +65,16 @@ return {
                         { action = "qa", desc = " Quit", icon = " ", key = "q" },
                     },
                     footer = function()
-                        local utils = require('dashboard.utils')
+                        local utils = require("dashboard.utils")
                         local package_manager_stats = utils.get_package_manager_stats()
                         return {
-                            '⚡ Neovim loaded in ' .. package_manager_stats.time .. ' ms',
-                            '',
-                            '✔ ' ..
-                            package_manager_stats.loaded ..
-                            ' plugins loaded\t\t⏲ ' .. package_manager_stats.count .. ' plugins installed',
+                            "⚡ Neovim loaded in " .. package_manager_stats.time .. " ms",
+                            "",
+                            "✔ "
+                                .. package_manager_stats.loaded
+                                .. " plugins loaded\t\t⏲ "
+                                .. package_manager_stats.count
+                                .. " plugins installed",
                         }
                     end,
                 },
@@ -78,6 +87,6 @@ return {
 
             return opts
         end
-        require('dashboard').setup(opts())
-    end
+        require("dashboard").setup(opts())
+    end,
 }
