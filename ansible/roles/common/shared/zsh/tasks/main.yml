@@ -44,6 +44,7 @@
     - "source ${HOME}/.config/shell/p10k.zsh"
     - "source ${HOME}/.config/shell/colors.zsh"
     - "source ${HOME}/.config/shell/zinit.zsh"
+    - "source ${HOME}/.config/shell/detect_system_style.zsh >/dev/null"
 
 - name: set java_home for macOS
   when: ansible_os_family == "Darwin"

@@ -4,9 +4,13 @@ return {
         lazy = false,
         priority = 1000,
         config = function()
+            local handle = io.popen("zsh -l -c '~/.config/shell/detect_system_style.zsh' 2>&1")
+            local result = handle:read("*a")
+            handle:close()
+            local is_dark = result:match("dark") ~= nil
             -- Set colorscheme
             require("tokyonight").setup({
-                style = "storm",
+                style = is_dark and "storm" or "day",
                 on_highlights = function(hl, _)
                     -- Diff colors
                     hl.DiffText = { bg = "#373640", fg = "#e0af68" }
