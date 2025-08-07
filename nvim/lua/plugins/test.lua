@@ -10,7 +10,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
-            "atm1020/neotest-jdtls",
+            "fabrizioperria/neotest-jdtls",
             "alfaix/neotest-gtest",
         },
         keys = {
