@@ -24,14 +24,14 @@ vim.keymap.set({ "n" }, "<leader>Y", [["+Y]], { desc = "Copy Line to clipboard" 
 vim.keymap.set({ "x", "n" }, "<C-d>", "<C-d>zz", { desc = "Scroll down" })
 vim.keymap.set({ "n", "x" }, "<C-u>", "<C-u>zz", { desc = "Scroll up" })
 
-vim.keymap.set("n", "<leader>=", function()
-    local buf = vim.api.nvim_get_current_buf()
-    local row = vim.api.nvim_win_get_cursor(0)[1]
-    local sep = "===================================================================================================="
-    vim.api.nvim_buf_set_lines(buf, row, row, false, { sep })
-    require("mini.comment").toggle_lines(row + 1, row + 1)
-    vim.api.nvim_win_set_cursor(0, { row + 2, 0 })
-end, { desc = "Add separator" })
+vim.keymap.set("n", "<leader>/", "gcc", { remap = true, desc = "Toggle comment (line)" })
+vim.keymap.set("v", "<leader>/", "gc", { remap = true, desc = "Toggle comment (visual)" })
+vim.keymap.set(
+    "n",
+    "<leader>=",
+    "O============================================================================================<Esc>gcc",
+    { remap = true, desc = "Header" }
+)
 
 vim.keymap.set({ "i", "n" }, "<C-Left>", function()
     vim.api.nvim_feedkeys(
