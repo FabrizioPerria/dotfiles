@@ -4,6 +4,12 @@
     src: "{{playbook_dir}}/../shell"
     dest: "${HOME}/.config/"
 
+- name: Ensure theme detection executable permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.config/shell/detect_system_style.zsh"
+    mode: "0755"
+    state: file
+
 - name: Remove existing Zinit installation
   file:
     path: "{{ ansible_env.HOME }}/.zinit"
