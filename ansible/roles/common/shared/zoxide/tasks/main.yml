@@ -1,3 +1,4 @@
+---
 - name: Install zoxide
-  shell: cargo install --root /usr/local zoxide
+  shell: sudo cargo install --root /usr/local zoxide
   become: true

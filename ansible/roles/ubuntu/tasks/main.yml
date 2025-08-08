@@ -141,6 +141,7 @@
       - gnome-tweaks
       - gnome-shell-extensions
       - openjdk-21-jdk
+      - rustup
     state: present
   become: true
 
