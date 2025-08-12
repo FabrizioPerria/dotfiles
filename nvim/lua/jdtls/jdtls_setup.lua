@@ -118,9 +118,17 @@ function M.setup()
 
         vim.api.nvim_create_autocmd("BufWritePost", {
             pattern = { "*.java", "pom.xml", "build.gradle", "settings.gradle" },
-            callback = function()
+            callback = function(event)
+                vim.defer_fn(function()
+                    local bufnr = vim.api.nvim_get_current_buf()
+                    if vim.api.nvim_buf_is_valid(bufnr) then
+                        require("jdtls").compile("incremental")
+                    end
+                end, 50)
                 -- local _, _ = pcall(vim.lsp.codelens.refresh)
-                require("jdtls").compile("incremental")
+                -- if vim.api.nvim_buf_is_valid(event.buf) then
+                --     require("jdtls").compile("incremental")
+                -- end
             end,
         })
     end

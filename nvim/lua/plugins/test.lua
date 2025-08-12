@@ -57,6 +57,14 @@ return {
                 "<leader>to",
                 function()
                     require("neotest").output.open({ enter = true, auto_close = true })
+                    vim.api.nvim_create_autocmd("FileType", {
+                        pattern = "neotest-output",
+                        once = true,
+                        callback = function()
+                            vim.keymap.set("n", "<Esc>", "<cmd>close<CR>", { buffer = true, silent = true })
+                            vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true, silent = true })
+                        end,
+                    })
                 end,
                 desc = "Show Output",
             },
