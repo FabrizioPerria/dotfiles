@@ -1,4 +1,16 @@
 ---
-- name: Install ripgrep
-  shell: cargo install --root /usr/local --features 'pcre2' ripgrep
+- name: Install ripgrep to temporary directory
+  shell: cargo install --root /tmp/ripgrep --features 'pcre2' ripgrep
+  become: false
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+    HOME: "{{ ansible_env.HOME }}"
+  args:
+    creates: "/tmp/ripgrep/bin/rg"
+
+- name: Copy ripgrep binary to /usr/local/bin
+  copy:
+    src: "/tmp/ripgrep/bin/rg"
+    dest: "/usr/local/bin/rg"
+    mode: "0755"
   become: true

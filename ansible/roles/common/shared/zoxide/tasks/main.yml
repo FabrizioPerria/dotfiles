@@ -1,4 +1,16 @@
 ---
-- name: Install zoxide
-  shell: sudo cargo install --root /usr/local zoxide
+- name: Install zoxide to temporary directory
+  shell: cargo install --root /tmp/zoxide zoxide
+  become: false
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
+    HOME: "{{ ansible_env.HOME }}"
+  args:
+    creates: "/tmp/zoxide/bin/zoxide"
+
+- name: Copy zoxide binary to /usr/local/bin
+  copy:
+    src: "/tmp/zoxide/bin/zoxide"
+    dest: "/usr/local/bin/zoxide"
+    mode: "0755"
   become: true

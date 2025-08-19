@@ -139,10 +139,8 @@
   become: true
 
 - name: Install Rust
-  become: true
   ansible.builtin.shell: |
-    sudo rustup default stable &&
-    sudo rustup update stable
+    rustup default stable
 
 - name: Install ghostty
   include_role:
