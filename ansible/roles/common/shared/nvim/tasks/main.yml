@@ -48,5 +48,5 @@
 - name: Run nvim commands
   environment:
     PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-    NVM_DIR: "{{ ansible_env.HOME }}/.nvm"
-  shell: ". ${NVM_DIR}/nvm.sh && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa"
+    FNM_DIR: "{{ ansible_env.HOME }}/.fnm"
+  shell: 'eval "$($FNM_DIR/fnm env)" && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa'

@@ -73,7 +73,7 @@
       trusted=true
       signed-by=/etc/apt/keyrings/microsoft.asc]
       https://packages.microsoft.com/repos/azure-cli noble main
-    filename: vscode
+    filename: azure
     state: present
 
 - name: Update apt cache again
@@ -112,7 +112,6 @@
       - axel
       - clangd
       - snapd
-      - cargo
       - cifs-utils
       - virtualenv
       - nfs-common

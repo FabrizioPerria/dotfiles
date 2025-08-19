@@ -4,7 +4,7 @@ macos-option-as-alt = true
 window-inherit-font-size = false
 font-size = 12
 
-font-family = JetBrainsMono Nerd Font Mono
+font-family = JetBrainsMono Nerd Font Mono Bold
 font-family-bold = JetBrainsMono Nerd Font Mono Extra Bold
 font-family-bold-italic = JetBrainsMono Nerd Font Mono Extra Bold Italic
 
