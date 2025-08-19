@@ -311,6 +311,13 @@
     dest: "/tmp/zen-browser.tar.xz"
     mode: "u=rw,go=r"
 
+- name: Ensure /opt/zen-browser directory exists
+  become: true
+  ansible.builtin.file:
+    path: /opt/zen-browser
+    state: directory
+    mode: "0755"
+
 - name: Extract Zen browser
   become: true
   ansible.builtin.unarchive:
