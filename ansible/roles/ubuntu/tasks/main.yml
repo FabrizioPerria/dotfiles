@@ -135,6 +135,7 @@
       - gnome-shell-extensions
       - openjdk-21-jdk
       - rustup
+      - dconf-editor
     state: present
   become: true
 
@@ -309,8 +310,9 @@
 
 - name: Set root password
   become: true
-  ansible.builtin.shell: |
-    echo "{{ root_password.user_input }}" | sudo -S passwd root
+  ansible.builtin.user:
+    name: root
+    password: "{{ root_password.user_input | password_hash('sha512') }}"
   when: root_password.user_input is defined
 
 - pause:
