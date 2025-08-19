@@ -3,13 +3,13 @@
   set_fact:
     lazysql_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' else 'x86_64' }}"
     lazydocker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
+    neovim_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     albert_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
-    neovim_ppa: "{{ 'stable' if ansible_architecture == 'aarch64' else 'stable' }}"
     ghostty_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
@@ -32,11 +32,6 @@
       - curl
       - locales
     state: present
-  become: true
-
-- name: Add Neovim PPA
-  apt_repository:
-    repo: ppa:neovim-ppa/{{ neovim_ppa }}
   become: true
 
 - name: Create APT keyrings dir
@@ -89,7 +84,6 @@
       - zsh
       - git
       - tmux
-      - neovim
       - sudo
       - python3-neovim
       - python3-dev
@@ -281,7 +275,10 @@
 - name: Setup nvim
   include_role:
     name: common/shared/nvim
-  when: ansible_architecture != 'aarch64'
+  vars:
+    os: linux
+    arch: "{{ neovim_arch }}"
+    version: 0.11.2
 
 - name: Install ulauncher deps
   command: pip install py-expression-eval  --break-system-packages

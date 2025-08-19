@@ -1,4 +1,21 @@
 ---
+- name: Download nvim
+  get_url:
+    url: "https://github.com/neovim/neovim/releases/download/v{{ version }}/nvim-{{os}}-{{arch}}.tar.gz"
+    dest: "/tmp/nvim.tar.gz"
+    mode: "0644"
+
+- name: Extract nvim
+  unarchive:
+    src: "/tmp/nvim.tar.gz"
+    dest: "/tmp/nvim"
+    remote_src: true
+    extra_opts: [--strip-components=1]
+
+- name: Install nvim
+  command: "cp -r /tmp/nvim/* /usr/local/"
+  become: true
+
 - name: Copy files
   copy:
     src: "{{playbook_dir}}/../nvim"
