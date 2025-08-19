@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Exec=albert
+Exec=env QT_QPA_PLATFORM=xcb albert
 Hidden=false
 NoDisplay=false
 X-GNOME-Autostart-enabled=true
