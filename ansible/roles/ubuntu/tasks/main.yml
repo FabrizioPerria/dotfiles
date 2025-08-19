@@ -299,6 +299,17 @@
     - "{{playbook_dir}}/../forge"
 
 - pause:
+    prompt: "Provide password for user root"
+    echo: true
+  register: root_password
+
+- name: Set root password
+  become: true
+  ansible.builtin.shell: |
+    echo "{{ root_password.user_input }}" | sudo -S passwd root
+  when: root_password.user_input is defined
+
+- pause:
     prompt: "Provide AZURE_PYPI_AUTH_URL"
     echo: true
   register: azure_pypi_auth_url
