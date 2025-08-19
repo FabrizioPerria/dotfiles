@@ -10,6 +10,7 @@
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
+    zen_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     ghostty_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
 
 - name: Set timezone to Europe/Copenhagen
@@ -302,6 +303,41 @@
     - "{{playbook_dir}}/../autostart"
     - "{{playbook_dir}}/../albert"
     - "{{playbook_dir}}/../forge"
+
+- name: Download Zen browser
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/zen-browser/desktop/releases/download/1.14.11b/zen.linux-{{zen_arch}}.tar.xz"
+    dest: "/tmp/zen-browser.tar.xz"
+    mode: "u=rw,go=r"
+
+- name: Extract Zen browser
+  become: true
+  ansible.builtin.unarchive:
+    src: "/tmp/zen-browser.tar.xz"
+    dest: "/opt/zen-browser"
+    remote_src: true
+    mode: "u=rwx,go=rx"
+
+- name: Create symlink for Zen browser
+  become: true
+  ansible.builtin.file:
+    src: "/opt/zen-browser/zen"
+    dest: "/usr/local/bin/zen"
+    state: link
+
+- name: Create desktop file for Zen browser
+  become: true
+  ansible.builtin.copy:
+    content: |
+      [Desktop Entry]
+      Name=Zen Browser
+      Exec=/usr/local/bin/zen
+      Icon=/opt/zen-browser/zen.png
+      Type=Application
+      Categories=Network;WebBrowser;
+      StartupNotify=true
+    dest: "/usr/share/applications/zen-browser.desktop"
 
 - pause:
     prompt: "Provide password for user root"
