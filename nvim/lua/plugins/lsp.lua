@@ -41,9 +41,19 @@ return {
                     markdown = { "prettierd" },
                     html = { "prettierd" },
                     lua = { "stylua" },
-                    -- python = { "black" },
+                    python = { "isort_custom", "ruff_format_custom" },
                 },
                 formatters = {
+                    isort_custom = {
+                        command = "isort",
+                        args = { "--settings-path", vim.fn.stdpath("config") .. "/styles/pyproject.toml", "-" },
+                        stdin = true,
+                    },
+                    ruff_format_custom = {
+                        command = "ruff",
+                        args = { "format", "--config", vim.fn.stdpath("config") .. "/styles/pyproject.toml", "-" },
+                        stdin = true,
+                    },
                     shfmt = {
                         prepend_args = { "-i", "4" },
                     },

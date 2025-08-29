@@ -166,7 +166,7 @@ local function getCapabilities()
     return capabilities
 end
 
-local jdtls_config = {
+local config = {
     cmd = {
         "java",
         "-Declipse.application=org.eclipse.jdt.ls.core.id1",
@@ -196,9 +196,7 @@ local jdtls_config = {
         "settings.gradle",
         "build.gradle",
     }),
-}
 
-local config = {
     settings = {
         java = {
             format = {

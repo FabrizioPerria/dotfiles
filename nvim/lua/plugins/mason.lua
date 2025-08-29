@@ -19,6 +19,9 @@ return {
                     "jdtls",
                     "java-test",
 
+                    "ruff",
+                    "isort",
+
                     "gopls",
                     "goimports",
                     "gofumpt",
