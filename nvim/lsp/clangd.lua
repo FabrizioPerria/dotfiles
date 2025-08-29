@@ -1,5 +1,5 @@
 -- Function to open the build terminal
-function open_build_terminal()
+function open_build_terminal_cpp()
     vim.cmd("botright 10split") -- Open a split at the bottom
     vim.cmd("terminal ./build.sh") -- Open terminal and run script
     vim.cmd("normal G") -- Scroll to bottom of terminal output
@@ -13,7 +13,7 @@ end
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
     pattern = { "*.cpp", "*.hpp" },
-    command = "nnoremap <buffer> <leader><leader> :wa<CR>:lua open_build_terminal()<CR>",
+    command = "nnoremap <buffer> <leader><leader> :wa<CR>:lua open_build_terminal_cpp()<CR>",
 })
 
 local function get_capabilities()

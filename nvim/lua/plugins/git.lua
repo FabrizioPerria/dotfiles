@@ -1,11 +1,3 @@
-local function DiffViewToggle()
-    if next(require("diffview.lib").views) == nil then
-        vim.cmd("DiffviewOpen")
-    else
-        vim.cmd("DiffviewClose")
-    end
-end
-
 local blameFormat = function(line_porcelain, config, idx)
     local hash = string.sub(line_porcelain.hash, 0, 7)
     local line_with_hl = {}
@@ -100,32 +92,6 @@ return {
         keys = {
             { "<leader>gb", "<cmd>BlameToggle virtual<CR>", desc = "toggle git blame - virtual" },
             { "<leader>gB", "<cmd>BlameToggle window<CR>", desc = "toggle git blame - window" },
-        },
-    },
-    {
-        "sindrets/diffview.nvim",
-        config = function()
-            require("diffview").setup({
-                view = {
-                    merge_tool = {
-                        layout = "diff3_mixed",
-                        disable_diagnostics = false,
-                    },
-                },
-            })
-        end,
-        keys = {
-            {
-                "<leader>gd",
-                function()
-                    DiffViewToggle()
-                end,
-                desc = "toggle diff",
-            },
-            { "<leader>gd<Left>", "<cmd>lua require('diffview').diffget('base')<CR>", desc = "" },
-            { "<leader>gd<Right>", "<cmd>lua require('diffview').diffget('mine')<CR>", desc = "" },
-            { "<leader>gd<Down>", "<cmd>lua require('diffview').diffput('mine')<CR>", desc = "" },
-            { "<leader>gd<Up>", "<cmd>lua require('diffview').diffput('base')<CR>", desc = "" },
         },
     },
 }

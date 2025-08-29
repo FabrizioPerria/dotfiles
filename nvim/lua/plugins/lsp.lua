@@ -36,12 +36,12 @@ return {
                     typescript = { "prettierd" },
                     javascript = { "prettierd" },
                     vue = { "prettierd" },
-                    json = { "prettierd" },
+                    -- json = { "prettierd" },
                     yaml = { "prettierd" },
                     markdown = { "prettierd" },
                     html = { "prettierd" },
                     lua = { "stylua" },
-                    python = { "black" },
+                    -- python = { "black" },
                 },
                 formatters = {
                     shfmt = {

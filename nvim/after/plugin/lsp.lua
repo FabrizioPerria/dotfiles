@@ -67,13 +67,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "java",
-    callback = function(args)
-        require("jdtls.jdtls_setup").setup()
-    end,
-})
-
 vim.lsp.enable({
     "ansiblels",
     "basedpyright",
@@ -85,6 +78,7 @@ vim.lsp.enable({
     "dockerls",
     "dotls",
     "gopls",
+    "jdtls",
     "jsonls",
     "lua_ls",
     "marksman",
