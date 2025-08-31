@@ -4,7 +4,6 @@ return {
         event = { "BufReadPost", "BufNewFile" },
         config = function()
             local lint = require("lint")
-            -- if /tmp/properties does not exist, create it
             local properties_file = vim.fn.stdpath("data") .. "/mason/packages/checkstyle/checkstyle.properties"
             if vim.fn.filereadable(properties_file) == 0 then
                 vim.fn.writefile(
@@ -21,19 +20,8 @@ return {
                 "-p",
                 properties_file,
             }
-            lint.linters.ruff.args = {
-                "--config",
-                vim.fn.stdpath("config") .. "/styles/pyproject.toml",
-                "check",
-                "--force-exclude",
-                "--quiet",
-                "--stdin-filename",
-                get_file_name,
-                "--no-fix",
-                "--output-format",
-                "json",
-                "-",
-            }
+            lint.linters.luacheck.args =
+                { "--globals", "vim", "--std", "lua51", "--formatter", "plain", "--codes", "--ranges", "-" }
             lint.linters.yamllint.args =
                 { "--format", "parsable", "-c", vim.fn.stdpath("config") .. "/styles/yamllint.yml", "-" }
             lint.linters_by_ft = {
@@ -49,15 +37,6 @@ return {
                 yaml = { "yamllint" },
                 markdown = { "markdownlint" },
             }
-            -- lint.linters.golangcilint.args = { "run", "--out-format", "json", "$FILENAME" }
-            -- lint.linters.eslint_d.args = {
-            --     "--config",
-            --     vim.fn.stdpath("config") .. "/styles/.eslintrc.json",
-            --     "--stdin",
-            --     "--stdin-filename",
-            --     "$FILENAME",
-            -- }
-            -- lint.linters.yamllint.args = { "-c", vim.fn.stdpath("config") .. "/styles/.yamllint.yaml", "$FILENAME" }
             vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
                 callback = function()
                     lint.try_lint()
