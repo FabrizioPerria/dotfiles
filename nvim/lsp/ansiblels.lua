@@ -1,3 +1,4 @@
+local lspconfig_util = require("lspconfig.util")
 local config = {
     cmd = { "ansible-language-server", "--stdio" },
     capabilities = require("cmp_nvim_lsp").default_capabilities(),
@@ -5,7 +6,9 @@ local config = {
         "yaml",
         "yml",
     },
-    root_markers = { "playbook.yml", "playbook.yaml", "ansible.cfg", ".ansible-lint" },
+    root_dir = function(fname)
+        return lspconfig_util.root_pattern("playbook.yml", "playbook.yaml", "ansible.cfg", ".ansible-lint")(fname)
+    end,
     settings = {
         ansible = {
             ansible = {

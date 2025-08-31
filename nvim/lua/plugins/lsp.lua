@@ -34,6 +34,8 @@ return {
                 "json",
                 "-",
             }
+            lint.linters.yamllint.args =
+                { "--format", "parsable", "-c", vim.fn.stdpath("config") .. "/styles/yamllint.yml", "-" }
             lint.linters_by_ft = {
                 go = { "golangcilint" },
                 java = { "checkstyle" },
