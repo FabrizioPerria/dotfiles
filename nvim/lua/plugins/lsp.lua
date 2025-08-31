@@ -24,10 +24,20 @@ return {
                 { "--globals", "vim", "--std", "lua51", "--formatter", "plain", "--codes", "--ranges", "-" }
             lint.linters.yamllint.args =
                 { "--format", "parsable", "-c", vim.fn.stdpath("config") .. "/styles/yamllint.yml", "-" }
+            lint.linters.pylint.args = {
+                "--rcfile",
+                vim.fn.stdpath("config") .. "/styles/pylintrc",
+                "-f",
+                "json",
+                "--from-stdin",
+                function()
+                    return vim.api.nvim_buf_get_name(0)
+                end,
+            }
             lint.linters_by_ft = {
                 go = { "golangcilint" },
                 java = { "checkstyle" },
-                python = { "ruff" },
+                python = { "pylint" },
                 lua = { "luacheck" },
                 sh = { "shellcheck" },
                 javascript = { "eslint" },
