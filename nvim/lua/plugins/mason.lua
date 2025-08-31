@@ -16,6 +16,7 @@ return {
             require("mason-tool-installer").setup({
                 ensure_installed = {
                     "roslyn",
+                    "netcoredbg",
 
                     "vtsls",
                     "vue-language-server",

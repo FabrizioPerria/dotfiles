@@ -10,6 +10,7 @@ return {
             "nvim-treesitter/nvim-treesitter",
             "nvim-neotest/neotest-go",
             "nvim-neotest/neotest-python",
+            "Issafalcon/neotest-dotnet",
             "fabrizioperria/neotest-jdtls",
             "alfaix/neotest-gtest",
         },
@@ -102,6 +103,7 @@ return {
                     }),
                     require("neotest-gtest"),
                     require("neotest-jdtls"),
+                    require("neotest-dotnet"),
                 },
             })
         end,

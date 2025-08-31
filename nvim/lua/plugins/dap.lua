@@ -56,6 +56,13 @@ return {
         },
     },
     {
+        "Cliffback/netcoredbg-macOS-arm64.nvim",
+        dependencies = { "mfussenegger/nvim-dap" },
+        config = function()
+            require("netcoredbg-macOS-arm64").setup(require("dap"))
+        end,
+    },
+    {
         "mfussenegger/nvim-dap",
         dependencies = {
             "nvim-neotest/nvim-nio",
@@ -172,6 +179,27 @@ return {
                     env = {
                         PYTHONPATH = "${workspaceFolder}:${workspaceFolder}/src",
                     },
+                },
+            }
+
+            local netcoredbg = vim.fn.expand("$MASON/packages/netcoredbg/netcoredbg")
+            if vim.fn.has("mac") == 1 then
+                local netcoredbg = vim.fn.stdpath("data") .. "/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
+            end
+            dap.adapters.coreclr = {
+                type = "executable",
+                command = netcoredbg,
+                args = { "--interpreter=vscode" },
+            }
+
+            dap.configurations.cs = {
+                {
+                    type = "coreclr",
+                    name = "Launch",
+                    request = "launch",
+                    program = function()
+                        return vim.fn.input("Path to dll: ", vim.fn.getcwd() .. "/bin/Debug/", "file")
+                    end,
                 },
             }
             vim.g.dap_virtual_text = true
