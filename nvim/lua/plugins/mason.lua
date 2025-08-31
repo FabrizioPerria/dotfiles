@@ -2,7 +2,12 @@ return {
     {
         "williamboman/mason.nvim",
         config = function()
-            require("mason").setup({})
+            require("mason").setup({
+                registries = {
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",
+                },
+            })
         end,
     },
     {
@@ -10,6 +15,8 @@ return {
         config = function()
             require("mason-tool-installer").setup({
                 ensure_installed = {
+                    "roslyn",
+
                     "vtsls",
                     "vue-language-server",
 

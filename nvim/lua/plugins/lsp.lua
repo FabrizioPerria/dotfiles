@@ -146,6 +146,7 @@ return {
         end,
     },
     { "mfussenegger/nvim-jdtls" },
+    { "seblyng/roslyn.nvim" },
     {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },

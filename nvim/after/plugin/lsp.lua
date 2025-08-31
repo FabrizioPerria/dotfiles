@@ -90,6 +90,7 @@ vim.lsp.enable({
     "jsonls",
     "lua_ls",
     "marksman",
+    "roslyn",
     "tailwindcss",
     "ts_ls",
     "yamlls",
