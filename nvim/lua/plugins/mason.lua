@@ -18,10 +18,12 @@ return {
                     "java-debug-adapter",
                     "jdtls",
                     "java-test",
+                    "checkstyle",
 
                     "ruff",
                     "isort",
 
+                    "golangci-lint",
                     "gopls",
                     "goimports",
                     "gofumpt",
@@ -33,6 +35,7 @@ return {
 
                     "stylua",
                     "lua-language-server",
+                    "luacheck",
 
                     "json-lsp",
                     "jsonlint",
@@ -67,7 +70,7 @@ return {
                     "css-lsp",
                     "typescript-language-server",
                     "tailwindcss-language-server",
-                    "prettierd",
+                    "prettier",
 
                     "clangd",
                     "clang-format",

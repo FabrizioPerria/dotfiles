@@ -1,12 +1,67 @@
 return {
     {
-        "L3MON4D3/LuaSnip",
-        lazy = true,
-        build = "make install_jsregexp",
-        dependencies = {
-            "rafamadriz/friendly-snippets",
-            "mireq/luasnip-snippets",
-        },
+        "mfussenegger/nvim-lint",
+        event = { "BufReadPost", "BufNewFile" },
+        config = function()
+            local lint = require("lint")
+            -- if /tmp/properties does not exist, create it
+            local properties_file = vim.fn.stdpath("data") .. "/mason/packages/checkstyle/checkstyle.properties"
+            if vim.fn.filereadable(properties_file) == 0 then
+                vim.fn.writefile(
+                    { "suppressions.path=" .. vim.fn.stdpath("config") .. "/styles/checkstyle-suppressions.xml" },
+                    properties_file
+                )
+            end
+
+            lint.linters.checkstyle.args = {
+                "-f",
+                "sarif",
+                "-c",
+                vim.fn.stdpath("config") .. "/styles/checkstyle.xml",
+                "-p",
+                properties_file,
+            }
+            lint.linters.ruff.args = {
+                "--config",
+                vim.fn.stdpath("config") .. "/styles/pyproject.toml",
+                "check",
+                "--force-exclude",
+                "--quiet",
+                "--stdin-filename",
+                get_file_name,
+                "--no-fix",
+                "--output-format",
+                "json",
+                "-",
+            }
+            lint.linters_by_ft = {
+                go = { "golangcilint" },
+                java = { "checkstyle" },
+                python = { "ruff" },
+                lua = { "luacheck" },
+                sh = { "shellcheck" },
+                javascript = { "eslint" },
+                typescript = { "eslint" },
+                vue = { "eslint" },
+                json = { "eslint" },
+                yaml = { "yamllint" },
+                markdown = { "markdownlint" },
+            }
+            -- lint.linters.golangcilint.args = { "run", "--out-format", "json", "$FILENAME" }
+            -- lint.linters.eslint_d.args = {
+            --     "--config",
+            --     vim.fn.stdpath("config") .. "/styles/.eslintrc.json",
+            --     "--stdin",
+            --     "--stdin-filename",
+            --     "$FILENAME",
+            -- }
+            -- lint.linters.yamllint.args = { "-c", vim.fn.stdpath("config") .. "/styles/.yamllint.yaml", "$FILENAME" }
+            vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+                callback = function()
+                    lint.try_lint()
+                end,
+            })
+        end,
     },
     {
         "stevearc/conform.nvim",
@@ -29,17 +84,16 @@ return {
                     lsp_fallback = true,
                 },
                 formatters_by_ft = {
-                    -- java = { "google_java_format" },
                     go = { "gofmt" },
                     cpp = { "clang_format" },
                     c = { "clang_format" },
-                    typescript = { "prettierd" },
-                    javascript = { "prettierd" },
-                    vue = { "prettierd" },
-                    -- json = { "prettierd" },
-                    yaml = { "prettierd" },
-                    markdown = { "prettierd" },
-                    html = { "prettierd" },
+                    typescript = { "prettier" },
+                    javascript = { "prettier" },
+                    vue = { "prettier" },
+                    json = { "prettier" },
+                    yaml = { "prettier" },
+                    markdown = { "prettier" },
+                    html = { "prettier" },
                     lua = { "stylua" },
                     python = { "isort_custom", "ruff_format_custom" },
                 },
@@ -57,11 +111,15 @@ return {
                     shfmt = {
                         prepend_args = { "-i", "4" },
                     },
-                    -- google_java_format = {
-                    --     command = "google-java-format",
-                    --     args = { "-" },
-                    --     stdin = true,
-                    -- },
+                    prettier = {
+                        args = {
+                            "--config",
+                            vim.fn.stdpath("config") .. "/styles/.prettierrc",
+                            "--stdin-filepath",
+                            "$FILENAME",
+                        },
+                        stdin = true,
+                    },
                 },
                 default_format_opts = {
                     lsp_format = "never",
@@ -85,7 +143,6 @@ return {
                 sources = {
                     null_ls.builtins.code_actions.proselint,
                     null_ls.builtins.code_actions.refactoring,
-                    null_ls.builtins.completion.luasnip,
 
                     null_ls.builtins.diagnostics.codespell,
                     null_ls.builtins.diagnostics.markdownlint,
@@ -108,8 +165,6 @@ return {
         dependencies = {
             "hrsh7th/cmp-nvim-lsp",
             "onsails/lspkind.nvim",
-            "saadparwaiz1/cmp_luasnip",
-            "L3MON4D3/LuaSnip",
             "zbirenbaum/copilot.lua",
             "hrsh7th/cmp-buffer",
             "hrsh7th/cmp-path",
@@ -134,11 +189,6 @@ return {
         lazy = true,
         event = { "InsertEnter", "CmdlineEnter" },
 
-        config = function()
-            require("luasnip/loaders/from_vscode").lazy_load()
-            require("luasnip/loaders/from_snipmate").lazy_load()
-            require("luasnip_snippets.common.snip_utils").setup()
-        end,
         opts = function()
             local cmp = require("cmp")
             require("cmp").setup({
@@ -169,12 +219,6 @@ return {
                 },
                 sources = cmp.config.sources({
                     {
-                        name = "luasnip",
-                        priority = 15,
-                        group_index = 1,
-                        option = { show_autosnippets = true, use_show_condition = false },
-                    },
-                    {
                         name = "nvim_lua",
                         entry_filter = function()
                             if vim.bo.filetype ~= "lua" then
@@ -185,17 +229,6 @@ return {
                         priority = 150,
                         group_index = 1,
                     },
-                    -- {
-                    --     name = "lazydev",
-                    --     group_index = 0,
-                    --     entry_filter = function()
-                    --         if vim.bo.filetype ~= "lua" then
-                    --             return false
-                    --         end
-                    --         return true
-                    --     end,
-                    --     priority = 100,
-                    -- },
                     {
                         name = "nvim_lsp",
                         priority = 100,
@@ -244,60 +277,9 @@ return {
                         },
                         group_index = 4,
                     },
-                    -- {
-                    --     name = "git",
-                    --     entry_filter = function()
-                    --         if vim.bo.filetype ~= "gitcommit" then
-                    --             return false
-                    --         end
-                    --         return true
-                    --     end,
-                    --     priority = 40,
-                    --     group_index = 5,
-                    -- },
                     { name = "dap", priority = 40, group_index = 6 },
                     { name = "async_path", priority = 30, group_index = 5 },
-                    -- { name = "calc", priority = 10, group_index = 9 },
-                    -- {
-                    --     name = "conventionalcommits",
-                    --     priority = 10,
-                    --     group_index = 9,
-                    --     max_item_count = 5,
-                    --     entry_filter = function()
-                    --         if vim.bo.filetype ~= "gitcommit" then
-                    --             return false
-                    --         end
-                    --         return true
-                    --     end,
-                    -- },
-                    -- {
-                    --     name = "fish",
-                    --     priority = 10,
-                    --     group_index = 9,
-                    --     entry_filter = function()
-                    --         if vim.bo.filetype ~= "gitcommit" then
-                    --             return false
-                    --         end
-                    --         return true
-                    --     end,
-                    -- },
-                    -- {
-                    --     name = "emoji",
-                    --     priority = 10,
-                    --     group_index = 9,
-                    --     entry_filter = function()
-                    --         if vim.bo.filetype ~= "gitcommit" then
-                    --             return false
-                    --         end
-                    --         return true
-                    --     end,
-                    -- },
                 }),
-                snippet = {
-                    expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
-                    end,
-                },
 
                 mapping = cmp.mapping.preset.insert({
                     ["<Up>"] = cmp.mapping.select_prev_item({
