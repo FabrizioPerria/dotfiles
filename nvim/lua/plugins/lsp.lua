@@ -105,7 +105,7 @@ return {
                     prettier = {
                         args = {
                             "--config",
-                            vim.fn.stdpath("config") .. "/styles/.prettierrc",
+                            vim.fn.stdpath("config") .. "/styles/prettierrc",
                             "--stdin-filepath",
                             "$FILENAME",
                         },

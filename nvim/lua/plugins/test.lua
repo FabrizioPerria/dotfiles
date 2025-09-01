@@ -103,7 +103,9 @@ return {
                     }),
                     require("neotest-gtest"),
                     require("neotest-jdtls"),
-                    require("neotest-dotnet"),
+                    require("neotest-dotnet")({
+                        discovery_root = "solution",
+                    }),
                 },
             })
         end,
