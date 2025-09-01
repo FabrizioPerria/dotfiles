@@ -184,9 +184,14 @@ return {
 
             local netcoredbg = vim.fn.expand("$MASON/packages/netcoredbg/netcoredbg")
             if vim.fn.has("mac") == 1 then
-                local netcoredbg = vim.fn.stdpath("data") .. "/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
+                netcoredbg = vim.fn.stdpath("data") .. "/lazy/netcoredbg-macOS-arm64.nvim/netcoredbg/netcoredbg"
             end
             dap.adapters.coreclr = {
+                type = "executable",
+                command = netcoredbg,
+                args = { "--interpreter=vscode" },
+            }
+            dap.adapters.netcoredbg = {
                 type = "executable",
                 command = netcoredbg,
                 args = { "--interpreter=vscode" },

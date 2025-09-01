@@ -28,7 +28,7 @@
   "mason-tool-installer.nvim": { "branch": "main", "commit": "517ef5994ef9d6b738322664d5fdd948f0fdeb46" },
   "mason.nvim": { "branch": "main", "commit": "7dc4facca9702f95353d5a1f87daf23d78e31c2a" },
   "mini.indentscope": { "branch": "main", "commit": "9d9490c172a4718d7d1f20eaae668a28f160c2d7" },
-  "neotest": { "branch": "master", "commit": "35a59c1f59dbb954d92b74ab64a966a668cea495" },
+  "neotest": { "branch": "fix/subprocess/load-adapters", "commit": "cd1bccbe80772c70732b43f1b95addab2083067a" },
   "neotest-dotnet": { "branch": "main", "commit": "962af8bcb73622b0f44f1e25a0441f5783fe5665" },
   "neotest-go": { "branch": "main", "commit": "92950ad7be2ca02a41abca5c6600ff6ffaf5b5d6" },
   "neotest-gtest": { "branch": "main", "commit": "16989561a6356878ec4ecd6afed4f0d7a471d1db" },

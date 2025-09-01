@@ -1,6 +1,10 @@
 return {
     {
+        "Issafalcon/neotest-dotnet",
+    },
+    {
         "nvim-neotest/neotest",
+        branch = "fix/subprocess/load-adapters",
         lazy = true,
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {
@@ -27,6 +31,8 @@ return {
                 function()
                     if vim.fn.expand("%:e") == "go" then
                         require("dap-go").debug_test()
+                    elseif vim.fn.expand("%:e") == "cs" then
+                        require("neotest").run.run({ strategy = "dap" })
                     else
                         require("neotest").run.run({ strategy = "dap", file = vim.fn.expand("%") })
                     end
