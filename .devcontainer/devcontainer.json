@@ -1,0 +1,19 @@
+{
+  "name": "Dev Environment",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "mounts": [
+    "source=/Users/fabrizioperria/.config,target=/root/.config,type=bind",
+    "source=/Users/fabrizioperria/.zshrc,target=/root/.zshrc,type=bind",
+    "source=nvim-data,target=/root/.local/share,type=volume",
+    "source=claude-config,target=/root/.claude,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  }
+}
