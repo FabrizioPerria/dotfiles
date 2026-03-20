@@ -92,7 +92,7 @@ vim.lsp.enable({
     "kotlin",
     "lua_ls",
     "marksman",
-    "powerhsell_es",
+    "powershell",
     "roslyn",
     "tailwindcss",
     "ts_ls",

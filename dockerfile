@@ -16,14 +16,13 @@ RUN apt-get update && apt-get install -y \
     lua5.4 luarocks \
     python3.12 python3-neovim python3-dev python3-pip python3-venv \
     fontconfig unzip \
-    fd-find bat eza ncdu tree axel \
+    fd-find bat eza ncdu tree axel socat \
     clang clangd cmake build-essential libc++-dev libc++abi-dev \
     libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
     llvm libncursesw5-dev xz-utils tk-dev \
     libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev libpcre2-dev pkg-config \
     net-tools traceroute \
     openjdk-21-jdk \
-    iputils-ping \
     rustup \
     yq jq \
     && locale-gen en_US.UTF-8 \
@@ -99,6 +98,14 @@ RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
 
 # ── tiktoken_core ─────────────────────────────────────────────────────────────
 RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version 5.1 tiktoken_core
+
+
+# RUN curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-x64.tar.gz \
+RUN curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-arm64.tar.gz \
+    && sudo mkdir -p /opt/microsoft/powershell/7 \
+    && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
+    && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
+    && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
 # ── pynvim ────────────────────────────────────────────────────────────────────
 RUN pip3 install --break-system-packages pynvim
