@@ -1,84 +1,169 @@
-FROM ubuntu:23.10
+FROM ubuntu:24.04
 
-RUN apt update
-RUN apt install -y software-properties-common apt-transport-https wget curl locales
-RUN add-apt-repository ppa:neovim-ppa/unstable
+ARG DEBIAN_FRONTEND=noninteractive
+ARG TARGETARCH
 
-RUN apt update
-RUN apt install -y zsh git tmux neovim sudo python3-neovim python3-dev python3-pip python3-venv fontconfig unzip ripgrep \
-    fzf ripgrep fd-find bat exa htop ncdu tree clang cmake build-essential jq git-lfs axel sshfs clangd snapd
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV TERM=xterm-256color
 
-RUN useradd -ms /bin/zsh -d /home/fabrizio fabrizio
-RUN echo "fabrizio:test" | chpasswd
-RUN usermod -aG sudo fabrizio
+# ── Base packages ─────────────────────────────────────────────────────────────
+RUN apt-get update && apt-get install -y \
+    software-properties-common apt-transport-https wget curl \
+    locales sudo git git-lfs \
+    zsh tmux \
+    lua5.4 luarocks \
+    python3.12 python3-neovim python3-dev python3-pip python3-venv \
+    fontconfig unzip \
+    fd-find bat eza ncdu tree axel \
+    clang clangd cmake build-essential libc++-dev libc++abi-dev \
+    libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+    llvm libncursesw5-dev xz-utils tk-dev \
+    libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev libpcre2-dev pkg-config \
+    net-tools traceroute \
+    openjdk-21-jdk \
+    rustup \
+    yq jq \
+    && locale-gen en_US.UTF-8 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN echo "fabrizio ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+# ── Non-root user ─────────────────────────────────────────────────────────────
+RUN usermod -l dev -d /home/dev -m ubuntu \
+    && groupmod -n dev ubuntu \
+    && usermod -s /bin/zsh dev \
+    && echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-RUN axel -n8 https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-{{fastfetch_arch}}.deb --output fastfetch.deb
-RUN dpkg -i fastfetch.deb
+USER dev
+WORKDIR /home/dev
 
-RUN axel -n8 https://go.dev/dl/go1.22.1.linux-arm64.tar.gz --output=go.tar.gz
-RUN tar -C /usr/local -xzf go.tar.gz
-RUN rm go.tar.gz
+ENV HOME=/home/dev
+ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${PATH}"
+ENV GOROOT=/usr/local/go
+ENV GOPATH=${HOME}/go
 
-USER fabrizio
-WORKDIR /home/fabrizio
+# ── Symlinks ──────────────────────────────────────────────────────────────────
+RUN mkdir -p ${HOME}/.local/bin \
+    && ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd \
+    && ln -s /usr/bin/batcat ${HOME}/.local/bin/bat \
+    && sudo ln -s /usr/bin/python3.12 /usr/bin/python
 
-ENV PATH="${PATH}:/usr/local/go/bin:${HOME}/.local/bin"
-RUN go install golang.org/x/tools/gopls@latest
-RUN go install github.com/go-delve/delve/cmd/dlv@latest
-RUN go install golang.org/x/tools/cmd/goimports@latest
-RUN go install golang.org/x/tools/cmd/gorename@latest
+# ── JAVA_HOME ─────────────────────────────────────────────────────────────────
+RUN echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)" >> ${HOME}/.java_home.sh
 
-RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+# ── Rust ──────────────────────────────────────────────────────────────────────
+RUN rustup default stable
 
-RUN git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
-RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-RUN git clone --depth=1 https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-RUN git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-RUN git clone --depth=1 https://github.com/wfxr/forgit.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/forgit
+# ── Go ────────────────────────────────────────────────────────────────────────
+RUN GO_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "amd64") \
+    && wget -q https://go.dev/dl/go1.24.2.linux-${GO_ARCH}.tar.gz -O /tmp/go.tar.gz \
+    && sudo tar -C /usr/local -xzf /tmp/go.tar.gz \
+    && rm /tmp/go.tar.gz
 
-RUN if [ "$(uname -m)" = "arm64" ] || [ "$(uname -m)" = "aarch64" ]; then \
-    git clone --depth=1 https://github.com/RitchieS/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
-    elif command -v apt >/dev/null; then \
-    git clone --depth=1 https://github.com/ptavares/zsh-exa.git ${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-exa; \
-    fi;
+# ── Go tools ──────────────────────────────────────────────────────────────────
+RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 \
+    && go install github.com/go-delve/delve/cmd/dlv@latest \
+    && go install golang.org/x/tools/cmd/goimports@latest \
+    && go install github.com/jesseduffield/lazygit@latest \
+    && go install github.com/jesseduffield/lazydocker@latest \
+    && go install github.com/jorgerojas26/lazysql@latest \
+    && go install github.com/Lifailon/lazyjournal@latest
 
-COPY tmux/tmux.conf .config/tmux/tmux.conf
-RUN git clone --depth=1 https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
+# ── Rust tools ────────────────────────────────────────────────────────────────
+RUN cargo install zoxide \
+    && cargo install --features 'pcre2' ripgrep \
+    && sudo cp ${HOME}/.cargo/bin/rg /usr/local/bin/rg
 
-RUN mkdir -p ${HOME}/.local/bin
-RUN ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd
-RUN ln -s /usr/bin/batcat ${HOME}/.local/bin/bat
-RUN ln -s /usr/bin/pwsh ${HOME}/.local/bin/powershell
+# ── fnm + Node LTS ────────────────────────────────────────────────────────────
+RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME}/.fnm" --skip-shell
+RUN eval "$(/home/dev/.fnm/fnm env)" \
+    && /home/dev/.fnm/fnm install --lts \
+    && /home/dev/.fnm/fnm default lts-latest \
+    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli
 
-COPY fzf .config/fzf
-COPY fzf/keybindings.sh /usr/share/doc/fzf/examples/key-bindings.zsh
-COPY shell .config/shell
-RUN echo 'source ${HOME}/.config/shell/aliases.zsh' >${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/shell/exports.zsh' >>${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/shell/zsh.zsh' >>${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/shell/p10k.zsh' >>${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/fzf/completion.sh' >>${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/fzf/keybindings.sh' >>${HOME}/.zshrc
-RUN echo 'source ${HOME}/.config/shell/colors.zsh' >>${HOME}/.zshrc
+# ── Neovim ────────────────────────────────────────────────────────────────────
+RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
+    && wget -q https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-linux-${NVIM_ARCH}.tar.gz -O /tmp/nvim.tar.gz \
+    && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
+    && rm /tmp/nvim.tar.gz
 
-USER root
-RUN chown -R fabrizio /home/fabrizio/.config
-RUN locale-gen en_US.UTF-8
+# ── tiktoken_core ─────────────────────────────────────────────────────────────
+RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version 5.1 tiktoken_core
 
-USER fabrizio
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+# ── pynvim ────────────────────────────────────────────────────────────────────
+RUN pip3 install --break-system-packages pynvim
 
-RUN ~/.tmux/plugins/tpm/scripts/install_plugins.sh
+# ── NerdFonts ─────────────────────────────────────────────────────────────────
+COPY --chown=dev:dev NerdFonts/ /usr/local/share/fonts/NerdFonts/
+RUN fc-cache -f
 
-COPY nvim .config/nvim
-RUN nvim --headless +qa
-RUN nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa
+# ── Zinit ─────────────────────────────────────────────────────────────────────
+RUN git clone --depth 1 https://github.com/zdharma-continuum/zinit.git ${HOME}/.zinit/bin
 
-ENTRYPOINT [ "/bin/zsh", "-c", "tmux" ]
+# ── TPM ───────────────────────────────────────────────────────────────────────
+RUN git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 
+# ── Dotfiles ──────────────────────────────────────────────────────────────────
+RUN mkdir -p ${HOME}/.config
+COPY --chown=dev:dev shell/      ${HOME}/.config/shell/
+COPY --chown=dev:dev tmux/       ${HOME}/.config/tmux/
+COPY --chown=dev:dev nvim/       ${HOME}/.config/nvim/
+COPY --chown=dev:dev mini/       ${HOME}/.config/mini/
+COPY --chown=dev:dev lazygit/    ${HOME}/.config/lazygit/
+COPY --chown=dev:dev lazydocker/ ${HOME}/.config/lazydocker/
+COPY --chown=dev:dev lazysql/    ${HOME}/.config/lazysql/
+COPY --chown=dev:dev fastfetch/  ${HOME}/.config/fastfetch/
 
+# ── .zshrc ────────────────────────────────────────────────────────────────────
+# bindkey '^?' is the correct zsh binding for DEL (what ghostty sends for backspace)
+# No stty needed — zsh handles it in the line editor
+RUN cat > ${HOME}/.zshrc << 'ZSHRC'
+source ${HOME}/.java_home.sh
+source ${HOME}/.config/shell/exports.zsh
+source ${HOME}/.config/shell/aliases.zsh
+source ${HOME}/.config/shell/colors.zsh
+source ${HOME}/.config/shell/zinit.zsh
+[[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
+bindkey '^?' backward-delete-char
+eval "$(/home/dev/.fnm/fnm env)"
+ZSHRC
 
+# ── Pre-install zinit plugins ─────────────────────────────────────────────────
+RUN zsh -c '\
+    source /home/dev/.zinit/bin/zinit.zsh; \
+    zinit load zsh-users/zsh-completions; \
+    zinit load zsh-users/zsh-history-substring-search; \
+    zinit load zsh-users/zsh-syntax-highlighting; \
+    zinit load zsh-users/zsh-autosuggestions; \
+    zinit load Aloxaf/fzf-tab; \
+    zinit load fabrizioperria/zsh-venv-autoswitch; \
+    zinit ice depth=1; zinit load romkatv/powerlevel10k \
+    ' 2>&1 || true
+
+# ── tmux plugins ──────────────────────────────────────────────────────────────
+RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
+
+# ── Neovim bootstrap ──────────────────────────────────────────────────────────
+# HOME must be explicit — ENV HOME in Dockerfile doesn't always reach subprocesses
+# Step 1: bootstrap lazy.nvim (init.lua clones it if missing)
+RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" && nvim --headless --noplugin -c 'quit'
+
+# Step 2: install all plugins via lazy
+RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" && nvim --headless -c 'lua require("lazy").sync({wait=true})' -c 'quit'
+
+# Step 3: treesitter + mason
+RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" \
+    && HOME=/home/dev nvim --headless \
+    -c 'lua require("lazy").sync({wait=true})' \
+    -c 'TSUpdateSync' \
+    # -c 'MasonToolsInstallSync' \
+    -c 'quit'
+
+# ── Fix ownership of everything written during build ─────────────────────────
+RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config
+
+# ── Workdir ───────────────────────────────────────────────────────────────────
+RUN sudo mkdir -p /workspaces && sudo chown dev:dev /workspaces
+WORKDIR /workspaces
+
+ENTRYPOINT ["/bin/zsh", "-c", "tmux -u new-session -A -s main"]

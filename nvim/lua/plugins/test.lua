@@ -4,7 +4,7 @@ return {
     },
     {
         "nvim-neotest/neotest",
-        branch = "fix/subprocess/load-adapters",
+        -- branch = "fix/subprocess/load-adapters",
         lazy = true,
         event = { "BufReadPre", "BufNewFile" },
         dependencies = {

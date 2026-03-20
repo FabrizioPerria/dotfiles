@@ -43,6 +43,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", {})
         vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", {})
         vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", {})
+        vim.keymap.set("n", "gu", "<cmd>lua vim.lsp.buf.references()<cr>", {})
         vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", {})
         vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", {})
 
@@ -88,8 +89,10 @@ vim.lsp.enable({
     "gopls",
     "jdtls",
     "jsonls",
+    "kotlin",
     "lua_ls",
     "marksman",
+    "powerhsell_es",
     "roslyn",
     "tailwindcss",
     "ts_ls",

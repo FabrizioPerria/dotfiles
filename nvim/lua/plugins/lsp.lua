@@ -70,10 +70,13 @@ return {
         },
         config = function()
             require("conform").setup({
-                format_on_save = {
-                    timeout_ms = 1000,
-                    lsp_fallback = true,
-                },
+                format_on_save = function(bufnr)
+                    local ignore = { "ps1", "psm1", "psd1", "kotlin" }
+                    if vim.tbl_contains(ignore, vim.bo[bufnr].filetype) then
+                        return
+                    end
+                    return { timeout_ms = 1000, lsp_fallback = true }
+                end,
                 formatters_by_ft = {
                     go = { "gofmt" },
                     cpp = { "clang_format" },

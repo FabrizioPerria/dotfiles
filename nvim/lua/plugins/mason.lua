@@ -83,6 +83,11 @@ return {
                     "clangd",
                     "clang-format",
                     "codelldb",
+
+                    "kotlin-debug-adapter",
+                    "kotlin-language-server",
+                    "marksman",
+                    "powershell-editor-services",
                 },
             })
         end,
