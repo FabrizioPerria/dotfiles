@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev libpcre2-dev pkg-config \
     net-tools traceroute \
     openjdk-21-jdk \
+    iputils-ping \
     rustup \
     yq jq \
     && locale-gen en_US.UTF-8 \
