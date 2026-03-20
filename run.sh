@@ -31,9 +31,14 @@ for path in "$@"; do
     MOUNTS+=(-v "${abs}:/workspaces/${name}")
 done
 
+mkdir -p .claude
+touch .claude.json
+
 MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
-    -v claude-cfg:/home/dev/.claude
+    -v .claude:/home/dev/.claude
+    -v .claude.json:/home/dev/.claude.json
+    -v .:/workspaces/dotfiles
 )
 
 docker run -it \

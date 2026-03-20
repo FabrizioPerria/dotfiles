@@ -48,9 +48,9 @@ RUN mkdir -p ${HOME}/.local/bin \
     && ln -s /usr/bin/batcat ${HOME}/.local/bin/bat \
     && sudo ln -s /usr/bin/python3.12 /usr/bin/python
 
-# # ── p4 CLI ───────────────────────────────────────────────────────────────────
-# # Install the real p4 binary (used for syntax awareness by tools like ansiblels)
-# # At runtime on Windows, the p4 wrapper delegates to the Windows host via SSH.
+# ── p4 CLI ───────────────────────────────────────────────────────────────────
+# Install the real p4 binary (used for syntax awareness by tools like ansiblels)
+# At runtime on Windows, the p4 wrapper delegates to the Windows host via SSH.
 # RUN P4_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86-64") \
 #     && wget -q "https://www.perforce.com/downloads/perforce/r24.2/bin.linux26${P4_ARCH}/p4" \
 #     -O /tmp/p4 \
@@ -88,7 +88,7 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME
 RUN eval "$(/home/dev/.fnm/fnm env)" \
     && /home/dev/.fnm/fnm install --lts \
     && /home/dev/.fnm/fnm default lts-latest \
-    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli
+    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli @anthropic-ai/claude-code
 
 # ── Neovim ────────────────────────────────────────────────────────────────────
 RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
@@ -159,6 +159,7 @@ source ${HOME}/.config/shell/colors.zsh
 source ${HOME}/.config/shell/zinit.zsh
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
 bindkey '^?' backward-delete-char
+eval "$(/home/dev/.fnm/fnm env)"
 ZSHRC
 
 # ── Pre-install zinit plugins ─────────────────────────────────────────────────
