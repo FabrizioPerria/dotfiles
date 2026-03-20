@@ -48,6 +48,15 @@ RUN mkdir -p ${HOME}/.local/bin \
     && ln -s /usr/bin/batcat ${HOME}/.local/bin/bat \
     && sudo ln -s /usr/bin/python3.12 /usr/bin/python
 
+# # ── p4 CLI ───────────────────────────────────────────────────────────────────
+# # Install the real p4 binary (used for syntax awareness by tools like ansiblels)
+# # At runtime on Windows, the p4 wrapper delegates to the Windows host via SSH.
+# RUN P4_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86-64") \
+#     && wget -q "https://www.perforce.com/downloads/perforce/r24.2/bin.linux26${P4_ARCH}/p4" \
+#     -O /tmp/p4 \
+#     && sudo install -m 755 /tmp/p4 /usr/local/bin/p4-real \
+#     && rm /tmp/p4
+
 # ── JAVA_HOME ─────────────────────────────────────────────────────────────────
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)" >> ${HOME}/.java_home.sh
 
@@ -114,6 +123,31 @@ COPY --chown=dev:dev lazydocker/ ${HOME}/.config/lazydocker/
 COPY --chown=dev:dev lazysql/    ${HOME}/.config/lazysql/
 COPY --chown=dev:dev fastfetch/  ${HOME}/.config/fastfetch/
 
+# ── SSH client config ────────────────────────────────────────────────────────
+# ~/.ssh is a named volume — key is generated on first run via setup-ssh.sh
+RUN mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
+RUN cat > ${HOME}/.ssh/config << 'SSHCONF'
+Host windows-host
+HostName host-gateway
+User dev
+StrictHostKeyChecking no
+IdentityFile ~/.ssh/id_devenv
+SSHCONF
+RUN chmod 600 ${HOME}/.ssh/config
+
+# ── p4 wrapper ────────────────────────────────────────────────────────────────
+# Forwards all p4 commands to the Windows host over SSH.
+# Falls back to p4-real if SSH key not yet set up or host unreachable.
+RUN sudo tee /usr/local/bin/p4 > /dev/null << 'P4WRAPPER'
+#!/usr/bin/env zsh
+if [[ -f "${HOME}/.ssh/id_devenv" ]] && ssh -q -o ConnectTimeout=1 windows-host exit 2>/dev/null; then
+exec ssh windows-host p4 "$@"
+else
+exec p4-real "$@"
+fi
+P4WRAPPER
+RUN sudo chmod 755 /usr/local/bin/p4
+
 # ── .zshrc ────────────────────────────────────────────────────────────────────
 # bindkey '^?' is the correct zsh binding for DEL (what ghostty sends for backspace)
 # No stty needed — zsh handles it in the line editor
@@ -125,31 +159,26 @@ source ${HOME}/.config/shell/colors.zsh
 source ${HOME}/.config/shell/zinit.zsh
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
 bindkey '^?' backward-delete-char
-eval "$(/home/dev/.fnm/fnm env)"
 ZSHRC
 
 # ── Pre-install zinit plugins ─────────────────────────────────────────────────
-RUN zsh -c '\
-    source /home/dev/.zinit/bin/zinit.zsh; \
-    zinit load zsh-users/zsh-completions; \
-    zinit load zsh-users/zsh-history-substring-search; \
-    zinit load zsh-users/zsh-syntax-highlighting; \
-    zinit load zsh-users/zsh-autosuggestions; \
-    zinit load Aloxaf/fzf-tab; \
-    zinit load fabrizioperria/zsh-venv-autoswitch; \
-    zinit ice depth=1; zinit load romkatv/powerlevel10k \
-    ' 2>&1 || true
+# Run twice: first pass downloads+registers, second pass confirms state is written
+RUN HOME=/home/dev zsh -i -c '    source /home/dev/.zinit/bin/zinit.zsh &&     zinit load zsh-users/zsh-completions &&     zinit load zsh-users/zsh-history-substring-search &&     zinit load zsh-users/zsh-syntax-highlighting &&     zinit load zsh-users/zsh-autosuggestions &&     zinit load Aloxaf/fzf-tab &&     zinit load fabrizioperria/zsh-venv-autoswitch &&     zinit ice depth=1 &&     zinit load romkatv/powerlevel10k &&     zinit report --all ' 2>&1 || true
+RUN HOME=/home/dev zsh -i -c '    source /home/dev/.zinit/bin/zinit.zsh &&     zinit load zsh-users/zsh-completions &&     zinit load zsh-users/zsh-history-substring-search &&     zinit load zsh-users/zsh-syntax-highlighting &&     zinit load zsh-users/zsh-autosuggestions &&     zinit load Aloxaf/fzf-tab &&     zinit load fabrizioperria/zsh-venv-autoswitch &&     zinit ice depth=1 &&     zinit load romkatv/powerlevel10k ' 2>&1 || true
 
 # ── tmux plugins ──────────────────────────────────────────────────────────────
 RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
 
+# ── Source zshrc to initialize full environment before nvim bootstrap ───────
+RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
+
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
 # HOME must be explicit — ENV HOME in Dockerfile doesn't always reach subprocesses
 # Step 1: bootstrap lazy.nvim (init.lua clones it if missing)
-RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" && nvim --headless --noplugin -c 'quit'
+RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
 
 # Step 2: install all plugins via lazy
-RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" && nvim --headless -c 'lua require("lazy").sync({wait=true})' -c 'quit'
+RUN HOME=/home/dev nvim --headless -c 'lua require("lazy").sync({wait=true})' -c 'quit'
 
 # Step 3: treesitter + mason
 RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" \
