@@ -76,7 +76,8 @@ RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 
     && go install github.com/jesseduffield/lazygit@latest \
     && go install github.com/jesseduffield/lazydocker@latest \
     && go install github.com/jorgerojas26/lazysql@latest \
-    && go install github.com/Lifailon/lazyjournal@latest
+    && go install github.com/Lifailon/lazyjournal@latest \
+    && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2
 
 # ── Rust tools ────────────────────────────────────────────────────────────────
 RUN cargo install zoxide \
@@ -185,6 +186,7 @@ RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
 RUN mkdir -p /home/dev/.claude
 RUN touch /home/dev/.claude.json
+RUN mkdir -p /home/dev/.config/tc
 
 RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
 
