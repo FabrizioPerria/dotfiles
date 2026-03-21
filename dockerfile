@@ -100,8 +100,9 @@ RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
 RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version 5.1 tiktoken_core
 
 
-# RUN curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-x64.tar.gz \
-RUN curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-arm64.tar.gz \
+# ── powershell ─────────────────────────────────────────────────────────────
+RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
+    && curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-${PWSH_ARCH}.tar.gz \
     && sudo mkdir -p /opt/microsoft/powershell/7 \
     && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
     && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
@@ -182,20 +183,10 @@ RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
 RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
 
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
-# HOME must be explicit — ENV HOME in Dockerfile doesn't always reach subprocesses
-# Step 1: bootstrap lazy.nvim (init.lua clones it if missing)
+RUN mkdir -p /home/dev/.claude
+RUN touch /home/dev/.claude.json
+
 RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
-
-# Step 2: install all plugins via lazy
-RUN HOME=/home/dev nvim --headless -c 'lua require("lazy").sync({wait=true})' -c 'quit'
-
-# Step 3: treesitter + mason
-RUN HOME=/home/dev eval "$(/home/dev/.fnm/fnm env)" \
-    && HOME=/home/dev nvim --headless \
-    -c 'lua require("lazy").sync({wait=true})' \
-    -c 'TSUpdateSync' \
-    # -c 'MasonToolsInstallSync' \
-    -c 'quit'
 
 # ── Fix ownership of everything written during build ─────────────────────────
 RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config

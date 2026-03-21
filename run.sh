@@ -6,10 +6,9 @@
 
 set -euo pipefail
 
-IMAGE="devenv:latest"
 CONTAINER="devenv"
 
-if ! docker image inspect "$IMAGE" &>/dev/null; then
+if ! docker image inspect "${CONTAINER}:latest" &>/dev/null; then
     echo "Image not found — run ./build.sh first."
     exit 1
 fi
@@ -31,18 +30,16 @@ for path in "$@"; do
     MOUNTS+=(-v "${abs}:/workspaces/${name}")
 done
 
-mkdir -p .claude
 touch .claude.json
 
 MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
-    -v .claude:/home/dev/.claude
+    -v claude:/home/dev/.claude
     -v .claude.json:/home/dev/.claude.json
-    -v .:/workspaces/dotfiles
 )
 
 docker run -it \
     --name "$CONTAINER" \
     --hostname devenv \
     "${MOUNTS[@]}" \
-    "$IMAGE"
+    "${CONTAINER}:latest"
