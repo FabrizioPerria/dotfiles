@@ -35,7 +35,6 @@ touch .claude.json
 MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
     -v claude:/home/dev/.claude
-    -v teamcity:/home/dev/.config/tc
     -v .claude.json:/home/dev/.claude.json
 )
 
