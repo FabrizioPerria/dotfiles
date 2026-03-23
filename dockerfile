@@ -3,6 +3,12 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
 
+ARG TC_URL
+RUN test -n "$TC_URL"
+
+ARG TC_TOKEN
+RUN test -n "$TC_TOKEN"
+
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
@@ -22,7 +28,8 @@ RUN apt-get update && apt-get install -y \
     llvm libncursesw5-dev xz-utils tk-dev \
     libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev libpcre2-dev pkg-config \
     net-tools traceroute \
-    openjdk-21-jdk \
+    openjdk-21-jdk maven \
+    dos2unix \
     rustup \
     yq jq \
     && locale-gen en_US.UTF-8 \
@@ -38,24 +45,17 @@ USER dev
 WORKDIR /home/dev
 
 ENV HOME=/home/dev
-ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${PATH}"
+ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${PATH}"
 ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
+ENV TEAMCITY_URL=$TC_URL
+ENV TEAMCITY_TOKEN=$TC_TOKEN
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \
     && ln -s /usr/bin/fdfind ${HOME}/.local/bin/fd \
     && ln -s /usr/bin/batcat ${HOME}/.local/bin/bat \
     && sudo ln -s /usr/bin/python3.12 /usr/bin/python
-
-# ── p4 CLI ───────────────────────────────────────────────────────────────────
-# Install the real p4 binary (used for syntax awareness by tools like ansiblels)
-# At runtime on Windows, the p4 wrapper delegates to the Windows host via SSH.
-# RUN P4_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86-64") \
-#     && wget -q "https://www.perforce.com/downloads/perforce/r24.2/bin.linux26${P4_ARCH}/p4" \
-#     -O /tmp/p4 \
-#     && sudo install -m 755 /tmp/p4 /usr/local/bin/p4-real \
-#     && rm /tmp/p4
 
 # ── JAVA_HOME ─────────────────────────────────────────────────────────────────
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)" >> ${HOME}/.java_home.sh
@@ -89,7 +89,11 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME
 RUN eval "$(/home/dev/.fnm/fnm env)" \
     && /home/dev/.fnm/fnm install --lts \
     && /home/dev/.fnm/fnm default lts-latest \
-    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli @anthropic-ai/claude-code
+    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli @anthropic-ai/claude-code \
+    && git clone --depth 1 https://github.com/dandaka/ccquota.git /tmp/ccquota \
+    && cd /tmp/ccquota \
+    && /home/dev/.fnm/fnm exec --using=default npm install -g . \
+    && rm -rf /tmp/ccquota
 
 # ── Neovim ────────────────────────────────────────────────────────────────────
 RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
@@ -133,38 +137,13 @@ COPY --chown=dev:dev lazydocker/ ${HOME}/.config/lazydocker/
 COPY --chown=dev:dev lazysql/    ${HOME}/.config/lazysql/
 COPY --chown=dev:dev fastfetch/  ${HOME}/.config/fastfetch/
 
-# ── SSH client config ────────────────────────────────────────────────────────
-# ~/.ssh is a named volume — key is generated on first run via setup-ssh.sh
-RUN mkdir -p ${HOME}/.ssh && chmod 700 ${HOME}/.ssh
-RUN cat > ${HOME}/.ssh/config << 'SSHCONF'
-Host windows-host
-HostName host-gateway
-User dev
-StrictHostKeyChecking no
-IdentityFile ~/.ssh/id_devenv
-SSHCONF
-RUN chmod 600 ${HOME}/.ssh/config
-
-# ── p4 wrapper ────────────────────────────────────────────────────────────────
-# Forwards all p4 commands to the Windows host over SSH.
-# Falls back to p4-real if SSH key not yet set up or host unreachable.
-RUN sudo tee /usr/local/bin/p4 > /dev/null << 'P4WRAPPER'
-#!/usr/bin/env zsh
-if [[ -f "${HOME}/.ssh/id_devenv" ]] && ssh -q -o ConnectTimeout=1 windows-host exit 2>/dev/null; then
-exec ssh windows-host p4 "$@"
-else
-exec p4-real "$@"
-fi
-P4WRAPPER
-RUN sudo chmod 755 /usr/local/bin/p4
-
 # ── .zshrc ────────────────────────────────────────────────────────────────────
 # bindkey '^?' is the correct zsh binding for DEL (what ghostty sends for backspace)
 # No stty needed — zsh handles it in the line editor
 RUN cat > ${HOME}/.zshrc << 'ZSHRC'
-source ${HOME}/.java_home.sh
 source ${HOME}/.config/shell/exports.zsh
 source ${HOME}/.config/shell/aliases.zsh
+source ${HOME}/.java_home.sh
 source ${HOME}/.config/shell/colors.zsh
 source ${HOME}/.config/shell/zinit.zsh
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
