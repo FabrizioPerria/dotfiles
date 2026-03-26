@@ -3,7 +3,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$IMAGE     = 'devenv:latest'
+$IMAGE     = 'devenv:latest'
 $CONTAINER = 'devenv'
 
 if (-not (docker image inspect $IMAGE 2>$null)) {
@@ -23,7 +23,7 @@ if (docker ps -a --format '{{.Names}}' | Select-String -Quiet "^$CONTAINER$") {
 
 $mounts = @()
 foreach ($p in $Paths) {
-    $abs  = (Resolve-Path $p -ErrorAction SilentlyContinue)?.Path ?? $p
+    $abs  = (Resolve-Path $p -ErrorAction SilentlyContinue)?.Path ?? $p
     $name = Split-Path $abs -Leaf
     $mounts += '-v', "${abs}:/workspaces/${name}"
 }
@@ -32,8 +32,10 @@ New-Item -ItemType Directory -Force -Path "$PWSH_HOME/.claude" | Out-Null
 if (-not (Test-Path "$PWSH_HOME/.claude.json")) { New-Item "$PWSH_HOME/.claude.json" -ItemType File | Out-Null }
 
 $mounts += '-v', "nvim-data:/home/dev/.local/share/nvim"
+$mounts += '-v', "local-p4:/workspaces/linuxp4"
 $mounts += '-v', "$PWSH_HOME/.claude:/home/dev/.claude"
 $mounts += '-v', "$PWSH_HOME/.claude.json:/home/dev/.claude.json"
+$mounts += '-v', "$PWSH_HOME/lazyperf:/workspaces/lazyperf"
 
-docker run -it --name $CONTAINER --hostname devenv @mounts $IMAGE
+docker run -it --name $CONTAINER --hostname devenv --dns $env:DNS @mounts $IMAGE
 

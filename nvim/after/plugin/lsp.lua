@@ -89,7 +89,7 @@ vim.lsp.enable({
     "gopls",
     "jdtls",
     "jsonls",
-    "kotlin",
+    "kotlin_language_server",
     "lua_ls",
     "marksman",
     "powershell",

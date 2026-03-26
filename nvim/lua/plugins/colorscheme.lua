@@ -31,9 +31,18 @@ return {
                     hl.CmpItemKindCopilot = { fg = "#6CC644" }
                     hl.SpecialKey = { fg = "#444444" }
                     hl.FloatBorder = { bg = "#1e222a", fg = "#5e81ac" }
+
+                    hl.StatusLine = { fg = "#a9b1d6", bg = "#2a2d3e" }
+                    hl.StatusLineNC = { fg = "#444b6a", bg = "#1a1b26" }
                 end,
             })
             vim.cmd("colorscheme tokyonight")
+            vim.api.nvim_create_autocmd("TermOpen", {
+                callback = function()
+                    vim.wo.winhighlight = "Normal:TermNormal"
+                end,
+            })
+            vim.api.nvim_set_hl(0, "TermNormal", { bg = "#0d0f17" })
 
             local dap_signs = {
                 Breakpoint = {
