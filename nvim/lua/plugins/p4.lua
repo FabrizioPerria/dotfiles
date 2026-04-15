@@ -318,7 +318,42 @@ vim.api.nvim_create_autocmd("InsertEnter", {
     end,
 })
 
+local ns = vim.api.nvim_create_namespace("p4blame")
+local enabled = false
+
+local function clear()
+    vim.api.nvim_buf_clear_namespace(0, ns, 0, -1)
+    enabled = false
+end
+
+local function toggle()
+    if enabled then
+        clear()
+        return
+    end
+
+    local file = vim.fn.expand("%:p")
+    local lines = vim.fn.systemlist("p4 annotate -cu " .. vim.fn.shellescape(file))
+
+    for i, line in ipairs(lines) do
+        local cl, user = line:match("^(%s*%d+):%s+(%S+)")
+        if cl then
+            cl = vim.trim(cl)
+            vim.api.nvim_buf_set_extmark(0, ns, i - 1, 0, {
+                virt_text = {
+                    { string.format(" %s  %s", user, cl), "Comment" },
+                },
+                virt_text_pos = "right_align",
+            })
+        end
+    end
+
+    enabled = true
+end
+
+vim.api.nvim_create_user_command("P4BlameToggle", toggle, {})
+vim.keymap.set("n", "<leader>pb", "<cmd>P4BlameToggle<CR>", { desc = "toggle p4 blame" })
+
 -- require("which-key").add({ { "<leader>p", group = "perforce" } })
 
 return {}
-

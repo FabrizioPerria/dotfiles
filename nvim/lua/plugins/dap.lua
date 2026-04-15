@@ -4,6 +4,22 @@ end
 
 return {
     {
+        "TheLeoP/powershell.nvim",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "rcarriga/nvim-dap-ui",
+            "nvim-neotest/nvim-nio",
+        },
+        ft = "ps1",
+        opts = {
+            bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
+        },
+        config = function(_, opts)
+            require("powershell").setup(opts)
+        end,
+    },
+
+    {
         "rcarriga/nvim-dap-ui",
         opts = {
             icons = { expanded = "▾", collapsed = "▸" },
