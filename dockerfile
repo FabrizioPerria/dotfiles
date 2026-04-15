@@ -12,6 +12,7 @@ RUN test -n "$TC_TOKEN"
 ARG P4URL
 ARG P4CLIENT
 ARG P4USER
+ARG P4PASS
 
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
@@ -58,6 +59,7 @@ ENV TEAMCITY_TOKEN=$TC_TOKEN
 ENV P4PORT=$P4URL
 ENV P4CLIENT=$P4CLIENT
 ENV P4USER=$P4USER
+ENV P4PASS=$P4PASS
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \

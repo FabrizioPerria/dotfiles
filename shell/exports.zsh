@@ -39,3 +39,7 @@ export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export ZSH_THEME="powerlevel10k/powerlevel10k"
 export ZSH_TMUX_UNICODE=1
+
+if [[ -n "${P4PASS}" ]]; then
+    echo "${P4PASS}" | p4 login &>/dev/null
+fi
