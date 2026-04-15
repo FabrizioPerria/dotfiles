@@ -1,18 +1,19 @@
-build:
-	docker build -t fp/shell .
+ansible:
+	./ansible_install.sh
 
-run: build
-	docker run --rm --cap-add SYS_ADMIN \
-		--device /dev/fuse \
-		-v ~:/home/win \
-		-v ~/.ssh:/home/fabrizio/.ssh \
-		-v ~/.gitconfig:/home/fabrizio/.gitconfig \
-		-v ~/.gnupg:/home/fabrizio/.gnupg \
-		--security-opt apparmor:unconfined \
-		--security-opt seccomp:unconfined \
-		-it fp/shell  
-    
-install:
-	./setup.sh
+ifeq ($(OS),Windows_NT)
+DOCKER_BUILD_SCRIPT = .
+DOCKER_RUN_SCRIPT = powershell -File docker_run.ps1
+else
+DOCKER_BUILD_SCRIPT = .
+DOCKER_RUN_SCRIPT = ./docker_run.sh
+endif
 
-.PHONY: build run install
+build_docker:
+	$(DOCKER_BUILD_SCRIPT)
+
+
+run_docker: build_docker
+	$(DOCKER_RUN_SCRIPT)
+
+.PHONY: ansible build_docker run_docker

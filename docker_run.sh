@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# run.sh — launch (or reattach to) the dev container
-#
-# Usage:
-#   ./run.sh [path1] [path2] ...
 
 set -euo pipefail
 
@@ -34,8 +30,8 @@ touch .claude.json
 
 MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
-    -v claude:/home/dev/.claude
-    -v .claude.json:/home/dev/.claude.json
+    -v "${HOME}/claude:/home/dev/.claude"
+    -v "${HOME}/.claude.json:/home/dev/.claude.json"
 )
 
 docker run -it \
