@@ -9,6 +9,10 @@ RUN test -n "$TC_URL"
 ARG TC_TOKEN
 RUN test -n "$TC_TOKEN"
 
+ARG P4URL
+ARG P4CLIENT
+ARG P4USER
+
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
@@ -30,6 +34,7 @@ RUN apt-get update && apt-get install -y \
     net-tools traceroute \
     openjdk-21-jdk maven \
     dos2unix \
+    iputils-ping \
     rustup \
     yq jq \
     && locale-gen en_US.UTF-8 \
@@ -50,6 +55,9 @@ ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
 ENV TEAMCITY_URL=$TC_URL
 ENV TEAMCITY_TOKEN=$TC_TOKEN
+ENV P4PORT=$P4URL
+ENV P4CLIENT=$P4CLIENT
+ENV P4USER=$P4USER
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \
@@ -112,6 +120,14 @@ RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
     && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
     && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
     && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
+
+# ── p4 ────────────────────────────────────────────────────────────────────
+RUN wget -qO - https://package.perforce.com/perforce.pubkey \
+    | sudo tee /etc/apt/trusted.gpg.d/perforce.asc > /dev/null \
+    && echo "deb http://package.perforce.com/apt/ubuntu noble release" \
+       | sudo tee /etc/apt/sources.list.d/perforce.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y p4-cli
 
 # ── pynvim ────────────────────────────────────────────────────────────────────
 RUN pip3 install --break-system-packages pynvim
