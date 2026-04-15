@@ -326,30 +326,86 @@ local function clear()
     enabled = false
 end
 
+local blame_buf = nil
+local blame_win = nil
+
 local function toggle()
     if enabled then
-        clear()
+        if blame_win and vim.api.nvim_win_is_valid(blame_win) then
+            vim.api.nvim_win_close(blame_win, true)
+        end
+        if blame_buf and vim.api.nvim_buf_is_valid(blame_buf) then
+            vim.api.nvim_buf_delete(blame_buf, { force = true })
+        end
+        blame_buf = nil
+        blame_win = nil
+        enabled = false
         return
     end
 
     local file = vim.fn.expand("%:p")
     local lines = vim.fn.systemlist("p4 annotate -cu " .. vim.fn.shellescape(file))
+    local blame_lines = {}
 
-    for i, line in ipairs(lines) do
-        local cl, user = line:match("^(%s*%d+):%s+(%S+)")
-        if cl then
-            cl = vim.trim(cl)
-            vim.api.nvim_buf_set_extmark(0, ns, i - 1, 0, {
-                virt_text = {
-                    { string.format(" %s  %s", user, cl), "Comment" },
-                },
-                virt_text_pos = "right_align",
-            })
+    for idx, line in ipairs(lines) do
+        if idx > 1 then
+            local cl, user = line:match("^(%s*%d+):%s+(%S+)")
+            if cl then
+                table.insert(blame_lines, string.format("%s  %s", vim.trim(cl), user))
+            else
+                table.insert(blame_lines, "")
+            end
         end
     end
 
+    -- create scratch buffer
+    blame_buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(blame_buf, 0, -1, false, blame_lines)
+    vim.bo[blame_buf].modifiable = false
+    vim.bo[blame_buf].buftype = "nofile"
+
+    -- open left split
+    local width = 30
+    vim.cmd("topleft " .. width .. "vsplit")
+    blame_win = vim.api.nvim_get_current_win()
+    vim.api.nvim_win_set_buf(blame_win, blame_buf)
+    vim.wo[blame_win].number = false
+    vim.wo[blame_win].relativenumber = false
+    vim.wo[blame_win].signcolumn = "no"
+    vim.wo[blame_win].wrap = false
+
+    -- sync scrolling
+    vim.wo[blame_win].scrollbind = true
+    vim.cmd("wincmd p") -- jump back to source window
+    vim.wo.scrollbind = true
+
     enabled = true
 end
+-- local function toggle()
+--     if enabled then
+--         clear()
+--         return
+--     end
+--
+--     local file = vim.fn.expand("%:p")
+--     local lines = vim.fn.systemlist("p4 annotate -cu " .. vim.fn.shellescape(file))
+--
+--     for i, line in ipairs(lines) do
+--         local cl, user = line:match("^(%s*%d+):%s+(%S+)")
+--         if cl then
+--             cl = vim.trim(cl)
+--             vim.api.nvim_buf_set_extmark(0, ns, i - 1, 0, {
+--                 virt_text = {
+--                     { string.format(" %s  %s", user, cl), "Comment" },
+--                 },
+--                 virt_text_pos = "overlay",
+--                 virt_text_win_col = 160,
+--             })
+--         end
+--     end
+--
+--     enabled = true
+-- end
 
 vim.api.nvim_create_user_command("P4BlameToggle", toggle, {})
 vim.keymap.set("n", "<leader>pb", "<cmd>P4BlameToggle<CR>", { desc = "toggle p4 blame" })
