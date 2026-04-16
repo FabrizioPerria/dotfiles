@@ -99,7 +99,7 @@ RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME
 RUN eval "$(/home/dev/.fnm/fnm env)" \
     && /home/dev/.fnm/fnm install --lts \
     && /home/dev/.fnm/fnm default lts-latest \
-    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli @anthropic-ai/claude-code \
+    && /home/dev/.fnm/fnm exec --using=default npm install -g neovim tree-sitter-cli \
     && git clone --depth 1 https://github.com/dandaka/ccquota.git /tmp/ccquota \
     && cd /tmp/ccquota \
     && /home/dev/.fnm/fnm exec --using=default npm install -g . \
@@ -111,9 +111,11 @@ RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
     && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
     && rm /tmp/nvim.tar.gz
 
+# ── Claude Code ───────────────────────────────────────────────────────────────
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
 # ── tiktoken_core ─────────────────────────────────────────────────────────────
 RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version 5.1 tiktoken_core
-
 
 # ── powershell ─────────────────────────────────────────────────────────────
 RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
