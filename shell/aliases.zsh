@@ -23,10 +23,6 @@ xcopy() {
     printf '\033]52;c;%s\a' "$b64"
 }
 
-alias login-db="az account get-access-token --resource-type oss-rdbms --output tsv --query accessToken"
-
-alias login-db-token='echo "{}" | jq --arg token "$(login-db)" '\''.token=$token'\'' > token.json'
-
 pid-port() {
     local port=${1:-8042}
     if [[ -z "$port" ]]; then
@@ -34,4 +30,8 @@ pid-port() {
         return 1
     fi
     lsof -n -i :$port | grep LISTEN
+}
+
+tl() {
+    tldr --list | fzf --preview "tldr {}" | xargs tldr
 }

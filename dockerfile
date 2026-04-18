@@ -94,6 +94,10 @@ RUN cargo install zoxide \
     && cargo install --features 'pcre2' ripgrep \
     && sudo cp ${HOME}/.cargo/bin/rg /usr/local/bin/rg
 
+# ── tealdeer ──────────────────────────────────────────────────────────────────
+RUN cargo install tealdeer \
+    && tldr --update
+
 # ── fnm + Node LTS ────────────────────────────────────────────────────────────
 RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME}/.fnm" --skip-shell
 RUN eval "$(/home/dev/.fnm/fnm env)" \
