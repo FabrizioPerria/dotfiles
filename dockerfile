@@ -4,23 +4,21 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
 
 ARG TC_URL
-RUN test -n "$TC_URL"
 
 ARG TC_TOKEN
-RUN test -n "$TC_TOKEN"
 
 ARG P4URL
 ARG P4CLIENT
 ARG P4USER
 ARG P4PASS
 
-ENV LANG=en_US.UTF-8
-ENV LANGUAGE=en_US:en
-ENV LC_ALL=en_US.UTF-8
-ENV TERM=xterm-256color
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
+    TERM=xterm-256color
 
 # ── Base packages ─────────────────────────────────────────────────────────────
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common apt-transport-https wget curl \
     locales sudo git git-lfs \
     zsh tmux \
@@ -38,8 +36,20 @@ RUN apt-get update && apt-get install -y \
     iputils-ping \
     rustup \
     yq jq \
-    && locale-gen en_US.UTF-8 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    dotnet-sdk-8.0 dotnet-runtime-8.0 \
+    && locale-gen en_US.UTF-8
+
+# ── p4 ────────────────────────────────────────────────────────────────────
+RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
+    wget -qO - https://package.perforce.com/perforce.pubkey \
+    | sudo tee /etc/apt/trusted.gpg.d/perforce.asc > /dev/null \
+    && echo "deb http://package.perforce.com/apt/ubuntu noble release" \
+    | sudo tee /etc/apt/sources.list.d/perforce.list \
+    && sudo apt-get update \
+    && sudo apt-get install -y --no-install-recommends p4-cli; \
+    fi
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # ── Non-root user ─────────────────────────────────────────────────────────────
 RUN usermod -l dev -d /home/dev -m ubuntu \
@@ -129,13 +139,6 @@ RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
     && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
     && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 
-# ── p4 ────────────────────────────────────────────────────────────────────
-RUN wget -qO - https://package.perforce.com/perforce.pubkey \
-    | sudo tee /etc/apt/trusted.gpg.d/perforce.asc > /dev/null \
-    && echo "deb http://package.perforce.com/apt/ubuntu noble release" \
-       | sudo tee /etc/apt/sources.list.d/perforce.list \
-    && sudo apt-get update \
-    && sudo apt-get install -y p4-cli
 
 # ── pynvim ────────────────────────────────────────────────────────────────────
 RUN pip3 install --break-system-packages pynvim
@@ -148,7 +151,7 @@ RUN fc-cache -f
 RUN git clone --depth 1 https://github.com/zdharma-continuum/zinit.git ${HOME}/.zinit/bin
 
 # ── TPM ───────────────────────────────────────────────────────────────────────
-RUN git clone https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
+RUN git clone --depth 1 https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugins/tpm
 
 # ── Dotfiles ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.config
