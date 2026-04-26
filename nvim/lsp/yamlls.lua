@@ -1,6 +1,6 @@
 local config = {
     cmd = { "yaml-language-server", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = { "yaml" },
     root_markers = { ".git/", "yamllint.yaml", "yamlconfig.yaml" },
     settings = {

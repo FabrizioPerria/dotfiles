@@ -1,6 +1,6 @@
 local config = {
     cmd = { "vscode-css-language-server", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = {
         "css",
         "scss",

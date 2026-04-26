@@ -1,6 +1,6 @@
 local config = {
     cmd = { "docker-compose-langserver", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = { "yaml", "yml" },
     root_markers = { ".git/", "docker-compose.yml", "docker-compose.yaml" },
     on_attach = function(client, bufnr)

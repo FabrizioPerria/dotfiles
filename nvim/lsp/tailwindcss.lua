@@ -1,6 +1,6 @@
 local config = {
     cmd = { "tailwindcss-language-server", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = {
         "aspnetcorerazor",
         "astro",

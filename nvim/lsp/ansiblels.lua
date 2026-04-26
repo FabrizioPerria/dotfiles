@@ -1,7 +1,7 @@
 local lspconfig_util = require("lspconfig.util")
 local config = {
     cmd = { "ansible-language-server", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = {
         "yaml",
         "yml",

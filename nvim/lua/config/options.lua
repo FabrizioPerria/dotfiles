@@ -72,3 +72,7 @@ vim.opt.mouse = ""
 
 vim.g.gitblame_delay = 0
 vim.g.python3_host_prog = vim.fn.system("which python3.12"):gsub("\n", "")
+
+-- Native completion (enabled per-buffer via vim.lsp.completion.enable in after/plugin/lsp.lua)
+vim.opt.completeopt = "menu,menuone,noselect,popup"
+vim.opt.complete = ".,b,t"  -- current buffer, other buffers, tags
