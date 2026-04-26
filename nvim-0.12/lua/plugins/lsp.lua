@@ -1,0 +1,2 @@
+-- LSP servers are configured via lsp/ directory files (nvim-lspconfig)
+-- and enabled in after/plugin/lsp.lua

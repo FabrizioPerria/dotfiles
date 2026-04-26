@@ -158,7 +158,7 @@ local function getCapabilities()
         },
     }
 
-    local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
+    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
     for k, v in pairs(lsp_capabilities) do
         capabilities[k] = v

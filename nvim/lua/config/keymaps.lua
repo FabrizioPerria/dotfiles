@@ -1,8 +1,6 @@
 vim.g.mapleader = " "
 
-vim.keymap.set({ "n" }, "<leader>L", function()
-    vim.pack.update()
-end, { desc = "Update plugins" })
+vim.keymap.set({ "n" }, "<leader>L", ":Lazy<CR>", { desc = "Lazy Dashboard" })
 
 vim.keymap.set("n", "J", "mzJ`z", { noremap = true, desc = "Join lines" })
 --

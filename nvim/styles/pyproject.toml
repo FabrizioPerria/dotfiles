@@ -1,0 +1,24 @@
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+indent-width = 4
+fix = true
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false  # allow trailing commas
+docstring-code-format = true
+line-ending = "lf"
+
+[tool.ruff.lint]
+# Keep imports clean and sorted
+select = ["E", "F", "I"]
+
+[tool.isort]
+profile = "black"  # base style
+line_length = 110
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+

@@ -1,83 +1,95 @@
-require("mason").setup({
-    registries = {
-        "github:mason-org/mason-registry",
-        "github:Crashdummyy/mason-registry",
+return {
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup({
+                registries = {
+                    "github:mason-org/mason-registry",
+                    "github:Crashdummyy/mason-registry",
+                },
+            })
+        end,
     },
-})
+    {
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
+        config = function()
+            require("mason-tool-installer").setup({
+                ensure_installed = {
+                    "roslyn",
+                    "netcoredbg",
 
-require("mason-tool-installer").setup({
-    ensure_installed = {
-        "roslyn",
-        "netcoredbg",
+                    "vtsls",
+                    "vue-language-server",
 
-        "vtsls",
-        "vue-language-server",
+                    "debugpy",
+                    "basedpyright",
+                    "java-debug-adapter",
+                    "jdtls",
+                    "java-test",
+                    "checkstyle",
 
-        "debugpy",
-        "basedpyright",
-        "java-debug-adapter",
-        "jdtls",
-        "java-test",
-        "checkstyle",
+                    "ruff",
+                    "isort",
 
-        "ruff",
-        "isort",
+                    "golangci-lint",
+                    "gopls",
+                    "goimports",
+                    "gofumpt",
+                    "impl",
+                    "gomodifytags",
+                    "delve",
 
-        "golangci-lint",
-        "gopls",
-        "goimports",
-        "gofumpt",
-        "impl",
-        "gomodifytags",
-        "delve",
+                    "cmake-language-server",
 
-        "cmake-language-server",
+                    "stylua",
+                    "lua-language-server",
+                    "luacheck",
 
-        "stylua",
-        "lua-language-server",
-        "luacheck",
+                    "json-lsp",
+                    "jsonlint",
+                    "jq",
+                    "yaml-language-server",
+                    "yamllint",
+                    "yamlfmt",
 
-        "json-lsp",
-        "jsonlint",
-        "jq",
-        "yaml-language-server",
-        "yamllint",
-        "yamlfmt",
+                    "commitlint",
+                    "gitlint",
 
-        "commitlint",
-        "gitlint",
+                    "marksman",
+                    "markdownlint",
+                    "vale",
+                    "write-good",
+                    "cspell",
+                    "proselint",
 
-        "marksman",
-        "markdownlint",
-        "vale",
-        "write-good",
-        "cspell",
-        "proselint",
+                    "bash-language-server",
+                    "bash-debug-adapter",
+                    "beautysh",
+                    "shfmt",
+                    "shellcheck",
 
-        "bash-language-server",
-        "bash-debug-adapter",
-        "beautysh",
-        "shfmt",
-        "shellcheck",
+                    "ansible-language-server",
+                    "codespell",
+                    "docker-compose-language-service",
+                    "dockerfile-language-server",
+                    "dot-language-server",
+                    "editorconfig-checker",
 
-        "ansible-language-server",
-        "codespell",
-        "docker-compose-language-service",
-        "dockerfile-language-server",
-        "dot-language-server",
-        "editorconfig-checker",
+                    "css-lsp",
+                    "typescript-language-server",
+                    "tailwindcss-language-server",
+                    "prettier",
 
-        "css-lsp",
-        "typescript-language-server",
-        "tailwindcss-language-server",
-        "prettier",
+                    "clangd",
+                    "clang-format",
+                    "codelldb",
 
-        "clangd",
-        "clang-format",
-        "codelldb",
-
-        "kotlin-debug-adapter",
-        "kotlin-language-server",
-        "powershell-editor-services",
+                    "kotlin-debug-adapter",
+                    "kotlin-language-server",
+                    "marksman",
+                    "powershell-editor-services",
+                },
+            })
+        end,
     },
-})
+}

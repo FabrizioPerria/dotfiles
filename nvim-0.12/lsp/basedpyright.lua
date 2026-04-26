@@ -1,0 +1,28 @@
+local config = {
+    cmd = { "basedpyright-langserver", "--stdio" },
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    filetypes = { "python" },
+    root_markers = {
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "requirements.txt",
+        "Pipfile",
+        "pyrightconfig.json",
+        ".git",
+    },
+    settings = {
+        basedpyright = {
+            analysis = {
+                autoSearchPaths = true,
+                autoImportCompletions = true,
+                diagnosticMode = "openFilesOnly",
+                useLibraryCodeForTypes = true,
+            },
+        },
+    },
+}
+
+vim.lsp.config("basedpyright", config)
+
+return config

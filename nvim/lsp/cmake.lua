@@ -1,6 +1,6 @@
 local config = {
     cmd = { "cmake-language-server" },
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "cmake" },
     init_options = {
         buildDirectory = "build",

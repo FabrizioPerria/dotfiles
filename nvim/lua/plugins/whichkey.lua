@@ -1,6 +1,15 @@
-vim.o.timeout = true
-vim.o.timeoutlen = 300
-
-require("which-key").setup()
-
-vim.keymap.set("n", "<leader>w", "<cmd>WhichKey<CR>", { desc = "which-key leader" })
+return {
+    {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        keys = {
+            { "<leader>w", "<cmd>WhichKey<CR>", desc = "which-key leader" },
+        },
+        init = function()
+            vim.o.timeout = true
+            vim.o.timeoutlen = 300
+        end,
+        opts = {
+        }
+    }
+}

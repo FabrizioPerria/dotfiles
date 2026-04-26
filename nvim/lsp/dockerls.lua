@@ -1,6 +1,6 @@
 local config = {
     cmd = { "docker-langserver", "--stdio" },
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
     filetypes = { "dockerfile" },
     root_markers = { ".git/", "Dockerfile" },
     init_options = {
