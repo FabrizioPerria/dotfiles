@@ -37,6 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rustup \
     yq jq \
     dotnet-sdk-8.0 dotnet-runtime-8.0 \
+    clangd-16 \
     && locale-gen en_US.UTF-8
 
 # ── p4 ────────────────────────────────────────────────────────────────────
@@ -204,23 +205,30 @@ RUN mkdir -p /home/dev/.claude/plugins \
     && git clone https://github.com/JuliusBrussee/caveman "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" \
     && git -C "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" checkout "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
     && echo '{ \
-  "version": 2, \
-  "plugins": { \
+    "version": 2, \
+    "plugins": { \
     "caveman@caveman": [ \
-      { \
-        "scope": "user", \
-        "installPath": "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4", \
-        "version": "c2ed24b3e5d4", \
-        "installedAt": "2026-01-01T00:00:00.000Z", \
-        "lastUpdated": "2026-01-01T00:00:00.000Z", \
-        "gitCommitSha": "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
-      } \
+    { \
+    "scope": "user", \
+    "installPath": "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4", \
+    "version": "c2ed24b3e5d4", \
+    "installedAt": "2026-01-01T00:00:00.000Z", \
+    "lastUpdated": "2026-01-01T00:00:00.000Z", \
+    "gitCommitSha": "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
+    } \
     ] \
-  } \
-}' > /home/dev/.claude/plugins/installed_plugins.json
+    } \
+    }' > /home/dev/.claude/plugins/installed_plugins.json
 
 RUN touch /home/dev/.claude.json
 RUN mkdir -p /home/dev/.config/tc
+
+# ── clangd (arm64 only — mason can't install it on arm64) ─────────────────────
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    mkdir -p ${HOME}/.local/share/nvim/mason/bin \
+    && mkdir -p ${HOME}/.local/share/nvim/mason/packages/clangd \
+    && ln -s /usr/bin/clangd-16 ${HOME}/.local/share/nvim/mason/bin/clangd; \
+    fi
 
 # ── Fix ownership of everything written during build ─────────────────────────
 RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config

@@ -1,7 +1,7 @@
 require("config.keymaps")
 require("config.options")
 
-vim.pack.add({
+local packs = {
     -- Colorscheme
     "https://github.com/folke/tokyonight.nvim",
     "https://github.com/norcalli/nvim-colorizer.lua",
@@ -39,7 +39,6 @@ vim.pack.add({
     "https://github.com/theHamsta/nvim-dap-virtual-text",
     "https://github.com/leoluz/nvim-dap-go",
     "https://github.com/mfussenegger/nvim-dap-python",
-    "https://github.com/Cliffback/netcoredbg-macOS-arm64.nvim",
     "https://github.com/TheLeoP/powershell.nvim",
 
     -- Git
@@ -68,7 +67,13 @@ vim.pack.add({
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/folke/ts-comments.nvim",
     "https://github.com/folke/which-key.nvim",
-})
+}
+
+if vim.fn.has("mac") == 1 then
+    table.insert(packs, "https://github.com/Cliffback/netcoredbg-macOS-arm64.nvim")
+end
+
+vim.pack.add(packs)
 
 require("plugins.colorscheme")
 require("plugins.lsp")
