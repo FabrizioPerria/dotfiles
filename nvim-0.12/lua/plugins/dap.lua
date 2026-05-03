@@ -172,7 +172,9 @@ require("powershell").setup({
     bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services",
 })
 
-require("netcoredbg-macOS-arm64").setup(require("dap"))
+if vim.fn.has("mac") == 1 then
+    require("netcoredbg-macOS-arm64").setup(require("dap"))
+end
 
 -- Keymaps
 vim.keymap.set("n", "<F5>", ":DapContinue<CR>", { desc = "Run/Continue Debug" })
