@@ -156,7 +156,7 @@ RUN git clone --depth 1 https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugin
 RUN mkdir -p ${HOME}/.config
 COPY --chown=dev:dev shell/      ${HOME}/.config/shell/
 COPY --chown=dev:dev tmux/       ${HOME}/.config/tmux/
-COPY --chown=dev:dev nvim/       ${HOME}/.config/nvim/
+COPY --chown=dev:dev nvim-0.12/       ${HOME}/.config/nvim/
 COPY --chown=dev:dev mini/       ${HOME}/.config/mini/
 COPY --chown=dev:dev lazygit/    ${HOME}/.config/lazygit/
 COPY --chown=dev:dev lazydocker/ ${HOME}/.config/lazydocker/
@@ -189,11 +189,38 @@ RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
 RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
 
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
-RUN mkdir -p /home/dev/.claude
-RUN touch /home/dev/.claude.json
-RUN mkdir -p /home/dev/.config/tc
 
 RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
+
+# ── Claude config ─────────────────────────────────────────────────────────────
+RUN mkdir -p /home/dev/.claude
+COPY --chown=dev:dev claude/CLAUDE.md             /home/dev/.claude/CLAUDE.md
+COPY --chown=dev:dev claude/settings.json         /home/dev/.claude/settings.json
+COPY --chown=dev:dev claude/statusline-command.sh /home/dev/.claude/statusline-command.sh
+RUN touch /home/dev/.claude/.caveman-active
+
+# ── Caveman plugin (SHA: c2ed24b3e5d412cd0c25197b2bc9af587621fd99) ───────────────────────────────
+RUN mkdir -p /home/dev/.claude/plugins \
+    && git clone https://github.com/JuliusBrussee/caveman "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" \
+    && git -C "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" checkout "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
+    && echo '{ \
+  "version": 2, \
+  "plugins": { \
+    "caveman@caveman": [ \
+      { \
+        "scope": "user", \
+        "installPath": "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4", \
+        "version": "c2ed24b3e5d4", \
+        "installedAt": "2026-01-01T00:00:00.000Z", \
+        "lastUpdated": "2026-01-01T00:00:00.000Z", \
+        "gitCommitSha": "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
+      } \
+    ] \
+  } \
+}' > /home/dev/.claude/plugins/installed_plugins.json
+
+RUN touch /home/dev/.claude.json
+RUN mkdir -p /home/dev/.config/tc
 
 # ── Fix ownership of everything written during build ─────────────────────────
 RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config

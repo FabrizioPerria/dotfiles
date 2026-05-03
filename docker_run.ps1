@@ -33,7 +33,7 @@ if (-not (Test-Path "$PWSH_HOME/.claude.json")) { New-Item "$PWSH_HOME/.claude.j
 
 $mounts += '-v', "nvim-data:/home/dev/.local/share/nvim"
 $mounts += '-v', "local-p4:/workspaces/linuxp4"
-$mounts += '-v', "$PWSH_HOME/.claude:/home/dev/.claude"
+$mounts += '-v', "claude-data:/home/dev/.claude"
 $mounts += '-v', "$PWSH_HOME/.claude.json:/home/dev/.claude.json"
 $mounts += '-v', "$PWSH_HOME/lazyperf:/workspaces/lazyperf"
 

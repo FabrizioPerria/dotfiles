@@ -1,0 +1,32 @@
+{
+  "model": "sonnet",
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/dev/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "caveman@caveman": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    }
+  },
+  "awaySummaryEnabled": false,
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"Caveman mode is active. Respond terse like smart caveman. Drop articles, filler words, pleasantries, hedging. Fragments OK. Short synonyms. Technical terms exact. Code blocks unchanged. Pattern: [thing] [action] [reason]. [next step].\"}}'",
+            "statusMessage": "Activating caveman mode..."
+          }
+        ]
+      }
+    ]
+  }
+}

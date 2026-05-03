@@ -30,7 +30,7 @@ touch .claude.json
 
 MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
-    -v "${HOME}/claude:/home/dev/.claude"
+    -v "claude-data:/home/dev/.claude"
     -v "${HOME}/.claude.json:/home/dev/.claude.json"
 )
 
