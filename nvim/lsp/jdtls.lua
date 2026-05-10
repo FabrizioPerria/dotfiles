@@ -158,7 +158,7 @@ local function getCapabilities()
         },
     }
 
-    local lsp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local lsp_capabilities = vim.lsp.protocol.make_client_capabilities()
 
     for k, v in pairs(lsp_capabilities) do
         capabilities[k] = v
@@ -188,14 +188,7 @@ local config = {
         "-data",
         get_workspace(),
     },
-    root_dir = require("jdtls").setup.find_root({
-        ".git",
-        "mvnw",
-        "gradlew",
-        "pom.xml",
-        "settings.gradle",
-        "build.gradle",
-    }),
+    root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "settings.gradle", "build.gradle" },
 
     settings = {
         java = {
@@ -281,5 +274,10 @@ local config = {
     },
     on_attach = on_attach,
 }
-vim.lsp.config("jdtls", config)
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "java",
+    callback = function()
+        require("jdtls").start_or_attach(config)
+    end,
+})
 return config

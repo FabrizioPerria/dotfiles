@@ -17,6 +17,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     TERM=xterm-256color
 
+
 # ── Base packages ─────────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common apt-transport-https wget curl \
@@ -37,6 +38,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rustup \
     yq jq \
     dotnet-sdk-8.0 dotnet-runtime-8.0 \
+    clangd-16 \
     && locale-gen en_US.UTF-8
 
 # ── p4 ────────────────────────────────────────────────────────────────────
@@ -121,7 +123,7 @@ RUN eval "$(/home/dev/.fnm/fnm env)" \
 
 # ── Neovim ────────────────────────────────────────────────────────────────────
 RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
-    && wget -q https://github.com/neovim/neovim/releases/download/v0.11.2/nvim-linux-${NVIM_ARCH}.tar.gz -O /tmp/nvim.tar.gz \
+    && wget -q https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-${NVIM_ARCH}.tar.gz -O /tmp/nvim.tar.gz \
     && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
     && rm /tmp/nvim.tar.gz
 
@@ -138,7 +140,6 @@ RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
     && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
     && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
     && sudo ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
-
 
 # ── pynvim ────────────────────────────────────────────────────────────────────
 RUN pip3 install --break-system-packages pynvim
@@ -190,11 +191,45 @@ RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
 RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
 
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
+
+RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
+
+# ── Claude config ─────────────────────────────────────────────────────────────
 RUN mkdir -p /home/dev/.claude
+COPY --chown=dev:dev claude/CLAUDE.md             /home/dev/.claude/CLAUDE.md
+COPY --chown=dev:dev claude/settings.json         /home/dev/.claude/settings.json
+COPY --chown=dev:dev claude/statusline-command.sh /home/dev/.claude/statusline-command.sh
+RUN touch /home/dev/.claude/.caveman-active
+
+# ── Caveman plugin (SHA: c2ed24b3e5d412cd0c25197b2bc9af587621fd99) ───────────────────────────────
+RUN mkdir -p /home/dev/.claude/plugins \
+    && git clone https://github.com/JuliusBrussee/caveman "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" \
+    && git -C "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4" checkout "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
+    && echo '{ \
+    "version": 2, \
+    "plugins": { \
+    "caveman@caveman": [ \
+    { \
+    "scope": "user", \
+    "installPath": "/home/dev/.claude/plugins/cache/caveman/caveman/c2ed24b3e5d4", \
+    "version": "c2ed24b3e5d4", \
+    "installedAt": "2026-01-01T00:00:00.000Z", \
+    "lastUpdated": "2026-01-01T00:00:00.000Z", \
+    "gitCommitSha": "c2ed24b3e5d412cd0c25197b2bc9af587621fd99" \
+    } \
+    ] \
+    } \
+    }' > /home/dev/.claude/plugins/installed_plugins.json
+
 RUN touch /home/dev/.claude.json
 RUN mkdir -p /home/dev/.config/tc
 
-RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
+# ── clangd (arm64 only — mason can't install it on arm64) ─────────────────────
+RUN if [ "$TARGETARCH" = "arm64" ]; then \
+    mkdir -p ${HOME}/.local/share/nvim/mason/bin \
+    && mkdir -p ${HOME}/.local/share/nvim/mason/packages/clangd \
+    && ln -s /usr/bin/clangd-16 ${HOME}/.local/share/nvim/mason/bin/clangd; \
+    fi
 
 # ── Fix ownership of everything written during build ─────────────────────────
 RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config

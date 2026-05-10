@@ -1,6 +1,5 @@
-
 local function get_capabilities()
-    local capabilities = require("cmp_nvim_lsp").default_capabilities()
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities.offsetEncoding = { "utf-8", "utf-16" }
     capabilities.textDocument.completion.editsNearCursor = true
     return capabilities
@@ -8,9 +7,15 @@ end
 
 local config = {
     cmd = { "kotlin-language-server" },
-    filetypes = { "kotlin" },
+    filetypes = { "kotlin", "kotlin-script" },
     root_markers = {
         "pom.xml",
+        "build.gradle",
+        "build.gradle.kts",
+        "settings.gradle",
+        "settings.gradle.kts",
+        "gradlew",
+        ".git",
     },
     capabilities = get_capabilities(),
 }

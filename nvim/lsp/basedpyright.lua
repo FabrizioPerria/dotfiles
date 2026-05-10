@@ -1,6 +1,6 @@
 local config = {
     cmd = { "basedpyright-langserver", "--stdio" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = { "python" },
     root_markers = {
         "pyproject.toml",
@@ -15,6 +15,7 @@ local config = {
         basedpyright = {
             analysis = {
                 autoSearchPaths = true,
+                autoImportCompletions = true,
                 diagnosticMode = "openFilesOnly",
                 useLibraryCodeForTypes = true,
             },
