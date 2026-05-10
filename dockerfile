@@ -17,6 +17,7 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     TERM=xterm-256color
 
+
 # ── Base packages ─────────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common apt-transport-https wget curl \
@@ -157,7 +158,7 @@ RUN git clone --depth 1 https://github.com/tmux-plugins/tpm ${HOME}/.tmux/plugin
 RUN mkdir -p ${HOME}/.config
 COPY --chown=dev:dev shell/      ${HOME}/.config/shell/
 COPY --chown=dev:dev tmux/       ${HOME}/.config/tmux/
-COPY --chown=dev:dev nvim-0.12/       ${HOME}/.config/nvim/
+COPY --chown=dev:dev nvim/       ${HOME}/.config/nvim/
 COPY --chown=dev:dev mini/       ${HOME}/.config/mini/
 COPY --chown=dev:dev lazygit/    ${HOME}/.config/lazygit/
 COPY --chown=dev:dev lazydocker/ ${HOME}/.config/lazydocker/

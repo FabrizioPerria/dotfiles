@@ -1,13 +1,8 @@
 local config = {
     cmd = { "gopls" },
-    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = { "go", "gomod", "gowork", "gotmpl" },
     root_markers = { "go.mod", "go.work", ".git/" },
-    init_options = {
-        usePlaceholders = true,
-        completeUnimported = true,
-        staticcheck = true,
-    },
     settings = {
         gopls = {
             analyses = {

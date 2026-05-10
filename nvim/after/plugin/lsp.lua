@@ -21,8 +21,24 @@ function ShowDiagnosticsHover()
     end
 end
 
+local function enable_completion(client, bufnr)
+    if client and client:supports_method("textDocument/completion") then
+        vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+    end
+end
+
 vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function()
+    group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        enable_completion(client, args.buf)
+        -- Trigger completion on every keypress, not just triggerCharacters
+        vim.api.nvim_create_autocmd("InsertCharPre", {
+            buffer = args.buf,
+            callback = function()
+                vim.lsp.completion.get()
+            end,
+        })
         vim.keymap.set("n", "<leader>a", function()
             require("actions-preview").code_actions()
         end, {})
@@ -93,8 +109,15 @@ vim.lsp.enable({
     "lua_ls",
     "marksman",
     "powershell",
-    "roslyn",
+    -- "roslyn",
     "tailwindcss",
     "ts_ls",
     "yamlls",
 })
+
+-- Enable completion for any clients that attached before this file was sourced
+for _, client in ipairs(vim.lsp.get_clients()) do
+    for bufnr in pairs(client.attached_buffers) do
+        enable_completion(client, bufnr)
+    end
+end

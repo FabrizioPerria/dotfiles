@@ -28,4 +28,5 @@ local config = {
     end,
 }
 
+vim.lsp.config("powershell", config)
 return config

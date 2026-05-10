@@ -25,5 +25,5 @@ local config = {
         },
     },
 }
-vim.lsp.config("roslyn", config)
+-- vim.lsp.config("roslyn", config)
 return config
