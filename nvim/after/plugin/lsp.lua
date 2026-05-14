@@ -89,6 +89,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
         })
         vim.keymap.set("n", "[d", "<cmd>lua vim.diagnostic.goto_prev()<cr>", {})
         vim.keymap.set("n", "]d", "<cmd>lua vim.diagnostic.goto_next()<cr>", {})
+        vim.api.nvim_create_autocmd("TextChangedI", {
+            buffer = args.buf,
+            callback = function()
+                vim.lsp.completion.get()
+            end,
+        })
     end,
 })
 

@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dotnet-sdk-8.0 dotnet-runtime-8.0 \
     dotnet-sdk-10.0 dotnet-runtime-10.0 \
     clangd-16 \
-    zig \
+    lsof \
     && locale-gen en_US.UTF-8
 
 # ── p4 ────────────────────────────────────────────────────────────────────
@@ -107,6 +107,14 @@ RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 
 RUN cargo install zoxide \
     && cargo install --features 'pcre2' ripgrep \
     && sudo cp ${HOME}/.cargo/bin/rg /usr/local/bin/rg
+
+# ── Zig ───────────────────────────────────────────────────────────────────────
+ARG ZIG_VERSION=0.16.0
+RUN ZIG_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "aarch64" || echo "x86_64") \
+    && wget -q "https://ziglang.org/download/${ZIG_VERSION}/zig-${ZIG_ARCH}-linux-${ZIG_VERSION}.tar.xz" -O /tmp/zig.tar.xz \
+    && sudo tar -C /usr/local -xJf /tmp/zig.tar.xz \
+    && sudo ln -s /usr/local/zig-${ZIG_ARCH}-linux-${ZIG_VERSION}/zig /usr/local/bin/zig \
+    && rm /tmp/zig.tar.xz
 
 # ── tealdeer ──────────────────────────────────────────────────────────────────
 RUN cargo install tealdeer \
