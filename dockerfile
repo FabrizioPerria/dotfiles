@@ -38,7 +38,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rustup \
     yq jq \
     dotnet-sdk-8.0 dotnet-runtime-8.0 \
+    dotnet-sdk-10.0 dotnet-runtime-10.0 \
     clangd-16 \
+    zig \
     && locale-gen en_US.UTF-8
 
 # ── p4 ────────────────────────────────────────────────────────────────────
@@ -223,6 +225,10 @@ RUN mkdir -p /home/dev/.claude/plugins \
 
 RUN touch /home/dev/.claude.json
 RUN mkdir -p /home/dev/.config/tc
+
+RUN printf '#!/bin/sh\nbuf=$(cat)\nencoded=$(printf "%%s" "$buf" | base64 | tr -d "\\n")\nprintf "\\033]52;c;%%s\\a" "$encoded" > /dev/tty\n' \
+    > ${HOME}/.local/bin/osc52copy \
+    && chmod +x ${HOME}/.local/bin/osc52copy
 
 # ── clangd (arm64 only — mason can't install it on arm64) ─────────────────────
 RUN if [ "$TARGETARCH" = "arm64" ]; then \

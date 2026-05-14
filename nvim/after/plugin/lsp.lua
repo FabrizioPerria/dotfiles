@@ -113,6 +113,7 @@ vim.lsp.enable({
     "tailwindcss",
     "ts_ls",
     "yamlls",
+    "zls"
 })
 
 -- Enable completion for any clients that attached before this file was sourced

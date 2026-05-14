@@ -137,6 +137,7 @@
       - openjdk-21-jdk
       - rustup
       - dconf-editor
+      - zig
     state: present
   become: true
 

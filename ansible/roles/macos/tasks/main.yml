@@ -24,8 +24,8 @@
       - axel
       - rust
       - openjdk@21
+      - zig
       # - alacritty
-      - ghostty
     state: present
 
 - name: Install cask
@@ -34,7 +34,11 @@
       - nikitabobko/tap/aerospace
       - alfred
       - zen
+      - ghostty
     state: present
+  failed_when: >
+    result.failed and 'It seems there is already an App' not in result.msg
+  register: result
 
 - name: Install ripgrep
   include_role:
@@ -61,18 +65,18 @@
 
 - name: Copy font files
   copy:
-    src: "{{playbook_dir}}/../NerdFonts/"
-    dest: "/Library/Fonts/"
+    src: '{{playbook_dir}}/../NerdFonts/'
+    dest: '/Library/Fonts/'
 
 - name: Remove .config
   file:
-    path: "${HOME}/.config"
+    path: '${HOME}/.config'
     state: absent
 
 - name: Create .config
   file:
     state: directory
-    path: "${HOME}/.config"
+    path: '${HOME}/.config'
 
 - name: Setup zsh
   include_role:
@@ -112,9 +116,9 @@
 
 - name: Copy files
   copy:
-    src: "{{ item }}"
-    dest: "${HOME}/.config/"
+    src: '{{ item }}'
+    dest: '${HOME}/.config/'
   loop:
-    - "{{playbook_dir}}/../ghostty"
-    - "{{playbook_dir}}/../fastfetch"
-    - "{{playbook_dir}}/../aerospace"
+    - '{{playbook_dir}}/../ghostty'
+    - '{{playbook_dir}}/../fastfetch'
+    - '{{playbook_dir}}/../aerospace'
