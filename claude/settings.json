@@ -16,6 +16,12 @@
     }
   },
   "awaySummaryEnabled": false,
+  "permissions": {
+    "deny": [
+      "Write(/home/dev/.ssh/**)",
+      "Write(/etc/**)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {

@@ -37,5 +37,9 @@ $mounts += '-v', "claude-data:/home/dev/.claude"
 $mounts += '-v', "$PWSH_HOME/.claude.json:/home/dev/.claude.json"
 $mounts += '-v', "$PWSH_HOME/lazyperf:/workspaces/lazyperf"
 
-docker run -it --name $CONTAINER --hostname devenv --dns $env:DNS @mounts $IMAGE
+$envFile = "$PWSH_HOME/.devenv.env"
+$envArgs = @()
+if (Test-Path $envFile) { $envArgs = '--env-file', $envFile }
+
+docker run -it --name $CONTAINER --hostname devenv --dns $env:DNS @envArgs @mounts $IMAGE
 

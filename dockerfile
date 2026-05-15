@@ -3,15 +3,6 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
 
-ARG TC_URL
-
-ARG TC_TOKEN
-
-ARG P4URL
-ARG P4CLIENT
-ARG P4USER
-ARG P4PASS
-
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
@@ -68,12 +59,6 @@ ENV HOME=/home/dev
 ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${PATH}"
 ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
-ENV TEAMCITY_URL=$TC_URL
-ENV TEAMCITY_TOKEN=$TC_TOKEN
-ENV P4PORT=$P4URL
-ENV P4CLIENT=$P4CLIENT
-ENV P4USER=$P4USER
-ENV P4PASS=$P4PASS
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \

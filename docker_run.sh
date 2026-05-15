@@ -34,8 +34,13 @@ MOUNTS+=(
     -v "${HOME}/.claude.json:/home/dev/.claude.json"
 )
 
+ENV_FILE="${HOME}/.devenv.env"
+ENV_ARGS=()
+[[ -f "$ENV_FILE" ]] && ENV_ARGS+=(--env-file "$ENV_FILE")
+
 docker run -it \
     --name "$CONTAINER" \
     --hostname devenv \
+    "${ENV_ARGS[@]}" \
     "${MOUNTS[@]}" \
     "${CONTAINER}:latest"
