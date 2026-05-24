@@ -5,7 +5,7 @@ if vim.fn.has("win32") == 1 then
 end
 
 local config = {
-    filetypes = { "ps1", "psm1", "psd1" },
+    filetypes = { "ps1", },
     bundle_path = bundle,
     cmd = {
         "pwsh",

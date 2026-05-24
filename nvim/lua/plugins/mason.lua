@@ -5,14 +5,10 @@ require("mason").setup({
     },
 })
 
-require("mason-tool-installer").setup({
-    ensure_installed = {
+local tools = {
         "zls",
         "roslyn",
         "netcoredbg",
-
-        "vtsls",
-        "vue-language-server",
 
         "debugpy",
         "basedpyright",
@@ -68,17 +64,26 @@ require("mason-tool-installer").setup({
         "dot-language-server",
         "editorconfig-checker",
 
-        "css-lsp",
-        "typescript-language-server",
-        "tailwindcss-language-server",
-        "prettier",
+        -- "css-lsp",
+        -- "typescript-language-server",
+        -- "tailwindcss-language-server",
+        -- "prettier",
+        -- "html-lsp",
+        -- "vtsls",
+        -- "vue-language-server",
 
-        "clangd",
         "clang-format",
         "codelldb",
 
         "kotlin-debug-adapter",
         "kotlin-language-server",
         "powershell-editor-services",
-    },
+}
+
+if vim.loop.os_uname().machine ~= "aarch64" then
+    table.insert(tools, "clangd")
+end
+
+require("mason-tool-installer").setup({
+    ensure_installed = tools
 })

@@ -104,7 +104,7 @@ vim.lsp.enable({
     "bashls",
     "clangd",
     "cmake",
-    "cssls",
+    -- "cssls",
     "docker_compose_language_service",
     "dockerls",
     "dotls",
@@ -116,8 +116,8 @@ vim.lsp.enable({
     "marksman",
     "powershell",
     -- "roslyn",
-    "tailwindcss",
-    "ts_ls",
+    -- "tailwindcss",
+    -- "ts_ls",
     "yamlls",
     "zls"
 })

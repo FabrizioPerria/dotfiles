@@ -2,6 +2,8 @@ vim.opt.guicursor =
     "n-v-c:block-blinkwait1000-blinkon100-blinkoff50,i-ci-ve:ver25-blinkwait300-blinkon200-blinkoff150,r-cr-o:hor20"
 vim.opt.cursorline = true
 
+vim.cmd("syntax off")
+
 vim.opt.number = true
 vim.opt.relativenumber = true
 

@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:24.04@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
@@ -56,7 +56,7 @@ USER dev
 WORKDIR /home/dev
 
 ENV HOME=/home/dev
-ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${PATH}"
+ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${HOME}/.sdkman/candidates/gradle/current/bin:${PATH}"
 ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
 
@@ -66,11 +66,13 @@ RUN mkdir -p ${HOME}/.local/bin \
     && ln -s /usr/bin/batcat ${HOME}/.local/bin/bat \
     && sudo ln -s /usr/bin/python3.12 /usr/bin/python
 
-# ── JAVA_HOME ─────────────────────────────────────────────────────────────────
+# ── Java ──────────────────────────────────────────────────────────────────────
 RUN echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-$(dpkg --print-architecture)" >> ${HOME}/.java_home.sh
+RUN curl -s "https://get.sdkman.io?rcupdate=false" | SDKMAN_VERSION=5.22.5 bash \
+    && bash -c "source /home/dev/.sdkman/bin/sdkman-init.sh && sdk install gradle 9.5.1"
 
 # ── Rust ──────────────────────────────────────────────────────────────────────
-RUN rustup default stable
+RUN rustup default 1.95.0
 
 # ── Go ────────────────────────────────────────────────────────────────────────
 RUN GO_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "amd64") \
@@ -78,19 +80,18 @@ RUN GO_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "amd64") \
     && sudo tar -C /usr/local -xzf /tmp/go.tar.gz \
     && rm /tmp/go.tar.gz
 
-# ── Go tools ──────────────────────────────────────────────────────────────────
 RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 \
-    && go install github.com/go-delve/delve/cmd/dlv@latest \
-    && go install golang.org/x/tools/cmd/goimports@latest \
-    && go install github.com/jesseduffield/lazygit@latest \
-    && go install github.com/jesseduffield/lazydocker@latest \
-    && go install github.com/jorgerojas26/lazysql@latest \
-    && go install github.com/Lifailon/lazyjournal@latest \
+    && go install github.com/go-delve/delve/cmd/dlv@v1.24.2 \
+    && go install golang.org/x/tools/cmd/goimports@v0.31.0 \
+    && go install github.com/jesseduffield/lazygit@v0.61.1 \
+    && go install github.com/jesseduffield/lazydocker@v0.25.2 \
+    && go install github.com/jorgerojas26/lazysql@v0.4.8 \
+    && go install github.com/Lifailon/lazyjournal@0.8.6 \
     && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2
 
 # ── Rust tools ────────────────────────────────────────────────────────────────
-RUN cargo install zoxide \
-    && cargo install --features 'pcre2' ripgrep \
+RUN cargo install zoxide --version 0.9.9 \
+    && cargo install --features 'pcre2' ripgrep --version 14.1.1 \
     && sudo cp ${HOME}/.cargo/bin/rg /usr/local/bin/rg
 
 # ── Zig ───────────────────────────────────────────────────────────────────────
@@ -106,7 +107,13 @@ RUN cargo install tealdeer \
     && tldr --update
 
 # ── fnm + Node LTS ────────────────────────────────────────────────────────────
-RUN curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "${HOME}/.fnm" --skip-shell
+RUN FNM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "linux") \
+    && curl -fsSL "https://github.com/Schniz/fnm/releases/download/v1.39.0/fnm-${FNM_ARCH}.zip" -o /tmp/fnm.zip \
+    && unzip /tmp/fnm.zip -d /tmp/fnm \
+    && mkdir -p ${HOME}/.fnm \
+    && mv /tmp/fnm/fnm ${HOME}/.fnm/fnm \
+    && chmod +x ${HOME}/.fnm/fnm \
+    && rm -rf /tmp/fnm /tmp/fnm.zip
 RUN eval "$(/home/dev/.fnm/fnm env)" \
     && /home/dev/.fnm/fnm install --lts \
     && /home/dev/.fnm/fnm default lts-latest \
@@ -186,8 +193,11 @@ RUN ${HOME}/.tmux/plugins/tpm/scripts/install_plugins.sh
 RUN zsh -i -c 'source ~/.zshrc' 2>&1 || true
 
 # ── Neovim bootstrap ──────────────────────────────────────────────────────────
-
-RUN HOME=/home/dev nvim --headless --noplugin -c 'quit'
+RUN rm -rf /home/dev/.local/share/nvim
+RUN HOME=/home/dev nvim --headless \
+    -c 'autocmd User MasonToolsUpdateCompleted qall!' \
+    -c 'TSUpdate' \
+    -c 'lua require("mason-tool-installer").check_install(true)' 2>&1 || true
 
 # ── Claude config ─────────────────────────────────────────────────────────────
 RUN mkdir -p /home/dev/.claude

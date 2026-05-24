@@ -24,8 +24,11 @@ require("dapui").setup({
             position = "left",
         },
         {
-            elements = { { id = "console", size = 1 } },
-            size = 10,
+            elements = { 
+                { id = "console", size = 0.5 },
+                { id = "repl", size = 0.5 },
+            },
+            size = 15,
             position = "bottom",
         },
     },

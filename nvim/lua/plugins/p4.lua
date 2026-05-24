@@ -1,3 +1,7 @@
+if vim.fn.executable("p4") == 0 then
+    return {}
+end
+
 local function p4_notify(cmd, args)
     local result = vim.fn.system(vim.list_extend({ "p4", cmd }, args or {}))
     local ok = vim.v.shell_error == 0

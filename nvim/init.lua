@@ -1,5 +1,6 @@
 require("config.keymaps")
 require("config.options")
+vim.loader.enable()
 
 local packs = {
     -- Colorscheme
@@ -78,6 +79,25 @@ vim.pack.add(packs)
 require("plugins.colorscheme")
 require("plugins.mason")
 require("plugins.telescope")
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        if vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
+            vim.defer_fn(function()
+                require("telescope.builtin").find_files({ cwd = vim.fn.argv(0),
+                    attach_mappings = function(_, map)
+                        map("i", "<Esc>", function()
+                            local fname = vim.fn.argv(0) .. "/" .. os.date("%Y%m%d-%H%M%S") .. ".tmp"
+                            vim.cmd("edit " .. fname)
+                        end)
+                        return true
+                    end,
+                })
+            end, 50)
+        end
+    end,
+})
+
 require("plugins.treesitter")
 require("plugins.dap")
 require("plugins.git")

@@ -4,7 +4,6 @@ local config = {
     capabilities = vim.lsp.protocol.make_client_capabilities(),
     filetypes = {
         "yaml",
-        "yml",
     },
     root_dir = function(fname)
         return lspconfig_util.root_pattern("playbook.yml", "playbook.yaml", "ansible.cfg", ".ansible-lint")(fname)

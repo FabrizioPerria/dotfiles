@@ -20,7 +20,7 @@ require("telescope").setup({
     extensions = {
         file_browser = {
             hidden = true,
-            hijack_netrw = true,
+            hijack_netrw = false,
             no_ignore = true,
         },
         fzf = {
@@ -188,3 +188,4 @@ end, { desc = "Go to implementation" })
 vim.keymap.set("n", "<leader>be", function()
     require("telescope.builtin").diagnostics()
 end, { desc = "Show diagnostics" })
+

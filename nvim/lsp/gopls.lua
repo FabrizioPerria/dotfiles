@@ -1,7 +1,7 @@
 local config = {
     cmd = { "gopls" },
     capabilities = vim.lsp.protocol.make_client_capabilities(),
-    filetypes = { "go", "gomod", "gowork", "gotmpl" },
+    filetypes = { "go", "gomod", "gowork", },
     root_markers = { "go.mod", "go.work", ".git/" },
     settings = {
         gopls = {

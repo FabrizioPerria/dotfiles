@@ -5,7 +5,7 @@ local config = {
         caps.textDocument.completion.completionItem.snippetSupport = true
         return caps
     end)(),
-    filetypes = { "yaml", "yml" },
+    filetypes = { "yaml", },
     root_markers = { ".git/", "yamllint.yaml", "yamlconfig.yaml" },
     settings = {
         yaml = {
