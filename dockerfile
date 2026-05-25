@@ -93,6 +93,7 @@ RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 
 RUN cargo install zoxide --version 0.9.9 \
     && cargo install --features 'pcre2' ripgrep --version 14.1.1 \
     && sudo cp ${HOME}/.cargo/bin/rg /usr/local/bin/rg
+RUN cargo install claude-tmux
 
 # ── Zig ───────────────────────────────────────────────────────────────────────
 ARG ZIG_VERSION=0.16.0

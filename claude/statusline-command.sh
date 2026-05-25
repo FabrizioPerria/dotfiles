@@ -93,6 +93,27 @@ if [[ "$five_hour_pct" -gt 0 ]] 2>/dev/null || [[ "$seven_day_pct" -gt 0 ]] 2>/d
     echo $usage_info > /tmp/usage.txt
 fi
 
+# Build active plugins list from settings.json
+plugins_info=""
+settings_file="$HOME/.claude/settings.json"
+if [[ -f "$settings_file" ]]; then
+    plugin_names=$(jq -r '
+      .enabledPlugins
+      | to_entries
+      | map(select(.value == true) | .key | split("@")[0])
+      | group_by(split("-")[0])
+      | map(
+          if length == 1 then .[0]
+          else (.[0] | split("-")[0]) + "×" + (length | tostring)
+          end
+        )
+      | join(" | ")
+    ' "$settings_file" 2>/dev/null)
+    if [[ -n "$plugin_names" && "$plugin_names" != "null" ]]; then
+        plugins_info=$(printf ' | %sPlugins:%s %s' "$MAGENTA" "$RESET" "$plugin_names")
+    fi
+fi
+
 # Build the status line (common prefix, conditional context suffix)
 status=$(printf '%s%s%s in %s%s%s' "$CYAN" "$model" "$RESET" "$GREEN" "$(basename "$cwd")" "$RESET")
 if [[ "$has_context" == "true" ]]; then
@@ -101,6 +122,9 @@ if [[ "$has_context" == "true" ]]; then
 fi
 if [[ -n "$usage_info" ]]; then
     status="${status}${usage_info}"
+fi
+if [[ -n "$plugins_info" ]]; then
+    status="${status}${plugins_info}"
 fi
 
 echo "$status"

@@ -35,6 +35,7 @@ $mounts += '-v', "nvim-data:/home/dev/.local/share/nvim"
 $mounts += '-v', "local-p4:/workspaces/linuxp4"
 $mounts += '-v', "claude-data:/home/dev/.claude"
 $mounts += '-v', "$PWSH_HOME/.claude.json:/home/dev/.claude.json"
+$mounts += '-v', "$PWSH_HOME/.zsh_history_devenv:/home/dev/.zsh_history"
 $mounts += '-v', "$PWSH_HOME/lazyperf:/workspaces/lazyperf"
 
 $envFile = "$PWSH_HOME/.devenv.env"

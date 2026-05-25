@@ -32,6 +32,8 @@ MOUNTS+=(
     -v nvim-data:/home/dev/.local/share/nvim
     -v "claude-data:/home/dev/.claude"
     -v "${HOME}/.claude.json:/home/dev/.claude.json"
+    -v "${HOME}/.zsh_history_devenv:/home/dev/.zsh_history"
+    -v "${HOME}/Downloads/lsp:/workspaces/lsp"
 )
 
 ENV_FILE="${HOME}/.devenv.env"

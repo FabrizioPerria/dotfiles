@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "teamcity": {
+      "command": "npx",
+      "args": ["-y", "@daghis/teamcity-mcp"],
+      "env": {
+        "TEAMCITY_URL": "${TEAMCITY_URL}",
+        "TEAMCITY_TOKEN": "${TEAMCITY_TOKEN}",
+        "MCP_MODE": "dev"
+      }
+    }
+  }
+}
+

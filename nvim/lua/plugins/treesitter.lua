@@ -39,6 +39,7 @@ local parsers = {
     "rust",
     "sql",
     "svelte",
+    "tmux",
     "toml",
     "typescript",
     "vim",

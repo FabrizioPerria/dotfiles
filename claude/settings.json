@@ -1,27 +1,45 @@
 {
-  "model": "sonnet",
-  "statusLine": {
-    "type": "command",
-    "command": "bash /home/dev/.claude/statusline-command.sh"
-  },
-  "enabledPlugins": {
-    "caveman@caveman": true
-  },
-  "extraKnownMarketplaces": {
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
-    }
-  },
-  "awaySummaryEnabled": false,
   "permissions": {
     "deny": [
+      "Bash(*ping *)",
       "Write(/home/dev/.ssh/**)",
-      "Write(/etc/**)"
+      "Write(/etc/**)",
+      "Bash(*git push --force*)",
+      "Bash(*git push -f *)",
+      "Bash(*git push *--force*)",
+      "Bash(*git reset --hard*)",
+      "Bash(*git clean -f*)",
+      "Bash(*git clean -fd*)",
+      "Bash(*git filter-branch*)",
+      "Bash(*git filter-repo*)",
+      "Bash(*git branch -D *)",
+      "Bash(*git push *--delete*)",
+      "Bash(*git commit --amend*)",
+      "Bash(*p4 submit*)",
+      "Bash(*p4 obliterate*)",
+      "Bash(*p4 admin*)",
+      "Bash(*p4 protect*)",
+      "Bash(*p4 triggers*)",
+      "Bash(*p4 configure*)",
+      "Bash(*p4 depot -d*)",
+      "Bash(*p4 stream -d*)",
+      "Bash(*p4 branch -d*)",
+      "Bash(*p4 label -d*)",
+      "Bash(*p4 shelve -d*)",
+      "Bash(*p4 user -d*)",
+      "Bash(*p4 group -d*)",
+      "Bash(*rm -rf*)",
+      "Bash(*rm -fr*)",
+      "Bash(*rm -f /*)",
+      "Bash(*shred*)",
+      "Bash(*dd *)",
+      "Bash(*mkfs*)",
+      "Bash(*fdisk*)",
+      "Bash(*parted*)",
+      "Bash(*truncate*)"
     ]
   },
+  "model": "sonnet",
   "hooks": {
     "SessionStart": [
       {
@@ -34,5 +52,46 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /home/dev/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "caveman@caveman": true,
+    "teamcity-cli@teamcity-cli": true,
+    "voltagent-core-dev@voltagent": true,
+    "voltagent-lang@voltagent": true,
+    "voltagent-infra@voltagent": true,
+    "voltagent-qa-sec@voltagent": true,
+    "voltagent-data-ai@voltagent": true,
+    "voltagent-dev-exp@voltagent": true,
+    "voltagent-domains@voltagent": true,
+    "voltagent-biz@voltagent": true,
+    "voltagent-meta@voltagent": true,
+    "voltagent-research@voltagent": true
+  },
+  "extraKnownMarketplaces": {
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "voltagent": {
+      "source": {
+        "source": "github",
+        "repo": "VoltAgent/awesome-claude-code-subagents"
+      }
+    },
+    "teamcity-cli": {
+      "source": {
+        "source": "github",
+        "repo": "JetBrains/teamcity-cli"
+      }
+    }
+  },
+  "awaySummaryEnabled": false,
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true
 }
