@@ -1,5 +1,5 @@
 ifeq ($(OS),Windows_NT)
-DOCKER_RUN_SCRIPT = powershell -File docker_run.ps1
+DOCKER_RUN_SCRIPT = pwsh -File docker_run.ps1
 else
 DOCKER_RUN_SCRIPT = ./docker_run.sh
 endif

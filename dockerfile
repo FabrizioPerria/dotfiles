@@ -177,6 +177,8 @@ source ${HOME}/.config/shell/aliases.zsh
 source ${HOME}/.java_home.sh
 source ${HOME}/.config/shell/colors.zsh
 source ${HOME}/.config/shell/zinit.zsh
+source ${HOME}/.config/shell/tc-completion.zsh
+source ${HOME}/.config/shell/p4-completion.zsh
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
 bindkey '^?' backward-delete-char
 eval "$(/home/dev/.fnm/fnm env)"
@@ -205,6 +207,8 @@ RUN mkdir -p /home/dev/.claude
 COPY --chown=dev:dev claude/CLAUDE.md             /home/dev/.claude/CLAUDE.md
 COPY --chown=dev:dev claude/settings.json         /home/dev/.claude/settings.json
 COPY --chown=dev:dev claude/statusline-command.sh /home/dev/.claude/statusline-command.sh
+COPY --chown=dev:dev claude/run-agents.py         /home/dev/.claude/run-agents.py
+COPY --chown=dev:dev claude/mcp.json              /home/dev/.claude/mcp.json
 RUN touch /home/dev/.claude/.caveman-active
 
 # ── Caveman plugin (SHA: c2ed24b3e5d412cd0c25197b2bc9af587621fd99) ───────────────────────────────

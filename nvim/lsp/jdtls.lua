@@ -43,6 +43,10 @@ end
 
 local function get_workspace()
     local home = os.getenv("HOME")
+    if vim.fn.has('win32') == 1 then
+        home = os.getenv("HOMEPATH")
+    end
+
     local workspace_path = home .. "/.cache/nvim/jdtls/workspace/"
     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
     local workspace_dir = workspace_path .. project_name

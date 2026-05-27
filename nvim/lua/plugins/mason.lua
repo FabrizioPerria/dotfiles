@@ -20,21 +20,9 @@ local tools = {
         "ruff",
         "isort",
 
-        "golangci-lint",
-        "gopls",
-        "goimports",
-        "gofumpt",
-        "impl",
-        "gomodifytags",
-        "delve",
-
-        "cmake-language-server",
 
         "stylua",
         "lua-language-server",
-        "luacheck",
-
-        "json-lsp",
         "jsonlint",
         "jq",
         "yaml-language-server",
@@ -57,11 +45,9 @@ local tools = {
         "shfmt",
         "shellcheck",
 
-        "ansible-language-server",
         "codespell",
         "docker-compose-language-service",
         "dockerfile-language-server",
-        "dot-language-server",
         "editorconfig-checker",
 
         -- "css-lsp",
@@ -82,6 +68,22 @@ local tools = {
 
 if vim.loop.os_uname().machine ~= "aarch64" then
     table.insert(tools, "clangd")
+end
+
+if vim.fn.has('win32') == 0 then
+    table.insert(tools, "ansible-language-server")
+    table.insert(tools, "golangci-lint")
+    table.insert(tools, "gopls")
+    table.insert(tools, "goimports")
+    table.insert(tools, "gofumpt")
+    table.insert(tools, "impl")
+    table.insert(tools, "gomodifytags")
+    table.insert(tools, "delve")
+    table.insert(tools, "cmake-language-server")
+    table.insert(tools, "luacheck")
+    table.insert(tools, "json-lsp")
+    table.insert(tools, "dot-language-server")
+
 end
 
 require("mason-tool-installer").setup({

@@ -1,7 +1,7 @@
 local handle = io.popen("zsh -l -c '~/.config/shell/detect_system_style.zsh' 2>&1")
 local result = handle:read("*a")
 handle:close()
-local is_dark = result:match("dark") ~= nil
+local is_dark = result:match("dark") ~= nil or vim.fn.has('win32') == 1
 
 require("tokyonight").setup({
     style = is_dark and "storm" or "day",
