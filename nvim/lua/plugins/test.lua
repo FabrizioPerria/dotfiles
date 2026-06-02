@@ -7,7 +7,7 @@ require("neotest").setup({
             runner = "pytest",
         }),
         require("neotest-go")({
-            experimental = { test_table = true },
+            experimental = { test_table = false },
             args = { "-count=1", "-timeout=60s" },
         }),
         require("neotest-gtest"),

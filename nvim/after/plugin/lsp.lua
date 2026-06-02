@@ -31,6 +31,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
     callback = function(args)
         local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client and client.name == "jdtls" then
+            require("neotest").setup({ adapters = { require("neotest-jdtls") } })
+        end
         enable_completion(client, args.buf)
         -- Trigger completion on every keypress, not just triggerCharacters
         vim.api.nvim_create_autocmd("InsertCharPre", {
@@ -116,8 +119,9 @@ vim.lsp.enable({
     "marksman",
     "powershell",
     -- "roslyn",
-    -- "tailwindcss",
-    -- "ts_ls",
+    "tailwindcss",
+    "ts_ls",
+    "vtsls",
     "yamlls",
     "zls"
 })
