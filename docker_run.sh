@@ -34,6 +34,7 @@ MOUNTS+=(
     -v "${HOME}/.claude.json:/home/dev/.claude.json"
     -v "${HOME}/.zsh_history_devenv:/home/dev/.zsh_history"
     -v "${HOME}/Downloads/lsp:/workspaces/lsp"
+    -v "${HOME}/.ssh_container:/home/dev/.ssh"
 )
 
 ENV_FILE="${HOME}/.devenv.env"

@@ -43,21 +43,34 @@ end
 local function p4_open_diff_against_depot(depot, on_close)
     local tmp = vim.fn.tempname()
     vim.fn.system({ "p4", "print", "-q", "-o", tmp, depot })
-    if vim.v.shell_error ~= 0 then
-        vim.notify("p4: could not fetch depot version", vim.log.levels.ERROR)
-        return false
+    -- exit code is unreliable for added files (p4 warns on stderr but exits 0),
+    -- so judge by whether anything was actually printed
+    local has_depot = vim.fn.filereadable(tmp) == 1 and vim.fn.getfsize(tmp) > 0
+    if not has_depot then
+        -- file opened for add: no depot revision, diff against an empty file
+        -- so every line shows as added (green)
+        vim.fn.writefile({}, tmp)
     end
+
     local fpath = p4_resolve_local(depot)
     if fpath == "" then
         vim.notify("p4: could not resolve local path", vim.log.levels.WARN)
         return false
     end
     vim.cmd("edit " .. vim.fn.fnameescape(fpath))
+    vim.cmd("wincmd _") -- maximize height; otherwise the diff inherits the short list split
     local file_win = vim.api.nvim_get_current_win()
     vim.cmd("diffthis")
     vim.cmd("vert diffsplit " .. vim.fn.fnameescape(tmp))
     vim.api.nvim_buf_set_name(0, "depot:" .. vim.fn.fnamemodify(depot, ":t"))
     local depot_buf = vim.api.nvim_get_current_buf()
+
+    if not has_depot then
+        -- all-added diff: nothing to fold away, keep every line visible & green
+        local depot_win = vim.api.nvim_get_current_win()
+        vim.wo[file_win].foldenable = false
+        vim.wo[depot_win].foldenable = false
+    end
 
     local function close_diff()
         vim.cmd("diffoff!")
@@ -281,6 +294,20 @@ vim.keymap.set("n", "<leader>ps", function()
             p4_reopen_buf(buf, lines, log_row)
         end)
     end, { buffer = buf, noremap = true, silent = true, desc = "p4 diff file" })
+    vim.keymap.set("n", "o", function()
+        local row = vim.api.nvim_win_get_cursor(0)[1]
+        local depot = depot_paths[row]
+        if not depot or depot == "" then
+            return
+        end
+        local fpath = p4_resolve_local(depot)
+        if fpath == "" then
+            vim.notify("p4: could not resolve " .. depot, vim.log.levels.WARN)
+            return
+        end
+        vim.cmd("bd!")
+        vim.cmd("edit " .. vim.fn.fnameescape(fpath))
+    end, { buffer = buf, noremap = true, silent = true, desc = "p4 open file" })
     vim.keymap.set("n", "s", function()
         vim.ui.input({ prompt = "Submit description: " }, function(desc)
             if not desc or vim.trim(desc) == "" then
