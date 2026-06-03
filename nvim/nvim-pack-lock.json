@@ -12,6 +12,10 @@
       "rev": "179da7aaacce7c52874af636255ede72dd6fe796",
       "src": "git@github.com:FabijanZulj/blame.nvim"
     },
+    "cellular-automaton.nvim": {
+      "rev": "1606e9d5d04ff254023c3f3c62842d065708d6d3",
+      "src": "https://github.com/Eandrju/cellular-automaton.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "dd3f588bacbeb041be6facf1742e42097f62165d",
       "src": "git@github.com:lewis6991/gitsigns.nvim"

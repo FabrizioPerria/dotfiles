@@ -68,6 +68,8 @@ local packs = {
     "https://github.com/kylechui/nvim-surround",
     "https://github.com/folke/ts-comments.nvim",
     "https://github.com/folke/which-key.nvim",
+
+    "https://github.com/Eandrju/cellular-automaton.nvim",
 }
 
 if vim.fn.has("mac") == 1 then
@@ -108,4 +110,7 @@ require("plugins.p4")
 require("plugins.comments")
 require("plugins.whichkey")
 require("plugins.tmux")
+require("plugins.automaton")
+require("plugins.quickfix")
 require("nvim-surround").setup()
+
