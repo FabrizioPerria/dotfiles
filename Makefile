@@ -7,10 +7,14 @@ endif
 ansible:
 	./ansible_install.sh
 
+nvim:
+	rm -rf ~/.config/nvim
+	cp -R nvim ~/.config
+
 build_docker:
 	docker build --tag devenv:latest .
 
 run_docker: build_docker
 	$(DOCKER_RUN_SCRIPT)
 
-.PHONY: ansible build_docker run_docker
+.PHONY: ansible build_docker run_docker nvim

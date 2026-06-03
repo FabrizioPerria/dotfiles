@@ -194,60 +194,6 @@ ca.register_animation({
 })
 
 ca.register_animation({
-    fps  = 8,
-    name = "seeds",
-    update = function(grid)
-        local rows = #grid
-        local cols = #grid[1]
-        local alive = {}
-        for i = 1, rows do
-            alive[i] = {}
-            for j = 1, cols do
-                alive[i][j] = grid[i][j].char ~= " "
-            end
-        end
-        local any = false
-        for i = 1, rows do
-            for j = 1, cols do
-                local n = 0
-                for di = -1, 1 do
-                    for dj = -1, 1 do
-                        if not (di == 0 and dj == 0) then
-                            local ni, nj = i + di, j + dj
-                            if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                if alive[ni][nj] then n = n + 1 end
-                            end
-                        end
-                    end
-                end
-                -- Seeds: B2/S — born if 2 neighbours, never survives
-                if not alive[i][j] and n == 2 then
-                    -- borrow char from a live neighbour
-                    for di = -1, 1 do
-                        for dj = -1, 1 do
-                            local ni, nj = i + di, j + dj
-                            if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                if alive[ni][nj] then
-                                    grid[i][j].char     = grid[ni][nj].char
-                                    grid[i][j].hl_group = grid[ni][nj].hl_group
-                                    goto seeds_done
-                                end
-                            end
-                        end
-                    end
-                    ::seeds_done::
-                    any = true
-                elseif alive[i][j] then
-                    -- always dies
-                    grid[i][j].char = " "
-                end
-            end
-        end
-        return any
-    end,
-})
-
-ca.register_animation({
     fps  = 25,
     name = "ripple",
     init = function(grid)
@@ -344,27 +290,45 @@ ca.register_animation({
         local rows = #grid
         local cols = #grid[1]
         local orig = grid._vortex_orig
-        local cx   = cols / 2
-        local cy   = rows / 2
+
+        local tile_w = 96    -- vortex size/spacing in columns (smaller = more vortices)
+        local tile_h = 48     -- vortex size/spacing in rows
+        local R      = tile_w / 2   -- influence radius (visual units)
+        local speed  = 1.2
+
         for i = 1, rows do
             for j = 1, cols do
-                local dx   = j - cx
-                local dy   = (i - cy) * 2  -- compensate for char aspect ratio
-                local dist = math.sqrt(dx * dx + dy * dy)
-                -- rotation angle increases toward centre
-                local angle = t * (1 + 3 / (dist + 1))
-                local ca_   = math.cos(angle)
-                local sa_   = math.sin(angle)
-                local sj    = math.floor(cx + dx * ca_ - dy / 2 * sa_ + 0.5)
-                local si    = math.floor(cy + dx * sa_ / 2 + dy / 2 * ca_ + 0.5)
-                -- also pull slightly inward
-                si = math.floor(si + (cy - si) * 0.02 * t + 0.5)
-                sj = math.floor(sj + (cx - sj) * 0.02 * t + 0.5)
-                if si >= 1 and si <= rows and sj >= 1 and sj <= cols then
-                    grid[i][j].char     = orig[si][sj].char
-                    grid[i][j].hl_group = orig[si][sj].hl_group
+                -- centre of the tile this cell sits in
+                local tcol = math.floor((j - 1) / tile_w)
+                local trow = math.floor((i - 1) / tile_h)
+                local cx   = tcol * tile_w + tile_w / 2 + 0.5
+                local cy   = trow * tile_h + tile_h / 2 + 0.5
+
+                -- offset in visual units (rows count double: cells are ~2x tall)
+                local vx = j - cx
+                local vy = (i - cy) * 2
+                local r  = math.sqrt(vx * vx + vy * vy)
+
+                local fall = 1 - r / R
+                if fall <= 0 then
+                    -- outside this vortex's reach: leave untouched (seamless seams)
+                    grid[i][j].char     = orig[i][j].char
+                    grid[i][j].hl_group = orig[i][j].hl_group
                 else
-                    grid[i][j].char = " "
+                    local dir   = ((tcol + trow) % 2 == 0) and 1 or -1
+                    local angle = dir * t * speed * fall * fall  -- strongest at centre
+                    local cosA  = math.cos(angle)
+                    local sinA  = math.sin(angle)
+                    local sx    = vx * cosA - vy * sinA
+                    local sy    = vx * sinA + vy * cosA
+                    local src_j = math.floor(cx + sx + 0.5)
+                    local src_i = math.floor(cy + sy / 2 + 0.5)
+                    if src_i >= 1 and src_i <= rows and src_j >= 1 and src_j <= cols then
+                        grid[i][j].char     = orig[src_i][src_j].char
+                        grid[i][j].hl_group = orig[src_i][src_j].hl_group
+                    else
+                        grid[i][j].char = " "
+                    end
                 end
             end
         end
@@ -531,159 +495,8 @@ ca.register_animation({
     end,
 })
 
--- cellular-automaton.nvim custom animations
--- Place this file anywhere in your lua path and require it,
--- or paste the register_animation calls directly into your config.
---
--- Usage after requiring:
---   :CellularAutomaton gol
---   :CellularAutomaton brians_brain
---   :CellularAutomaton cyclic
---   :CellularAutomaton dissolve
---   :CellularAutomaton starfield
---   :CellularAutomaton langtons_ant
---   :CellularAutomaton maze
-
 local ca = require("cellular-automaton")
 
--- ─────────────────────────────────────────────────────────────
--- 1. GAME OF LIFE
---    Cells live/die by neighbour count.
---    char ~= " " is considered "alive".
--- ─────────────────────────────────────────────────────────────
-ca.register_animation({
-    fps  = 10,
-    name = "gol",
-    update = function(grid)
-        local rows = #grid
-        local cols = #grid[1]
-        -- snapshot alive state
-        local alive = {}
-        for i = 1, rows do
-            alive[i] = {}
-            for j = 1, cols do
-                alive[i][j] = grid[i][j].char ~= " "
-            end
-        end
-        for i = 1, rows do
-            for j = 1, cols do
-                local n = 0
-                for di = -1, 1 do
-                    for dj = -1, 1 do
-                        if not (di == 0 and dj == 0) then
-                            local ni, nj = i + di, j + dj
-                            if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                if alive[ni][nj] then n = n + 1 end
-                            end
-                        end
-                    end
-                end
-                local was = alive[i][j]
-                if was and (n < 2 or n > 3) then
-                    grid[i][j].char = " "
-                elseif not was and n == 3 then
-                    -- resurrect using a neighbour's char
-                    for di = -1, 1 do
-                        for dj = -1, 1 do
-                            local ni, nj = i + di, j + dj
-                            if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                if alive[ni][nj] then
-                                    grid[i][j].char     = grid[ni][nj].char
-                                    grid[i][j].hl_group = grid[ni][nj].hl_group
-                                    goto done
-                                end
-                            end
-                        end
-                    end
-                    ::done::
-                end
-            end
-        end
-        return true
-    end,
-})
-
--- ─────────────────────────────────────────────────────────────
--- 2. BRIAN'S BRAIN
---    3-state: ON → DYING → OFF → (born if 2 ON neighbours)
---    Produces gliders everywhere.
--- ─────────────────────────────────────────────────────────────
-ca.register_animation({
-    fps  = 15,
-    name = "brians_brain",
-    -- state stored in a side table keyed by "i,j"
-    init = function(grid)
-        -- attach state: 0=off, 1=on, 2=dying
-        local rows, cols = #grid, #grid[1]
-        for i = 1, rows do
-            for j = 1, cols do
-                grid[i][j]._bb = (grid[i][j].char ~= " ") and 1 or 0
-                grid[i][j]._bb_char = grid[i][j].char
-                grid[i][j]._bb_hl   = grid[i][j].hl_group
-            end
-        end
-    end,
-    update = function(grid)
-        local rows = #grid
-        local cols = #grid[1]
-        local snap = {}
-        for i = 1, rows do
-            snap[i] = {}
-            for j = 1, cols do
-                snap[i][j] = grid[i][j]._bb or 0
-            end
-        end
-        for i = 1, rows do
-            for j = 1, cols do
-                local s = snap[i][j]
-                if s == 1 then
-                    grid[i][j]._bb  = 2
-                    grid[i][j].char = grid[i][j]._bb_char ~= " " and grid[i][j]._bb_char or "·"
-                elseif s == 2 then
-                    grid[i][j]._bb  = 0
-                    grid[i][j].char = " "
-                else -- off
-                    local on = 0
-                    for di = -1, 1 do
-                        for dj = -1, 1 do
-                            if not (di == 0 and dj == 0) then
-                                local ni, nj = i + di, j + dj
-                                if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                    if snap[ni][nj] == 1 then on = on + 1 end
-                                end
-                            end
-                        end
-                    end
-                    if on == 2 then
-                        grid[i][j]._bb  = 1
-                        -- borrow char from a live neighbour
-                        for di = -1, 1 do
-                            for dj = -1, 1 do
-                                local ni, nj = i + di, j + dj
-                                if ni >= 1 and ni <= rows and nj >= 1 and nj <= cols then
-                                    if snap[ni][nj] == 1 then
-                                        grid[i][j].char     = grid[ni][nj]._bb_char
-                                        grid[i][j].hl_group = grid[ni][nj]._bb_hl
-                                        goto bb_done
-                                    end
-                                end
-                            end
-                        end
-                        ::bb_done::
-                    end
-                end
-            end
-        end
-        return true
-    end,
-})
-
--- ─────────────────────────────────────────────────────────────
--- 3. CYCLIC AUTOMATON
---    Each cell advances to next "level" if any neighbour is
---    one level ahead. Creates spiralling waves.
---    Levels are mapped to visible/space based on char.
--- ─────────────────────────────────────────────────────────────
 ca.register_animation({
     fps  = 20,
     name = "cyclic",
@@ -864,7 +677,7 @@ ca.register_animation({
             flipped[r][c] = not flipped[r][c]
             if flipped[r][c] then
                 local ch = origchar[r][c]
-                grid[r][c].char = ch ~= " " and ch or "█"
+                grid[r][c].char = ch ~= " " and ch or "░"
             else
                 grid[r][c].char = origchar[r][c]
             end
@@ -883,134 +696,20 @@ ca.register_animation({
     end,
 })
 
--- ─────────────────────────────────────────────────────────────
--- 7. MAZE (recursive backtracker / growing tree)
---    Carves a maze through the buffer. All chars become walls,
---    then passages open up frame by frame.
--- ─────────────────────────────────────────────────────────────
-ca.register_animation({
-    fps  = 30,
-    name = "maze",
-    init = function(grid)
-        local rows, cols = #grid, #grid[1]
-        -- work on a cell grid half the resolution (each maze cell = 2 screen cells)
-        local mr = math.floor(rows / 2)
-        local mc = math.floor(cols / 2)
-        -- fill everything with wall char
-        for i = 1, rows do
-            for j = 1, cols do
-                grid[i][j]._maze_orig = grid[i][j].char
-                grid[i][j].char = grid[i][j].char ~= " " and grid[i][j].char or "▓"
-            end
-        end
-        -- maze visited map
-        local visited = {}
-        for i = 1, mr do
-            visited[i] = {}
-            for j = 1, mc do visited[i][j] = false end
-        end
-        -- stack for DFS
-        local stack = { { r = 1, c = 1 } }
-        visited[1][1] = true
-        grid._maze_stack   = stack
-        grid._maze_visited = visited
-        grid._maze_mr      = mr
-        grid._maze_mc      = mc
-        grid._maze_done    = false
-
-        -- helper to carve: set screen cells for a maze cell to space
-        grid._maze_carve = function(g, r, c)
-            local sr = (r - 1) * 2 + 1
-            local sc = (c - 1) * 2 + 1
-            if sr <= rows and sc <= cols then
-                g[sr][sc].char = " "
-            end
-        end
-        grid._maze_carve_between = function(g, r1, c1, r2, c2)
-            local sr = r1 + r2 -- average*2
-            local sc = c1 + c2
-            -- passage cell between two maze cells
-            local pr = math.floor((r1 + r2) / 2) * 2 - 1 + 1
-            local pc = math.floor((c1 + c2) / 2) * 2 - 1 + 1
-            -- simpler: midpoint in screen coords
-            pr = (r1 - 1) * 2 + 1 + (r2 - r1)
-            pc = (c1 - 1) * 2 + 1 + (c2 - c1)
-            if pr >= 1 and pr <= rows and pc >= 1 and pc <= cols then
-                g[pr][pc].char = " "
-            end
-            _ = sr _ = sc -- suppress unused warning
-        end
-
-        -- carve start cell
-        grid._maze_carve(grid, 1, 1)
-    end,
-    update = function(grid)
-        if grid._maze_done then return false end
-
-        local stack   = grid._maze_stack
-        local visited = grid._maze_visited
-        local mr      = grid._maze_mr
-        local mc      = grid._maze_mc
-        local rows    = #grid
-
-        -- advance maze several steps per frame
-        for _ = 1, 3 do
-            if #stack == 0 then
-                grid._maze_done = true
-                -- reveal original chars in passages
-                for i = 1, rows do
-                    for j = 1, #grid[i] do
-                        if grid[i][j].char == " " and grid[i][j]._maze_orig ~= " " then
-                            -- keep space (passage)
-                        end
-                    end
-                end
-                return false
-            end
-
-            local cur = stack[#stack]
-            -- find unvisited neighbours (N/S/E/W)
-            local dirs = {}
-            local offsets = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } }
-            for _, d in ipairs(offsets) do
-                local nr, nc = cur.r + d[1], cur.c + d[2]
-                if nr >= 1 and nr <= mr and nc >= 1 and nc <= mc and not visited[nr][nc] then
-                    table.insert(dirs, { r = nr, c = nc })
-                end
-            end
-
-            if #dirs > 0 then
-                local chosen = dirs[math.random(#dirs)]
-                visited[chosen.r][chosen.c] = true
-                grid._maze_carve(grid, chosen.r, chosen.c)
-                grid._maze_carve_between(grid, cur.r, cur.c, chosen.r, chosen.c)
-                table.insert(stack, chosen)
-            else
-                table.remove(stack)
-            end
-        end
-
-        return true
-    end,
-})
 
 vim.keymap.set("n", "<leader>za", "<cmd>CellularAutomaton waves<CR>",         { desc = "Waves" })
 vim.keymap.set("n", "<leader>zb", "<cmd>CellularAutomaton matrix<CR>",        { desc = "Matrix" })
 vim.keymap.set("n", "<leader>zc", "<cmd>CellularAutomaton plasma<CR>",        { desc = "Plasma" })
 vim.keymap.set("n", "<leader>zd", "<cmd>CellularAutomaton earthquake<CR>",    { desc = "Earthquake" })
-vim.keymap.set("n", "<leader>ze", "<cmd>CellularAutomaton seeds<CR>",         { desc = "Seeds" })
+vim.keymap.set("n", "<leader>ze", "<cmd>CellularAutomaton make_it_rain<CR>",  { desc = "Make it rain" })
 vim.keymap.set("n", "<leader>zf", "<cmd>CellularAutomaton ripple<CR>",        { desc = "Ripple" })
 vim.keymap.set("n", "<leader>zg", "<cmd>CellularAutomaton gravity<CR>",       { desc = "Gravity" })
 vim.keymap.set("n", "<leader>zh", "<cmd>CellularAutomaton vortex<CR>",        { desc = "Vortex" })
 vim.keymap.set("n", "<leader>zi", "<cmd>CellularAutomaton fire<CR>",          { desc = "Fire" })
 vim.keymap.set("n", "<leader>zj", "<cmd>CellularAutomaton scramble_sort<CR>", { desc = "Scramble Sort" })
-vim.keymap.set("n", "<leader>zk", "<cmd>CellularAutomaton gol<CR>",           { desc = "GoL" })
-vim.keymap.set("n", "<leader>zl", "<cmd>CellularAutomaton game_of_life<CR>",  { desc = "GoL (original)" })
+vim.keymap.set("n", "<leader>zk", "<cmd>CellularAutomaton langtons_ant<CR>",  { desc = "Langton's Ant" })
+vim.keymap.set("n", "<leader>zl", "<cmd>CellularAutomaton game_of_life<CR>",  { desc = "GoL" })
 vim.keymap.set("n", "<leader>zm", "<cmd>CellularAutomaton cyclic<CR>",        { desc = "Cyclic" })
 vim.keymap.set("n", "<leader>zn", "<cmd>CellularAutomaton dissolve<CR>",      { desc = "Dissolve" })
 vim.keymap.set("n", "<leader>zo", "<cmd>CellularAutomaton starfield<CR>",     { desc = "Starfield" })
-vim.keymap.set("n", "<leader>zp", "<cmd>CellularAutomaton langtons_ant<CR>",  { desc = "Langton's Ant" })
-vim.keymap.set("n", "<leader>zq", "<cmd>CellularAutomaton maze<CR>",          { desc = "Maze" })
-vim.keymap.set("n", "<leader>zr", "<cmd>CellularAutomaton brians_brain<CR>",  { desc = "Brian's Brain" })
-vim.keymap.set("n", "<leader>zs", "<cmd>CellularAutomaton make_it_rain<CR>",  { desc = "Make it rain" })
 
