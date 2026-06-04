@@ -1,7 +1,14 @@
 ifeq ($(OS),Windows_NT)
-DOCKER_RUN_SCRIPT = pwsh -File docker_run.ps1
+DOCKER_RUN_SCRIPT = pwsh -File container_run.ps1
 else
-DOCKER_RUN_SCRIPT = ./docker_run.sh
+DOCKER_RUN_SCRIPT = ./container_run.sh
+endif
+
+ARCH := $(shell uname -m)
+ifeq ($(ARCH),x86_64)
+PODMAN_PLATFORM = linux/amd64
+else
+PODMAN_PLATFORM = linux/arm64
 endif
 
 ansible:
@@ -24,7 +31,10 @@ tmux:
 build_docker:
 	docker build --tag devenv:latest .
 
+build_podman:
+	podman build --platform $(PODMAN_PLATFORM) -t devenv:latest .
+
 run_docker: build_docker
 	$(DOCKER_RUN_SCRIPT)
 
-.PHONY: ansible build_docker run_docker nvim shell tmux
+.PHONY: ansible build_docker run_docker nvim shell tmux build_podman
