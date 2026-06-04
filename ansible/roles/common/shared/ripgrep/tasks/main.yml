@@ -1,17 +1,17 @@
 ---
 - name: Fix cargo registry permissions
   file:
-    path: '{{ ansible_env.HOME }}/.cargo'
-    owner: '{{ ansible_env.USER }}'
+    path: '{{ ansible_facts["env"].HOME }}/.cargo'
+    owner: '{{ ansible_facts["env"].USER }}'
     recurse: true
   become: true
 
 - name: Install ripgrep to temporary directory
-  shell: cargo install --root /tmp/ripgrep --features 'pcre2' ripgrep
+  shell: cargo install --root /tmp/ripgrep --features 'pcre2' --version 14.1.1 ripgrep
   become: false
   environment:
-    PATH: '{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}'
-    HOME: '{{ ansible_env.HOME }}'
+    PATH: '{{ ansible_facts["env"].HOME }}/.cargo/bin:{{ ansible_facts["env"].PATH }}'
+    HOME: '{{ ansible_facts["env"].HOME }}'
   args:
     creates: '/tmp/ripgrep/bin/rg'
 

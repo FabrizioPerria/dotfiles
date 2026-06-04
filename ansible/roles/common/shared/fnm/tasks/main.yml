@@ -1,14 +1,43 @@
 ---
-- name: Download and install fnm
-  shell: >
-    curl -fsSL https://fnm.vercel.app/install | bash -s -- --install-dir "{{ ansible_env.HOME }}/.fnm" --skip-shell --force-install
+- name: Determine fnm release asset
+  set_fact:
+    fnm_asset: "{{ 'fnm-macos.zip' if ansible_facts['system'] == 'Darwin' else ('fnm-arm64.zip' if ansible_facts['architecture'] in ['aarch64', 'arm64'] else 'fnm-linux.zip') }}"
+
+- name: Download fnm (pinned v1.39.0)
+  get_url:
+    url: "https://github.com/Schniz/fnm/releases/download/v1.39.0/{{ fnm_asset }}"
+    dest: /tmp/fnm.zip
+    mode: "0644"
+
+- name: Ensure fnm directory exists
+  file:
+    path: "{{ ansible_facts['env'].HOME }}/.fnm"
+    state: directory
+    mode: "0755"
+
+- name: Extract fnm
+  unarchive:
+    src: /tmp/fnm.zip
+    dest: "{{ ansible_facts['env'].HOME }}/.fnm"
+    remote_src: true
+
+- name: Make fnm executable
+  file:
+    path: "{{ ansible_facts['env'].HOME }}/.fnm/fnm"
+    mode: "0755"
+    state: file
+
+- name: Remove fnm archive
+  file:
+    path: /tmp/fnm.zip
+    state: absent
 
 - name: Install latest LTS Node.js version
   shell: "$HOME/.fnm/fnm install --lts"
 
 - name: Append fnm commands to .zshrc
   lineinfile:
-    path: "{{ ansible_env.HOME }}/.zshrc"
+    path: "{{ ansible_facts['env'].HOME }}/.zshrc"
     line: "{{ item }}"
     insertafter: EOF
   with_items:

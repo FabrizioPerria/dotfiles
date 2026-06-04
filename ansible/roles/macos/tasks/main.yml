@@ -9,6 +9,7 @@
       - fd
       - llvm
       - yq
+      - jq
       - git-lfs
       - eza
       - ncdu
@@ -22,9 +23,7 @@
       - fontconfig
       - luarocks
       - axel
-      - rust
       - openjdk@21
-      - zig
       # - alacritty
     state: present
 
@@ -39,6 +38,22 @@
   failed_when: >
     result.failed and 'It seems there is already an App' not in result.msg
   register: result
+
+- name: Ensure /usr/local/bin exists
+  file:
+    path: /usr/local/bin
+    state: directory
+  become: true
+
+- name: Install rustup
+  shell: >
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs |
+    sh -s -- -y --default-toolchain 1.95.0 --profile minimal --no-modify-path
+  args:
+    creates: "{{ ansible_facts['env'].HOME }}/.cargo/bin/rustup"
+
+- name: Pin Rust toolchain to 1.95.0
+  shell: "{{ ansible_facts['env'].HOME }}/.cargo/bin/rustup default 1.95.0"
 
 - name: Install ripgrep
   include_role:
@@ -59,14 +74,39 @@
   include_role:
     name: common/shared/go
   vars:
-    version: 1.23.0
+    version: 1.24.2
     os: darwin
     arch: arm64
+
+- name: Install zig
+  block:
+    - name: Download zig
+      get_url:
+        url: https://ziglang.org/download/0.16.0/zig-aarch64-macos-0.16.0.tar.xz
+        dest: /tmp/zig.tar.xz
+        mode: "0644"
+    - name: Extract zig
+      unarchive:
+        src: /tmp/zig.tar.xz
+        dest: /usr/local
+        remote_src: true
+      become: true
+    - name: Symlink zig
+      file:
+        src: /usr/local/zig-aarch64-macos-0.16.0/zig
+        dest: /usr/local/bin/zig
+        state: link
+      become: true
+    - name: Remove zig tarball
+      file:
+        path: /tmp/zig.tar.xz
+        state: absent
 
 - name: Copy font files
   copy:
     src: '{{playbook_dir}}/../NerdFonts/'
     dest: '/Library/Fonts/'
+  become: true
 
 - name: Remove .config
   file:
@@ -112,7 +152,7 @@
   vars:
     os: macos
     arch: arm64
-    version: 0.11.2
+    version: 0.12.2
 
 - name: Copy files
   copy:

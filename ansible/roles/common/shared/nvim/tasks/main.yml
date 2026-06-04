@@ -46,21 +46,21 @@
 - name: Install ticktoken-core
   shell: "luarocks install --lua-version 5.1 tiktoken_core"
   environment:
-    PATH: "${HOME}/.cargo/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ ansible_facts['env'].HOME }}/.cargo/bin:{{ ansible_facts['env'].PATH }}"
   become: true
 
 - name: Install pynvim on macOS
-  when: ansible_os_family == "Darwin"
+  when: ansible_facts['os_family'] == "Darwin"
   shell: |
     /opt/homebrew/bin/pip3.12 install --break-system-packages pynvim
 
 - name: Install pynvim on Linux
-  when: ansible_os_family != "Darwin"
+  when: ansible_facts['os_family'] != "Darwin"
   shell: |
     /usr/bin/python3 -m pip install --break-system-packages pynvim
 
 - name: Run nvim commands
   environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
-    FNM_DIR: "{{ ansible_env.HOME }}/.fnm"
+    PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
+    FNM_DIR: "{{ ansible_facts['env'].HOME }}/.fnm"
   shell: 'eval "$($FNM_DIR/fnm env)" && nvim --headless +TSUpdateSync +MasonToolsInstallSync +qa'

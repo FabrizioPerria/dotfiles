@@ -2,9 +2,9 @@
 - name: Install Lazysql
   become: true
   environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
   shell: |
-    /usr/local/go/bin/go install github.com/jorgerojas26/lazysql@latest
+    /usr/local/go/bin/go install github.com/jorgerojas26/lazysql@v0.4.8
 
 - name: Copy files
   copy:

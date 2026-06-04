@@ -33,9 +33,9 @@
     - name: Install Go tools
       become: true
       environment:
-        PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+        PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
       shell: |
-        /usr/local/go/bin/go install golang.org/x/tools/gopls@latest
-        /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@latest
-        /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@latest
-        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@latest
+        /usr/local/go/bin/go install golang.org/x/tools/gopls@v0.17.1
+        /usr/local/go/bin/go install github.com/go-delve/delve/cmd/dlv@v1.24.2
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/goimports@v0.31.0
+        /usr/local/go/bin/go install golang.org/x/tools/cmd/gorename@v0.31.0

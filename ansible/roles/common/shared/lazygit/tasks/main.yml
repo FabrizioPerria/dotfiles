@@ -2,9 +2,9 @@
 - name: Install Lazygit
   become: true
   environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
   shell: |
-    /usr/local/go/bin/go install github.com/jesseduffield/lazygit@latest
+    /usr/local/go/bin/go install github.com/jesseduffield/lazygit@v0.61.1
 
 - name: Copy files
   copy:

@@ -2,6 +2,6 @@
 - name: Install Lazyjournal
   become: true
   environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
   shell: |
-    /usr/local/go/bin/go install github.com/Lifailon/lazyjournal@latest
+    /usr/local/go/bin/go install github.com/Lifailon/lazyjournal@0.8.6

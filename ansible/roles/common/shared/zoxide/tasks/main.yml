@@ -1,10 +1,10 @@
 ---
 - name: Install zoxide to temporary directory
-  shell: cargo install --root /tmp/zoxide zoxide
+  shell: cargo install --root /tmp/zoxide --version 0.9.9 zoxide
   become: false
   environment:
-    PATH: "{{ ansible_env.HOME }}/.cargo/bin:{{ ansible_env.PATH }}"
-    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_facts['env'].HOME }}/.cargo/bin:{{ ansible_facts['env'].PATH }}"
+    HOME: "{{ ansible_facts['env'].HOME }}"
   args:
     creates: "/tmp/zoxide/bin/zoxide"
 

@@ -2,9 +2,9 @@
 - name: Install Lazydocker
   become: true
   environment:
-    PATH: "/usr/local/go/bin:{{ ansible_env.PATH }}"
+    PATH: "/usr/local/go/bin:{{ ansible_facts['env'].PATH }}"
   shell: |
-    /usr/local/go/bin/go install github.com/jesseduffield/lazydocker@latest
+    /usr/local/go/bin/go install github.com/jesseduffield/lazydocker@v0.25.2
 
 - name: Copy files
   copy:
