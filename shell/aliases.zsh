@@ -17,6 +17,8 @@ alias gittree="git log --graph --abbrev-commit --decorate --format=format:'%C(bo
 # alias xcopy="xclip -selection clipboard"
 alias teamcity="tc"
 
+alias bla="echo bla"
+
 xcopy() {
     local data=$(cat)
     local b64=$(echo -n "$data" | base64 | tr -d '\n')

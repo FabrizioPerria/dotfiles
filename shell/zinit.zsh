@@ -35,5 +35,16 @@ zinit wait lucid depth=1 for "zsh-users/zsh-completions"
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zcompdump
 
-eval "$(zoxide init zsh)"
+_zoxide_z_complete_frecent() {
+  emulate -L zsh
+  local query="${words[2,-1]}"
+  local -a entries
+  entries=("${(@f)$(zoxide query --list -- ${=query} 2>/dev/null)}")
+  (( ${#entries} )) || return 1
+  compadd -U -a entries   # -U: bypass zsh prefix-matching; zoxide already matched
+}
+
+zinit ice wait lucid id-as="zoxide-init" \
+    atload'eval "$(zoxide init zsh)"; compdef _zoxide_z_complete_frecent z'
+zinit light zdharma-continuum/null
 
