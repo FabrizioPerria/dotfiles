@@ -36,12 +36,14 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zcompdump
 
 _zoxide_z_complete_frecent() {
-  emulate -L zsh
+  # 1. real cd completion first — identical to `cd`, fzf popup and all
+  _cd && return
+
+  # 2. only if nothing completed as a path → zoxide frecent dirs
   local query="${words[2,-1]}"
-  local -a entries
-  entries=("${(@f)$(zoxide query --list -- ${=query} 2>/dev/null)}")
-  (( ${#entries} )) || return 1
-  compadd -U -a entries   # -U: bypass zsh prefix-matching; zoxide already matched
+  local -a frecent
+  frecent=("${(@f)$(zoxide query --list -- ${=query} 2>/dev/null)}")
+  (( ${#frecent} )) && compadd -U -a frecent
 }
 
 zinit ice wait lucid id-as="zoxide-init" \
