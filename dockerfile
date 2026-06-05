@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dotnet-sdk-10.0 dotnet-runtime-10.0 \
     clangd-16 \
     lsof \
+    podman uidmap fuse-overlayfs slirp4netns passt crun \
     && locale-gen en_US.UTF-8
 
 # ── p4 ────────────────────────────────────────────────────────────────────
@@ -130,6 +131,16 @@ RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
     && wget -q https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-${NVIM_ARCH}.tar.gz -O /tmp/nvim.tar.gz \
     && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
     && rm /tmp/nvim.tar.gz
+
+# ── Podman-in-Podman (nested rootless containers) ─────────────────────────────
+RUN sudo mkdir -p /etc/containers \
+    && printf '[storage]\ndriver = "overlay"\n[storage.options.overlay]\nmount_program = "/usr/bin/fuse-overlayfs"\nignore_chown_errors = "true"\n' \
+        | sudo tee /etc/containers/storage.conf > /dev/null \
+&& printf '[containers]\ndefault_sysctls = []\n[engine]\ncgroup_manager = "cgroupfs"\nevents_logger = "file"\n' \
+        | sudo tee /etc/containers/containers.conf > /dev/null \
+    && printf 'unqualified-search-registries = ["docker.io"]\n' \
+        | sudo tee /etc/containers/registries.conf > /dev/null
+RUN mkdir -p /home/dev/.local/share/containers
 
 # ── Claude Code ───────────────────────────────────────────────────────────────
 RUN curl -fsSL https://claude.ai/install.sh | bash

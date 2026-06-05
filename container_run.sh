@@ -15,12 +15,25 @@ if [[ -z "$ENGINE" ]]; then
     fi
 fi
 
-# Rootless podman: map the host user to the container's dev (uid 1000) so bind
-# mounts stay writable. keep-id is podman-only; rootful docker maps uid 1000
-# directly, so it needs nothing here.
-ENGINE_RUN_ARGS=()
+# Flags so nested podman works inside the devenv regardless of the outer engine.
+#   - both:   /dev/fuse, for the inner podman's fuse-overlayfs storage driver
+#   - podman: keep SELinux enforcing (container_engine_t) and map the host user
+#             to the container's dev (uid 1000) via keep-id so bind mounts stay
+#             writable (both podman-only)
+#   - docker: relax seccomp, since Docker's default profile blocks the
+#             namespace/clone syscalls rootless podman needs in order to nest
+ENGINE_RUN_ARGS=(--device /dev/fuse --device /dev/net/tun)
 if [[ "$ENGINE" == "podman" ]]; then
-    ENGINE_RUN_ARGS+=(--userns=keep-id:uid=1000,gid=1000)
+    ENGINE_RUN_ARGS+=(
+        --userns=keep-id:uid=1000,gid=1000
+        --security-opt label=type:container_engine_t
+        --security-opt "unmask=/proc/*"
+    )
+else
+    ENGINE_RUN_ARGS+=(
+        --security-opt seccomp=unconfined
+        --security-opt systempaths=unconfined
+    )
 fi
 
 if ! "$ENGINE" image inspect "${CONTAINER}:latest" &>/dev/null; then
@@ -50,6 +63,16 @@ MOUNTS+=(
     -v "${HOME}/Downloads/lsp:/workspaces/lsp"
     -v "${HOME}/.ssh_container:/home/dev/.ssh"
 )
+
+# Persist the nested podman image/container store across the --rm devenv.
+# :U (podman-only) chowns the volume to the mapped user so rootless writes work
+# under keep-id; docker initialises ownership from the image dir via copy-up.
+if [[ "$ENGINE" == "podman" ]]; then
+    MOUNTS+=(-v "podman-storage:/home/dev/.local/share/containers:U")
+else
+    MOUNTS+=(-v "podman-storage:/home/dev/.local/share/containers")
+fi
+
 ENV_FILE="${HOME}/.devenv.env"
 ENV_ARGS=()
 [[ -f "$ENV_FILE" ]] && ENV_ARGS+=(--env-file "$ENV_FILE")

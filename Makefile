@@ -35,9 +35,9 @@ build_podman:
 	podman build --platform $(PODMAN_PLATFORM) -t devenv:latest .
 
 run_docker: build_docker
-	$(DOCKER_RUN_SCRIPT)
+	CONTAINER_ENGINE=docker $(DOCKER_RUN_SCRIPT)
 
 run_podman: 
-	$(DOCKER_RUN_SCRIPT)
+	CONTAINER_ENGINE=podman $(DOCKER_RUN_SCRIPT)
 
 .PHONY: ansible build_docker run_docker nvim shell tmux build_podman
