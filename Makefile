@@ -37,4 +37,7 @@ build_podman:
 run_docker: build_docker
 	$(DOCKER_RUN_SCRIPT)
 
+run_podman: 
+	$(DOCKER_RUN_SCRIPT)
+
 .PHONY: ansible build_docker run_docker nvim shell tmux build_podman

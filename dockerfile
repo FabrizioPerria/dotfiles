@@ -25,6 +25,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     net-tools traceroute \
     openjdk-21-jdk maven \
     dos2unix \
+    ssh \
     iputils-ping \
     rustup \
     yq jq \
