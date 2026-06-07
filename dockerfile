@@ -89,7 +89,8 @@ RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 
     && go install github.com/jesseduffield/lazydocker@v0.25.2 \
     && go install github.com/jorgerojas26/lazysql@v0.4.8 \
     && go install github.com/Lifailon/lazyjournal@0.8.6 \
-    && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2
+    && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2 \ 
+    && go install github.com/air-verse/air@v1.65.3
 
 # ── Rust tools ────────────────────────────────────────────────────────────────
 RUN cargo install zoxide --version 0.9.9 \
@@ -216,11 +217,10 @@ RUN HOME=/home/dev nvim --headless \
 
 # ── Claude config ─────────────────────────────────────────────────────────────
 RUN mkdir -p /home/dev/.claude
-COPY --chown=dev:dev claude/CLAUDE.md             /home/dev/.claude/CLAUDE.md
-COPY --chown=dev:dev claude/settings.json         /home/dev/.claude/settings.json
 COPY --chown=dev:dev claude/statusline-command.sh /home/dev/.claude/statusline-command.sh
 COPY --chown=dev:dev claude/run-agents.py         /home/dev/.claude/run-agents.py
 COPY --chown=dev:dev claude/mcp.json              /home/dev/.claude/mcp.json
+
 RUN touch /home/dev/.claude/.caveman-active
 
 # ── Caveman plugin (SHA: c2ed24b3e5d412cd0c25197b2bc9af587621fd99) ───────────────────────────────
@@ -263,5 +263,22 @@ RUN sudo chown -R dev:dev /home/dev/.local /home/dev/.config
 # ── Workdir ───────────────────────────────────────────────────────────────────
 RUN sudo mkdir -p /workspaces && sudo chown dev:dev /workspaces
 WORKDIR /workspaces
+
+USER root
+COPY --chown=root:root claude/CLAUDE.md            /home/dev/.claude/CLAUDE.md
+COPY --chown=root:root claude/settings.json       /home/dev/.claude/settings.json
+COPY --chown=root:root claude/policy-limits.json   /home/dev/.claude/policy-limits.json
+COPY --chown=root:root claude/hooks/              /home/dev/.claude/hooks/
+
+RUN chmod 0444 /home/dev/.claude/settings.json /home/dev/.claude/policy-limits.json /home/dev/.claude/CLAUDE.md \
+&& chmod 0555 /home/dev/.claude/hooks && chmod 0555 /home/dev/.claude/hooks/*.sh
+
+RUN sed -i '/NOPASSWD:ALL/d' /etc/sudoers \
+    && deluser dev sudo 2>/dev/null || true \
+    && rm -f /etc/sudoers.d/* \
+    && rm -f /usr/bin/sudo /usr/bin/newgrp \
+    && ! su dev -c 'sudo -n true' 2>/dev/null && echo "OK: dev has no sudo" || (echo "FAIL: sudo still works" && exit 1)
+USER dev
+
 
 ENTRYPOINT ["/bin/zsh", "-c", "tmux -u new-session -A -s main"]

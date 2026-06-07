@@ -48,6 +48,19 @@ fi
 if "$ENGINE" ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
     "$ENGINE" rm "$CONTAINER"
 fi
+# Governance policy: a root-owned host dir, mounted READ-ONLY (see MOUNTS below).
+# Must NOT be the rw-mounted dotfiles, or the agent could edit it from inside.
+# Populate once on the host:
+#   sudo mkdir -p /srv/agent-policy
+#   sudo cp -rL ~/workspace/dotfiles/claude/settings.json \
+#               ~/workspace/dotfiles/claude/policy-limits.json \
+#               ~/workspace/dotfiles/claude/hooks /srv/agent-policy/
+#   sudo chown -R root:root /srv/agent-policy
+AGENT_POLICY="${AGENT_POLICY:-/Users/fabrizioperria/.claude/agent-policy}"
+for f in settings.json policy-limits.json hooks; do
+    [[ -e "$AGENT_POLICY/$f" ]] || { echo "Missing agent policy: $AGENT_POLICY/$f (see container_run.sh header)." >&2; exit 1; }
+done
+
 MOUNTS=()
 for path in "$@"; do
     abs=$(cd "$path" 2>/dev/null && pwd || echo "$path")
@@ -56,12 +69,17 @@ for path in "$@"; do
 done
 touch .claude.json
 MOUNTS+=(
-    -v nvim-data:/home/dev/.local/share/nvim
+    -v "nvim-data:/home/dev/.local/share/nvim"
     -v "claude-data:/home/dev/.claude"
+    -v "${AGENT_POLICY}/settings.json:/home/dev/.claude/settings.json:ro"
+    -v "${AGENT_POLICY}/policy-limits.json:/home/dev/.claude/policy-limits.json:ro"
+    -v "${AGENT_POLICY}/hooks:/home/dev/.claude/hooks:ro"
     -v "${HOME}/.claude.json:/home/dev/.claude.json"
     -v "${HOME}/.zsh_history_devenv:/home/dev/.zsh_history"
     -v "${HOME}/Downloads/lsp:/workspaces/lsp"
     -v "${HOME}/.ssh_container:/home/dev/.ssh"
+    -v "${HOME}/workspace/chords:/workspaces/chords"
+    -v "${HOME}/workspace/dotfiles:/workspaces/dotfiles"
 )
 
 # Persist the nested podman image/container store across the --rm devenv.
@@ -79,7 +97,9 @@ ENV_ARGS=()
 "$ENGINE" run -it \
     --name "$CONTAINER" \
     --hostname devenv \
+    -p80:5173 \
     "${ENGINE_RUN_ARGS[@]}" \
     "${ENV_ARGS[@]}" \
     "${MOUNTS[@]}" \
     "${CONTAINER}:latest"
+

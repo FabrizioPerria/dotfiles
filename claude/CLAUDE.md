@@ -85,7 +85,7 @@ When asked to "find a role" or "look for agents in the collection", read relevan
 
 ## 6. Agentic Workflow Scaffolding
 
-`~/.claude/run-agents.py` is the generic tmux-based workflow runner (preferred). `~/.claude/run-agents.sh` is the bash equivalent (kept for reference). Both read `workflow.json` from the project directory and orchestrate one Claude TUI pane per role.
+`~/.claude/run-agents.py` is the generic tmux-based workflow runner (preferred). Both read `workflow.json` from the project directory and orchestrate one Claude TUI pane per role.
 
 ### Named workflows
 
