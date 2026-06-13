@@ -1,33 +1,43 @@
 {
   "permissions": {
     "deny": [
-      "Bash(*ping *)",
-      "Write(/home/dev/.ssh/**)",
-      "Write(/etc/**)",
-      "Bash(*git push --force*)",
-      "Bash(*git push -f *)",
-      "Bash(*git push *--force*)",
-      "Bash(*git reset --hard*)",
-      "Bash(*git clean -f*)",
-      "Bash(*git clean -fd*)",
-      "Bash(*git filter-branch*)",
-      "Bash(*git filter-repo*)",
-      "Bash(*git branch -D *)",
-      "Bash(*git push *--delete*)",
-      "Bash(*git commit --amend*)",
-      "Bash(*p4 submit*)",
-      "Bash(*p4 obliterate*)",
-      "Bash(*p4 admin*)",
-      "Bash(*p4 protect*)",
-      "Bash(*p4 triggers*)",
-      "Bash(*p4 configure*)",
-      "Bash(*p4 depot -d*)",
-      "Bash(*p4 stream -d*)",
-      "Bash(*p4 branch -d*)",
-      "Bash(*p4 label -d*)",
-      "Bash(*p4 shelve -d*)",
-      "Bash(*p4 user -d*)",
-      "Bash(*p4 group -d*)",
+      "Write(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Write(//etc/**)",
+      "Edit(//etc/**)",
+      "Write(~/.claude/hooks/**)",
+      "Edit(~/.claude/hooks/**)",
+      "Read(~/.claude/hooks/**)",
+      "Edit(~/.claude/settings.json)",
+      "Write(~/.claude/settings.json)",
+      "Edit(~/.claude/settings.local.json)",
+      "Write(~/.claude/settings.local.json)",
+      "Edit(~/.claude/policy-limits.json)",
+      "Write(~/.claude/policy-limits.json)",
+      "Read(~/.claude/.credentials.json)",
+      "Edit(~/.claude/.credentials.json)",
+      "Write(~/.claude/.credentials.json)",
+      "Bash(*push*--force*)",
+      "Bash(*reset*--hard*)",
+      "Bash(*clean*-f*)",
+      "Bash(*filter-branch*)",
+      "Bash(*filter-repo*)",
+      "Bash(*branch*-D*)",
+      "Bash(*push*--delete*)",
+      "Bash(*commit*--amend*)",
+      "Bash(*submit*)",
+      "Bash(*obliterate*)",
+      "Bash(*admin*)",
+      "Bash(*protect*)",
+      "Bash(*triggers*)",
+      "Bash(*configure*)",
+      "Bash(*depot*-d*)",
+      "Bash(*stream*-d*)",
+      "Bash(*branch*-d*)",
+      "Bash(*label*-d*)",
+      "Bash(*shelve*-d*)",
+      "Bash(*user*-d*)",
+      "Bash(*group*-d*)",
       "Bash(*rm -rf*)",
       "Bash(*rm -fr*)",
       "Bash(*rm -f /*)",
@@ -36,11 +46,40 @@
       "Bash(*mkfs*)",
       "Bash(*fdisk*)",
       "Bash(*parted*)",
-      "Bash(*truncate*)"
-    ]
+      "Bash(*truncate*)",
+      "Bash(*base64*-d*)",
+      "Bash(*base64*--decode*)",
+      "Read(~/.ssh/**)",
+      "Read(//home/dev/.ssh/**)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/id_rsa)",
+      "Read(**/id_ed25519)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gcloud/**)",
+      "Grep(~/.ssh/**)",
+      "Grep(**/.env)",
+      "Grep(**/*.pem)",
+      "Grep(**/*.key)",
+      "Grep(~/.aws/**)"
+    ],
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable"
   },
   "model": "sonnet",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell|mcp__.*",
+        "hooks": [{ "type": "command", "command": "~/.claude/hooks/guard.sh" }]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit|Read|Grep",
+        "hooks": [{ "type": "command", "command": "~/.claude/hooks/path-guard.sh" }]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [
@@ -93,5 +132,9 @@
   },
   "awaySummaryEnabled": false,
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": [" "]
+  }
 }
