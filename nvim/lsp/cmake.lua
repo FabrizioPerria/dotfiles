@@ -1,11 +1,8 @@
 local config = {
-    cmd = { "cmake-language-server" },
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
-    filetypes = { "cmake" },
-    init_options = {
-        buildDirectory = "build",
-    },
-    root_markers = { "CMakeLists.txt", ".git/" },
+      cmd = { 'neocmakelsp', 'stdio' },
+      filetypes = { 'cmake' },
+      root_markers = { '.neocmake.toml', '.git', 'build', 'cmake' },
+      capabilities = vim.lsp.protocol.make_client_capabilities(),
 }
 vim.lsp.config("cmake", config)
 return config

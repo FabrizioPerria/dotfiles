@@ -79,7 +79,7 @@ if vim.fn.has('win32') == 0 then
     table.insert(tools, "impl")
     table.insert(tools, "gomodifytags")
     table.insert(tools, "delve")
-    table.insert(tools, "cmake-language-server")
+    table.insert(tools, "neocmakelsp")
     table.insert(tools, "luacheck")
     table.insert(tools, "json-lsp")
     table.insert(tools, "dot-language-server")
