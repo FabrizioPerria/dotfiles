@@ -6,13 +6,14 @@ ARG TARGETARCH
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8 \
-    TERM=xterm-256color
+    TERM=xterm-256color \
+    TZ=Europe/Copenhagen
 
 
 # ── Base packages ─────────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     software-properties-common apt-transport-https wget curl \
-    locales sudo git git-lfs \
+    locales sudo tzdata git git-lfs \
     zsh tmux \
     lua5.4 luarocks \
     python3.12 python3-neovim python3-dev python3-pip python3-venv \
@@ -35,6 +36,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsof \
     podman uidmap fuse-overlayfs slirp4netns passt crun \
     && locale-gen en_US.UTF-8
+
+# ── Timezone ──────────────────────────────────────────────────────────────────
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # ── p4 ────────────────────────────────────────────────────────────────────
 RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
