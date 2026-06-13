@@ -26,6 +26,14 @@ done
 if [ "$SKIP_INSTALL" = false ]; then
     if [[ $(uname) == "Darwin" ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        # The installer doesn't add brew to the current shell's PATH, so load it
+        # here; otherwise `brew` (and the homebrew module in the playbook) fail
+        # on a clean machine until the shell is restarted.
+        if [[ -x /opt/homebrew/bin/brew ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        elif [[ -x /usr/local/bin/brew ]]; then
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
         brew install ansible
     elif command -v apt >/dev/null; then
         maybe_sudo apt update

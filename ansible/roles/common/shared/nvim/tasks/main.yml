@@ -43,12 +43,6 @@
     path: "${HOME}/.local/state/nvim"
     state: absent
 
-- name: Install ticktoken-core
-  shell: "luarocks install --lua-version 5.1 tiktoken_core"
-  environment:
-    PATH: "{{ ansible_facts['env'].HOME }}/.cargo/bin:{{ ansible_facts['env'].PATH }}"
-  become: true
-
 - name: Install pynvim on macOS
   when: ansible_facts['os_family'] == "Darwin"
   shell: |
