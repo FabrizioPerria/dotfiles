@@ -34,6 +34,7 @@ local parsers = {
     "meson",
     "ninja",
     "nix",
+    "odin",
     "python",
     "regex",
     "rust",

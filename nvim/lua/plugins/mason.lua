@@ -64,10 +64,12 @@ local tools = {
         "kotlin-debug-adapter",
         "kotlin-language-server",
         "powershell-editor-services",
+
 }
 
 if vim.loop.os_uname().machine ~= "aarch64" then
     table.insert(tools, "clangd")
+    table.insert(tools, "ols")
 end
 
 if vim.fn.has('win32') == 0 then
