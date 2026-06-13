@@ -1,0 +1,4 @@
+---
+os: macos
+arch: aarch64
+version: 0.16.0

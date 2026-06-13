@@ -1,0 +1,38 @@
+---
+- name: Check if zig is installed
+  stat:
+    path: /usr/local/bin/zig
+  register: zig_binary
+
+- name: Check version of zig if it is installed
+  command: /usr/local/bin/zig version
+  register: zig_version
+  when: zig_binary.stat.exists
+  ignore_errors: true
+
+- when: not zig_binary.stat.exists or zig_version is failed or zig_version.stdout.find(version) == -1
+  block:
+    - name: Download zig
+      get_url:
+        url: https://ziglang.org/download/{{version}}/zig-{{arch}}-{{os}}-{{version}}.tar.xz
+        dest: /tmp/zig.tar.xz
+        mode: "0644"
+
+    - name: Extract zig
+      unarchive:
+        src: /tmp/zig.tar.xz
+        dest: /usr/local
+        remote_src: true
+      become: true
+
+    - name: Symlink zig
+      file:
+        src: /usr/local/zig-{{arch}}-{{os}}-{{version}}/zig
+        dest: /usr/local/bin/zig
+        state: link
+      become: true
+
+    - name: Remove zig tarball
+      file:
+        path: /tmp/zig.tar.xz
+        state: absent

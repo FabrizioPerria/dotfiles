@@ -43,14 +43,14 @@
   register: result
   failed_when: >
     result.failed and 'It seems there is already an App' not in result.msg
-- name: Check Colima status
-  command: colima status
-  register: colima_status
+- name: Check if Colima is running
+  command: colima list
+  register: colima_list
   failed_when: false
   changed_when: false
 - name: Start Colima
   command: colima start
-  when: colima_status.rc != 0
+  when: "'Running' not in colima_list.stdout + colima_list.stderr"
   async: 600
   poll: 10
 - name: Ensure /usr/local/bin exists
@@ -86,28 +86,12 @@
     os: darwin
     arch: arm64
 - name: Install zig
-  block:
-    - name: Download zig
-      get_url:
-        url: https://ziglang.org/download/0.16.0/zig-aarch64-macos-0.16.0.tar.xz
-        dest: /tmp/zig.tar.xz
-        mode: "0644"
-    - name: Extract zig
-      unarchive:
-        src: /tmp/zig.tar.xz
-        dest: /usr/local
-        remote_src: true
-      become: true
-    - name: Symlink zig
-      file:
-        src: /usr/local/zig-aarch64-macos-0.16.0/zig
-        dest: /usr/local/bin/zig
-        state: link
-      become: true
-    - name: Remove zig tarball
-      file:
-        path: /tmp/zig.tar.xz
-        state: absent
+  include_role:
+    name: common/shared/zig
+  vars:
+    version: 0.16.0
+    os: macos
+    arch: aarch64
 - name: Copy font files
   copy:
     src: '{{playbook_dir}}/../NerdFonts/'
