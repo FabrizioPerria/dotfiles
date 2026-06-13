@@ -81,7 +81,7 @@ RUN curl -s "https://get.sdkman.io?rcupdate=false" | SDKMAN_VERSION=5.22.5 bash 
 RUN rustup default 1.95.0
 
 # ── Go ────────────────────────────────────────────────────────────────────────
-RUN GO_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "amd64") \
+RUN GO_ARCH=$(dpkg --print-architecture) \
     && wget -q https://go.dev/dl/go1.24.2.linux-${GO_ARCH}.tar.gz -O /tmp/go.tar.gz \
     && sudo tar -C /usr/local -xzf /tmp/go.tar.gz \
     && rm /tmp/go.tar.gz
@@ -103,7 +103,7 @@ RUN cargo install claude-tmux
 
 # ── Zig ───────────────────────────────────────────────────────────────────────
 ARG ZIG_VERSION=0.16.0
-RUN ZIG_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "aarch64" || echo "x86_64") \
+RUN ZIG_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "aarch64" || echo "x86_64") \
     && wget -q "https://ziglang.org/download/${ZIG_VERSION}/zig-${ZIG_ARCH}-linux-${ZIG_VERSION}.tar.xz" -O /tmp/zig.tar.xz \
     && sudo tar -C /usr/local -xJf /tmp/zig.tar.xz \
     && sudo ln -s /usr/local/zig-${ZIG_ARCH}-linux-${ZIG_VERSION}/zig /usr/local/bin/zig \
@@ -114,7 +114,7 @@ RUN cargo install tealdeer \
     && tldr --update
 
 # ── fnm + Node LTS ────────────────────────────────────────────────────────────
-RUN FNM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "linux") \
+RUN FNM_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "arm64" || echo "linux") \
     && curl -fsSL "https://github.com/Schniz/fnm/releases/download/v1.39.0/fnm-${FNM_ARCH}.zip" -o /tmp/fnm.zip \
     && unzip /tmp/fnm.zip -d /tmp/fnm \
     && mkdir -p ${HOME}/.fnm \
@@ -131,7 +131,7 @@ RUN eval "$(/home/dev/.fnm/fnm env)" \
     && rm -rf /tmp/ccquota
 
 # ── Neovim ────────────────────────────────────────────────────────────────────
-RUN NVIM_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x86_64") \
+RUN NVIM_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "arm64" || echo "x86_64") \
     && wget -q https://github.com/neovim/neovim/releases/download/v0.12.2/nvim-linux-${NVIM_ARCH}.tar.gz -O /tmp/nvim.tar.gz \
     && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
     && rm /tmp/nvim.tar.gz
@@ -153,7 +153,7 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version 5.1 tiktoken_core
 
 # ── powershell ─────────────────────────────────────────────────────────────
-RUN PWSH_ARCH=$([ "$TARGETARCH" = "arm64" ] && echo "arm64" || echo "x64") \
+RUN PWSH_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "arm64" || echo "x64") \
     && curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-${PWSH_ARCH}.tar.gz \
     && sudo mkdir -p /opt/microsoft/powershell/7 \
     && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
@@ -255,7 +255,7 @@ RUN printf '#!/bin/sh\nbuf=$(cat)\nencoded=$(printf "%%s" "$buf" | base64 | tr -
     && chmod +x ${HOME}/.local/bin/osc52copy
 
 # ── clangd (arm64 only — mason can't install it on arm64) ─────────────────────
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
+RUN if [ "$(dpkg --print-architecture)" = "arm64" ]; then \
     mkdir -p ${HOME}/.local/share/nvim/mason/bin \
     && mkdir -p ${HOME}/.local/share/nvim/mason/packages/clangd \
     && ln -s /usr/bin/clangd-16 ${HOME}/.local/share/nvim/mason/bin/clangd; \

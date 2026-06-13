@@ -29,7 +29,7 @@ tmux:
 	echo "Reload tmux"
 
 build_docker:
-	docker build --tag devenv:latest .
+	DOCKER_BUILDKIT=1 docker build --tag devenv:latest .
 
 build_podman:
 	podman build --platform $(PODMAN_PLATFORM) -t devenv:latest .

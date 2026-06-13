@@ -27,6 +27,7 @@
       - colima
       - docker
       - docker-compose
+      - docker-buildx
     state: present
 - name: Install cask
   homebrew_cask:
@@ -50,10 +51,24 @@
   failed_when: false
   changed_when: false
 - name: Start Colima
-  command: colima start
+  command: colima start --cpu 4 --memory 8
   when: "'Running' not in colima_list.stdout + colima_list.stderr"
   async: 600
   poll: 10
+- name: Ensure docker cli-plugins directory exists
+  file:
+    path: "{{ ansible_facts['env'].HOME }}/.docker/cli-plugins"
+    state: directory
+- name: Register docker buildx as a CLI plugin
+  file:
+    src: /opt/homebrew/opt/docker-buildx/bin/docker-buildx
+    dest: "{{ ansible_facts['env'].HOME }}/.docker/cli-plugins/docker-buildx"
+    state: link
+- name: Register docker compose as a CLI plugin
+  file:
+    src: /opt/homebrew/opt/docker-compose/bin/docker-compose
+    dest: "{{ ansible_facts['env'].HOME }}/.docker/cli-plugins/docker-compose"
+    state: link
 - name: Ensure /usr/local/bin exists
   file:
     path: /usr/local/bin
