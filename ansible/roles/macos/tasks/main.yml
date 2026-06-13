@@ -19,57 +19,65 @@
       - bat
       - wget
       - gnu-tar
-      # - kitty
       - fontconfig
       - luarocks
       - axel
       - openjdk@21
-      # - alacritty
+      - colima
+      - docker
+      - docker-compose
     state: present
-
 - name: Install cask
   homebrew_cask:
-    name:
-      - nikitabobko/tap/aerospace
-      - alfred
-      - zen
-      - ghostty
+    name: "{{ item }}"
     state: present
+    install_options: adopt
+  loop:
+    - zen
+    - ghostty
+    - appcleaner
+    - grandperspective
+    - focusrite-control-2
+    - eqmac
+    - vlc
+  register: result
   failed_when: >
     result.failed and 'It seems there is already an App' not in result.msg
-  register: result
-
+- name: Check Colima status
+  command: colima status
+  register: colima_status
+  failed_when: false
+  changed_when: false
+- name: Start Colima
+  command: colima start
+  when: colima_status.rc != 0
+  async: 600
+  poll: 10
 - name: Ensure /usr/local/bin exists
   file:
     path: /usr/local/bin
     state: directory
   become: true
-
 - name: Install rustup
   shell: >
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs |
     sh -s -- -y --default-toolchain 1.95.0 --profile minimal --no-modify-path
   args:
     creates: "{{ ansible_facts['env'].HOME }}/.cargo/bin/rustup"
-
 - name: Pin Rust toolchain to 1.95.0
   shell: "{{ ansible_facts['env'].HOME }}/.cargo/bin/rustup default 1.95.0"
-
 - name: Install ripgrep
   include_role:
     name: common/shared/ripgrep
-
 - name: Install zoxide
   include_role:
     name: common/shared/zoxide
-
 - name: Create symlink for tmux
   file:
     src: /opt/homebrew/bin/tmux
     dest: /usr/local/bin/tmux
     state: link
   become: true
-
 - name: Install go
   include_role:
     name: common/shared/go
@@ -77,7 +85,6 @@
     version: 1.24.2
     os: darwin
     arch: arm64
-
 - name: Install zig
   block:
     - name: Download zig
@@ -101,51 +108,40 @@
       file:
         path: /tmp/zig.tar.xz
         state: absent
-
 - name: Copy font files
   copy:
     src: '{{playbook_dir}}/../NerdFonts/'
     dest: '/Library/Fonts/'
   become: true
-
 - name: Remove .config
   file:
     path: '${HOME}/.config'
     state: absent
-
 - name: Create .config
   file:
     state: directory
     path: '${HOME}/.config'
-
 - name: Setup zsh
   include_role:
     name: common/shared/zsh
-
 - name: Download and install fnm
   include_role:
     name: common/shared/fnm
-
 - name: Install lazySQL
   include_role:
     name: common/shared/lazysql
-
 - name: Install lazydocker
   include_role:
     name: common/shared/lazydocker
-
 - name: Install lazyjournal
   include_role:
     name: common/shared/lazyjournal
-
 - name: Install lazygit
   include_role:
     name: common/shared/lazygit
-
 - name: Setup tmux
   include_role:
     name: common/shared/tpm
-
 - name: Setup nvim
   include_role:
     name: common/shared/nvim
@@ -153,7 +149,6 @@
     os: macos
     arch: arm64
     version: 0.12.2
-
 - name: Copy files
   copy:
     src: '{{ item }}'
@@ -161,4 +156,3 @@
   loop:
     - '{{playbook_dir}}/../ghostty'
     - '{{playbook_dir}}/../fastfetch'
-    - '{{playbook_dir}}/../aerospace'
