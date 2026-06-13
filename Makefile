@@ -29,7 +29,7 @@ tmux:
 	echo "Reload tmux"
 
 build_docker:
-	DOCKER_BUILDKIT=1 docker build --tag devenv:latest .
+	docker build --tag devenv:latest .
 
 build_podman:
 	podman build --platform $(PODMAN_PLATFORM) -t devenv:latest .
@@ -37,7 +37,10 @@ build_podman:
 run_docker: build_docker
 	CONTAINER_ENGINE=docker $(DOCKER_RUN_SCRIPT)
 
+run_docker_notmux: build_docker
+	NO_TMUX=1 CONTAINER_ENGINE=docker $(DOCKER_RUN_SCRIPT)
+
 run_podman: 
 	CONTAINER_ENGINE=podman $(DOCKER_RUN_SCRIPT)
 
-.PHONY: ansible build_docker run_docker nvim shell tmux build_podman
+.PHONY: ansible build_docker run_docker run_docker_notmux nvim shell tmux build_podman

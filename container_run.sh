@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 CONTAINER="devenv"
+NO_TMUX="${NO_TMUX:-}"
 
 # Pick container engine: explicit override, else docker, else podman.
 ENGINE="${CONTAINER_ENGINE:-}"
@@ -42,7 +43,11 @@ if ! "$ENGINE" image inspect "${CONTAINER}:latest" &>/dev/null; then
 fi
 if "$ENGINE" ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
     echo "Attaching to running container..."
-    "$ENGINE" exec -it "$CONTAINER" /bin/zsh -c "tmux -u new-session -A -s main"
+    if [[ -n "$NO_TMUX" ]]; then
+        "$ENGINE" exec -it "$CONTAINER" /bin/zsh
+    else
+        "$ENGINE" exec -it "$CONTAINER" /bin/zsh -c "tmux -u new-session -A -s main"
+    fi
     exit 0
 fi
 if "$ENGINE" ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
@@ -76,10 +81,13 @@ fi
 ENV_FILE="${HOME}/.devenv.env"
 ENV_ARGS=()
 [[ -f "$ENV_FILE" ]] && ENV_ARGS+=(--env-file "$ENV_FILE")
+ENTRYPOINT_ARGS=()
+[[ -n "$NO_TMUX" ]] && ENTRYPOINT_ARGS+=(--entrypoint /bin/zsh)
 "$ENGINE" run -it \
     --name "$CONTAINER" \
     --hostname devenv \
     "${ENGINE_RUN_ARGS[@]}" \
+    "${ENTRYPOINT_ARGS[@]}" \
     "${ENV_ARGS[@]}" \
     "${MOUNTS[@]}" \
     "${CONTAINER}:latest"
