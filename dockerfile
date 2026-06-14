@@ -297,7 +297,7 @@ RUN set -eu; \
     fi; \
     sed -e '/__SITE_LOCAL_ENTRIES__/{r /tmp/fw/site.entries' -e 'd}' \
         /tmp/fw/init-firewall.sh > /usr/local/bin/init-firewall.sh; \
-    chmod 0755 /usr/local/bin/init-firewall.sh; \
+    chmod 0755 /usr/local/bin/init-firewall.sh /usr/local/bin/devenv-entry; \
     rm -rf /tmp/fw
 
 USER dev

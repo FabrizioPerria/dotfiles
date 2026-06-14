@@ -12,29 +12,13 @@ set -euo pipefail
 # ── allowlist ─────────────────────────────────────────────────────────────────
 # Everything the caged agent legitimately needs, and nothing else. Edit here.
 ALLOWED_DOMAINS=(
-    # Claude Code
     api.anthropic.com
     sentry.io
-    # statsig.anthropic.com omitted: no public DNS record, and Claude Code runs
-    # fine without it. If you ever see feature-flag/telemetry timeouts on start,
-    # add Statsig's real hosts here: featuregates.org featureassets.org
-    # git host
-    github.com
-    api.github.com
-    codeload.github.com
-    objects.githubusercontent.com
-    raw.githubusercontent.com
-    # package registries
-    registry.npmjs.org
-    pypi.org
-    files.pythonhosted.org
-    static.crates.io
-    index.crates.io
-    proxy.golang.org
-    sum.golang.org
-    # ubuntu apt
-    archive.ubuntu.com
-    security.ubuntu.com
+    # github.com
+    # api.github.com
+    # codeload.github.com
+    # objects.githubusercontent.com
+    # raw.githubusercontent.com
 
     # Site-local entries (work P4 IP, TeamCity host, etc.) are spliced in HERE at
     # build time from entry/allowlist.local (gitignored, never pushed). Empty in
@@ -80,15 +64,15 @@ ipset create allowed-domains hash:net
 # few stable, published CIDR ranges. Pin them directly: a single dig snapshot
 # misses per-host IP rotation within these ranges, which is what broke codeload
 # tarball downloads. These change rarely and GitHub announces when they do.
-GITHUB_CIDRS=(
-    140.82.112.0/20
-    143.55.64.0/20
-    192.30.252.0/22
-    185.199.108.0/22   # raw / objects.githubusercontent.com, pages
-)
-for cidr in "${GITHUB_CIDRS[@]}"; do
-    ipset add allowed-domains "$cidr" -exist
-done
+# GITHUB_CIDRS=(
+#     140.82.112.0/20
+#     143.55.64.0/20
+#     192.30.252.0/22
+#     185.199.108.0/22   # raw / objects.githubusercontent.com, pages
+# )
+# for cidr in "${GITHUB_CIDRS[@]}"; do
+#     ipset add allowed-domains "$cidr" -exist
+# done
 
 # Best-effort top-up from the live meta API, in case the ranges above ever shift.
 # Failure here is fine and expected (it's unauthenticated + rate-limited) - the
