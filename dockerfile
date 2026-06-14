@@ -198,6 +198,7 @@ source ${HOME}/.config/shell/zinit.zsh
 source ${HOME}/.config/shell/tc-completion.zsh
 source ${HOME}/.config/shell/p4-completion.zsh
 source ${HOME}/.config/shell/devenv.zsh
+unsetopt HIST_SAVE_BY_COPY
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
 bindkey '^?' backward-delete-char
 eval "$(/home/dev/.fnm/fnm env)"

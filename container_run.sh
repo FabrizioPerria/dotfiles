@@ -41,6 +41,12 @@ if ! "$ENGINE" image inspect "${CONTAINER}:latest" &>/dev/null; then
     echo "Image not found — run ./build.sh first."
     exit 1
 fi
+
+if [[ -n "${TMUX:-}" ]]; then
+    tmux set-option -p -t "$TMUX_PANE" @devenv 1
+    trap 'tmux set-option -pu -t "$TMUX_PANE" @devenv' EXIT
+fi
+
 if "$ENGINE" ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
     echo "Attaching to running container..."
     if [[ -n "$NO_TMUX" ]]; then
@@ -111,4 +117,3 @@ ENTRYPOINT_ARGS=()
     "${ENV_ARGS[@]}" \
     "${MOUNTS[@]}" \
     "${CONTAINER}:latest"
-

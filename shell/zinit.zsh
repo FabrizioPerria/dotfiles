@@ -23,13 +23,13 @@ zinit wait lucid as=program \
 zinit snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/key-bindings.zsh
 zinit snippet https://raw.githubusercontent.com/junegunn/fzf/master/shell/completion.zsh
 
-zinit wait lucid depth=1 ver"5c4f2ef" for "Aloxaf/fzf-tab"
+zinit wait lucid depth=1 for "Aloxaf/fzf-tab"
 zinit wait lucid depth=1 for "fabrizioperria/zsh-venv-autoswitch"
 zinit wait lucid depth=1 for "zsh-users/zsh-history-substring-search"
-zinit wait lucid depth=1 ver"v1.2.0" for "zsh-users/zsh-autosuggestions"
-zinit wait lucid depth=1 ver"v0.8.0" for "zsh-users/zsh-syntax-highlighting"
-zinit wait lucid depth=1 ver"v0.9.0" for "zsh-users/zsh-history-substring-search"
-zinit ice depth"1" ver"v5.0.0" && zinit light "romkatv/powerlevel10k"
+zinit wait lucid depth=1 for "zsh-users/zsh-autosuggestions"
+zinit wait lucid depth=1 for "zsh-users/zsh-syntax-highlighting"
+zinit wait lucid depth=1 for "zsh-users/zsh-history-substring-search"
+zinit ice depth"1" && zinit light "romkatv/powerlevel10k"
 zinit wait lucid depth=1 for "zsh-users/zsh-completions"
 
 zstyle ':completion:*' use-cache on
