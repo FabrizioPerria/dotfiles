@@ -1,25 +1,144 @@
-# devenv.zsh — inside the dev container, stamp the terminal title so the host
-# tmux can tell this pane apart from a native one (see pane-border-format in
-# tmux.conf). The title rides the terminal stream, so it survives the
-# make -> container_run.sh -> docker launch chain that hides the engine from
-# #{pane_current_command}. No-op outside the container.
+# Launch / attach the devenv container from anywhere.
 #
-# Must be sourced AFTER zinit loads powerlevel10k, so our title write runs
-# after p10k's and wins (sourced last in .zshrc, both native and in the
-# Dockerfile's .zshrc heredoc).
+# Sourced as a function (not run as a script), so it executes in the current
+# shell. That forces three differences from the old container_run.sh:
+#   - `return`, never `exit` (exit would kill your interactive shell)
+#   - `local` vars (so it doesn't leak ENGINE/MOUNTS/... into your shell)
+#   - `emulate -L zsh` (clean, localized options; restored on return)
+# Behaviour is otherwise identical to container_run.sh.
+#
+# Usage:
+#   devenv [DIR ...]            # each DIR -> bind-mounted at /workspaces/<name>
+#   NO_TMUX=1 devenv            # drop straight into zsh, no tmux
+#   CONTAINER_ENGINE=podman devenv
+devenv() {
+    emulate -L zsh
 
-if [[ -n "$DEVENV" ]]; then
-  autoload -Uz add-zsh-hook
+    local CONTAINER="devenv"
+    local NO_TMUX="${NO_TMUX:-}"
+    if [[ -n "${TMUX:-}" ]]; then
+        NO_TMUX=1
+    fi
 
-  # OSC 2 sets the pane title; tmux captures it into #{pane_title}.
-  # DEVENV_MODE (e.g. "agent"), if set by container_run.sh, is appended.
-  _devenv_set_title()   { print -Pn "\e]2;devenv${DEVENV_MODE:+:${DEVENV_MODE}}\a"; }
+    # Pick container engine: explicit override, else docker, else podman.
+    local ENGINE="${CONTAINER_ENGINE:-}"
+    if [[ -z "$ENGINE" ]]; then
+        if command -v docker &>/dev/null; then
+            ENGINE="docker"
+        elif command -v podman &>/dev/null; then
+            ENGINE="podman"
+        else
+            echo "Neither docker nor podman is installed." >&2
+            return 1
+        fi
+    fi
 
-  # Reset the title when this shell exits, so the host pane doesn't stay
-  # stuck on "devenv" (and amber) after you leave the container.
-  _devenv_clear_title() { print -Pn "\e]2;\a"; }
+    # Flags so nested podman works inside the devenv regardless of the outer engine.
+    #   - both:   /dev/fuse, for the inner podman's fuse-overlayfs storage driver
+    #   - podman: keep SELinux enforcing (container_engine_t) and map the host user
+    #             to the container's dev (uid 1000) via keep-id so bind mounts stay
+    #             writable (both podman-only)
+    #   - docker: relax seccomp, since Docker's default profile blocks the
+    #             namespace/clone syscalls rootless podman needs in order to nest
+    local -a ENGINE_RUN_ARGS=(--device /dev/fuse --device /dev/net/tun)
+    if [[ "$ENGINE" == "podman" ]]; then
+        ENGINE_RUN_ARGS+=(
+            --userns=keep-id:uid=1000,gid=1000
+            --security-opt label=type:container_engine_t
+            --security-opt "unmask=/proc/*"
+        )
+    else
+        ENGINE_RUN_ARGS+=(
+            --security-opt seccomp=unconfined
+            --security-opt systempaths=unconfined
+        )
+    fi
 
-  add-zsh-hook precmd  _devenv_set_title
-  add-zsh-hook preexec _devenv_set_title
-  add-zsh-hook zshexit _devenv_clear_title
-fi
+    if ! "$ENGINE" image inspect "${CONTAINER}:latest" &>/dev/null; then
+        echo "Image not found — build it first (make build_docker)." >&2
+        return 1
+    fi
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux set-option -p -t "$TMUX_PANE" @devenv 1
+        trap 'tmux set-option -pu -t "$TMUX_PANE" @devenv' EXIT
+    fi
+
+    if "$ENGINE" ps --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
+        echo "Attaching to running container..."
+        if [[ -n "$NO_TMUX" ]]; then
+            "$ENGINE" exec -it "$CONTAINER" /bin/zsh
+        else
+            "$ENGINE" exec -it "$CONTAINER" /bin/zsh -c "tmux -u new-session -A -s main"
+        fi
+        return 0
+    fi
+    if "$ENGINE" ps -a --format '{{.Names}}' | grep -q "^${CONTAINER}$"; then
+        "$ENGINE" rm "$CONTAINER"
+    fi
+
+    # Governance policy: a root-owned host dir, mounted READ-ONLY (see MOUNTS below).
+    # Must NOT be the rw-mounted dotfiles, or the agent could edit it from inside.
+    # Populate once on the host:
+    #   sudo mkdir -p /srv/agent-policy
+    #   sudo cp -rL ~/workspace/dotfiles/claude/settings.json \
+    #               ~/workspace/dotfiles/claude/policy-limits.json \
+    #               ~/workspace/dotfiles/claude/hooks /srv/agent-policy/
+    #   sudo chown -R root:root /srv/agent-policy
+    local AGENT_POLICY="${AGENT_POLICY:-/Users/fabrizioperria/.claude/agent-policy}"
+    local f
+    for f in settings.json policy-limits.json hooks; do
+        [[ -e "$AGENT_POLICY/$f" ]] || { echo "Missing agent policy: $AGENT_POLICY/$f (see devenv.zsh header)." >&2; return 1; }
+    done
+
+    local -a MOUNTS=()
+    local dir abs name
+    for dir in "$@"; do
+        abs=$(cd "$dir" 2>/dev/null && pwd || echo "$dir")
+        name=$(basename "$abs")
+        MOUNTS+=(-v "${abs}:/workspaces/${name}")
+    done
+    touch "${HOME}/.claude.json"
+    MOUNTS+=(
+        -v "nvim-data:/home/dev/.local/share/nvim"
+        -v "claude-data:/home/dev/.claude"
+        -v "${AGENT_POLICY}/settings.json:/home/dev/.claude/settings.json:ro"
+        -v "${AGENT_POLICY}/policy-limits.json:/home/dev/.claude/policy-limits.json:ro"
+        -v "${AGENT_POLICY}/hooks:/home/dev/.claude/hooks:ro"
+        -v "${HOME}/.claude.json:/home/dev/.claude.json"
+        -v "${HOME}/.zsh_history_devenv:/home/dev/.zsh_history"
+        -v "${HOME}/Downloads/lsp:/workspaces/lsp"
+        -v "${HOME}/.ssh_container:/home/dev/.ssh"
+        -v "${HOME}/workspace/chords:/workspaces/chords"
+        -v "${HOME}/workspace/dotfiles:/workspaces/dotfiles"
+    )
+
+    # Persist the nested podman image/container store across the --rm devenv.
+    # :U (podman-only) chowns the volume to the mapped user so rootless writes work
+    # under keep-id; docker initialises ownership from the image dir via copy-up.
+    if [[ "$ENGINE" == "podman" ]]; then
+        MOUNTS+=(-v "podman-storage:/home/dev/.local/share/containers:U")
+    else
+        MOUNTS+=(-v "podman-storage:/home/dev/.local/share/containers")
+    fi
+
+    local ENV_FILE="${HOME}/.devenv.env"
+    local -a ENV_ARGS=()
+    [[ -f "$ENV_FILE" ]] && ENV_ARGS+=(--env-file "$ENV_FILE")
+    local -a ENTRYPOINT_ARGS=()
+    [[ -n "$NO_TMUX" ]] && ENTRYPOINT_ARGS+=(--entrypoint /bin/zsh)
+
+    "$ENGINE" run -it \
+        --name "$CONTAINER" \
+        --hostname devenv \
+        -p80:5173 \
+        "${ENGINE_RUN_ARGS[@]}" \
+        "${ENTRYPOINT_ARGS[@]}" \
+        "${ENV_ARGS[@]}" \
+        "${MOUNTS[@]}" \
+        "${CONTAINER}:latest"
+ }
+
+ devenvt() {
+     NO_TMUX=1 devenv
+}

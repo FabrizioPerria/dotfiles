@@ -65,7 +65,6 @@ ENV HOME=/home/dev
 ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${HOME}/.sdkman/candidates/gradle/current/bin:${PATH}"
 ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
-ENV DEVENV=1
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \
