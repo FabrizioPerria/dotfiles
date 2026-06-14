@@ -50,6 +50,7 @@ local parsers = {
     "kdl",
     "c_sharp",
     "vue",
+    "zsh",
 }
 
 ts.install(parsers, { summary = false }):wait(30000)

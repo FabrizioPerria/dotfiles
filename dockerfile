@@ -65,6 +65,7 @@ ENV HOME=/home/dev
 ENV PATH="${HOME}/.local/bin:${HOME}/.cargo/bin:/usr/local/go/bin:${HOME}/go/bin:${HOME}/.fnm:${HOME}/.fnm/aliases/default/bin:${HOME}/.sdkman/candidates/gradle/current/bin:${PATH}"
 ENV GOROOT=/usr/local/go
 ENV GOPATH=${HOME}/go
+ENV DEVENV=1
 
 # ── Symlinks ──────────────────────────────────────────────────────────────────
 RUN mkdir -p ${HOME}/.local/bin \
@@ -196,6 +197,7 @@ source ${HOME}/.config/shell/colors.zsh
 source ${HOME}/.config/shell/zinit.zsh
 source ${HOME}/.config/shell/tc-completion.zsh
 source ${HOME}/.config/shell/p4-completion.zsh
+source ${HOME}/.config/shell/devenv.zsh
 [[ ! -f ${HOME}/.config/shell/p10k.zsh ]] || source ${HOME}/.config/shell/p10k.zsh
 bindkey '^?' backward-delete-char
 eval "$(/home/dev/.fnm/fnm env)"

@@ -73,6 +73,7 @@ for path in "$@"; do
     MOUNTS+=(-v "${abs}:/workspaces/${name}")
 done
 touch .claude.json
+[[ ! -f "${HOME}/.zsh_history_devenv" ]] && touch "${HOME}/.zsh_history_devenv"
 MOUNTS+=(
     -v "nvim-data:/home/dev/.local/share/nvim"
     -v "claude-data:/home/dev/.claude"
