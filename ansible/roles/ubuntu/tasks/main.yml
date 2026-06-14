@@ -6,7 +6,6 @@
     neovim_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     lazygit_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'x86_64' }}"
     go_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
-    albert_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     docker_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     code_arch: "{{ 'arm64' if ansible_architecture == 'aarch64' or ansible_architecture == 'arm64' else 'amd64' }}"
     fastfetch_arch: "{{ 'aarch64' if ansible_architecture == 'aarch64' else 'amd64' }}"
@@ -41,36 +40,6 @@
     path: "/etc/apt/keyrings"
     state: directory
     mode: "u=rwx,go=rx"
-
-- name: Install vscode key
-  become: true
-  ansible.builtin.get_url:
-    url: "https://packages.microsoft.com/keys/microsoft.asc"
-    dest: "/etc/apt/keyrings/"
-    mode: "u=rw,go=r"
-    force: true
-
-- name: Install VS Code repo
-  become: true
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [arch=amd64,arm64
-      trusted=true
-      signed-by=/etc/apt/keyrings/microsoft.asc]
-      https://packages.microsoft.com/repos/code stable main
-    filename: vscode
-    state: present
-
-- name: Install azure-cli repo
-  become: true
-  ansible.builtin.apt_repository:
-    repo: >-
-      deb [arch=amd64,arm64
-      trusted=true
-      signed-by=/etc/apt/keyrings/microsoft.asc]
-      https://packages.microsoft.com/repos/azure-cli noble main
-    filename: azure
-    state: present
 
 - name: Update apt cache again
   apt:
@@ -176,10 +145,6 @@
   include_role:
     name: common/shared/zoxide
 
-- name: Install Weasis
-  include_role:
-    name: common/linux/weasis
-
 - name: Create local bin directory
   file:
     path: ${HOME}/.local/bin
@@ -263,12 +228,6 @@
   include_role:
     name: common/shared/lazygit
 
-- name: Install albert
-  include_role:
-    name: common/linux/albert
-  vars:
-    arch: "{{albert_arch}}"
-
 - name: Install fastfetch
   include_role:
     name: common/linux/fastfetch
@@ -287,13 +246,6 @@
     arch: "{{ neovim_arch }}"
     version: 0.11.2
 
-- name: Install ulauncher deps
-  command: pip install py-expression-eval  --break-system-packages
-
-- name: Setup Gnome
-  include_role:
-    name: common/linux/gnome
-
 - name: Copy files
   copy:
     src: "{{ item }}"
@@ -301,9 +253,6 @@
   loop:
     - "{{playbook_dir}}/../ghostty"
     - "{{playbook_dir}}/../fastfetch"
-    - "{{playbook_dir}}/../autostart"
-    - "{{playbook_dir}}/../albert"
-    - "{{playbook_dir}}/../forge"
 
 - name: Download Zen browser
   become: true
@@ -359,24 +308,20 @@
     password: "{{ root_password.user_input | password_hash('sha512') }}"
   when: root_password.user_input is defined
 
-- pause:
-    prompt: "Provide AZURE_PYPI_AUTH_URL"
-    echo: true
-  register: azure_pypi_auth_url
+# - pause:
+#     prompt: "Provide AZURE_PYPI_AUTH_URL"
+#     echo: true
+#   register: azure_pypi_auth_url
 
-- when: azure_pypi_auth_url.user_input is defined and azure_pypi_auth_url.user_input.startswith("http")
-  block:
-    - name: Set Azure PyPi auth URL
-      shell: >
-        echo "export AZURE_PYPI_AUTH_URL={{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/shell/exports.zsh
-      when: azure_pypi_auth_url.user_input is defined
-
-    - name: Setup global pip conf
-      shell: >
-        mkdir -p ${HOME}/.config/pip &&
-        echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
-        echo "index-url = {{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/pip/pip.conf
-
-- name: Install Bitdefender
-  include_role:
-    name: common/linux/bitdefender
+# - when: azure_pypi_auth_url.user_input is defined and azure_pypi_auth_url.user_input.startswith("http")
+#   block:
+#     - name: Set Azure PyPi auth URL
+#       shell: >
+#         echo "export AZURE_PYPI_AUTH_URL={{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/shell/exports.zsh
+#       when: azure_pypi_auth_url.user_input is defined
+#
+#     - name: Setup global pip conf
+#       shell: >
+#         mkdir -p ${HOME}/.config/pip &&
+#         echo "[global]" >> ${HOME}/.config/pip/pip.conf &&
+#         echo "index-url = {{ azure_pypi_auth_url.user_input }}" >> ${HOME}/.config/pip/pip.conf
