@@ -59,7 +59,7 @@ devenv() {
         return 1
     fi
 
-    if [[ -n "${TMUX:-}" ]]; then
+    if [[ -n "${TMUX:-}" ]] && [[ $NO_TMUX ]]; then
         tmux set-option -p -t "$TMUX_PANE" @devenv 1
         trap 'tmux set-option -pu -t "$TMUX_PANE" @devenv' EXIT
     fi
@@ -125,20 +125,24 @@ devenv() {
     local ENV_FILE="${HOME}/.devenv.env"
     local -a ENV_ARGS=()
     [[ -f "$ENV_FILE" ]] && ENV_ARGS+=(--env-file "$ENV_FILE")
-    local -a ENTRYPOINT_ARGS=()
-    [[ -n "$NO_TMUX" ]] && ENTRYPOINT_ARGS+=(--entrypoint /bin/zsh)
+
+    # Egress firewall. Start as root with the network capabilities so the image
+    # entrypoint (devenv-entry) can lock egress to the allowlist, then it drops
+    # to the unprivileged dev user. NO_TMUX passes /bin/zsh as the command, so
+    # the entrypoint hands you a shell instead of the tmux session.
+    # (NET_ADMIN/NET_RAW are runtime-only — they can't be baked into the image.)
+    local -a FW_ARGS=(--user root --cap-add=NET_ADMIN --cap-add=NET_RAW)
+    local -a CMD_ARGS=()
+    [[ -n "$NO_TMUX" ]] && CMD_ARGS=(/bin/zsh)
 
     "$ENGINE" run -it \
         --name "$CONTAINER" \
         --hostname devenv \
         -p80:5173 \
+        "${FW_ARGS[@]}" \
         "${ENGINE_RUN_ARGS[@]}" \
-        "${ENTRYPOINT_ARGS[@]}" \
         "${ENV_ARGS[@]}" \
         "${MOUNTS[@]}" \
-        "${CONTAINER}:latest"
- }
-
- devenvt() {
-     NO_TMUX=1 devenv
+        "${CONTAINER}:latest" \
+        "${CMD_ARGS[@]}"
 }

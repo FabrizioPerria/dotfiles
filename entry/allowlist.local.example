@@ -1,0 +1,10 @@
+# Site-local firewall allowlist.
+# Copy this to 'allowlist.local' (gitignored) and add hosts/IPs your environment
+# needs that shouldn't be in the public repo. One entry per line.
+#   - hostnames are resolved at firewall init   (e.g. teamcity.corp.example.com)
+#   - raw IPv4 and CIDRs are allowed directly    (e.g. 10.20.30.40  or  10.20.0.0/16)
+#   - '#' comments and blank lines are ignored
+#
+# teamcity.corp.example.com
+# 10.20.30.40
+# 10.20.0.0/16

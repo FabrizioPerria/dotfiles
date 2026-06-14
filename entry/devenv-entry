@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Default entrypoint for the devenv container.
+#
+# Always runs as root (the run command adds --user root + NET_ADMIN/NET_RAW),
+# locks egress to the allowlist, then permanently drops to the unprivileged dev
+# user before handing over the session.
+#
+# fail-closed: if the firewall can't be established and verified, set -e aborts
+# and the container exits before any shell is handed over.
+set -euo pipefail
+
+/usr/local/bin/init-firewall.sh
+
+# Drop to dev, shedding all capabilities (NET_ADMIN included). No sudo exists in
+# this image, so the drop is one-way: nothing in the session can re-open egress.
+# Run the passed command, or the tmux session by default (NO_TMUX passes zsh).
+if [[ $# -eq 0 ]]; then
+    set -- /bin/zsh -c 'tmux -u new-session -A -s main'
+fi
+exec setpriv --reuid=dev --regid=dev --init-groups --inh-caps=-all "$@"

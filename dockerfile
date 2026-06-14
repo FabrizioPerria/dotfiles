@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clangd-16 \
     lsof \
     podman uidmap fuse-overlayfs slirp4netns passt crun \
+    iptables ipset dnsutils iproute2 \
     && locale-gen en_US.UTF-8
 
 # ── Timezone ──────────────────────────────────────────────────────────────────
@@ -284,7 +285,22 @@ RUN sed -i '/NOPASSWD:ALL/d' /etc/sudoers \
     && rm -f /etc/sudoers.d/* \
     && rm -f /usr/bin/sudo /usr/bin/newgrp \
     && ! su dev -c 'sudo -n true' 2>/dev/null && echo "OK: dev has no sudo" || (echo "FAIL: sudo still works" && exit 1)
+
+COPY --chown=root:root entry/devenv-entry     /usr/local/bin/devenv-entry
+
+COPY --chown=root:root ./entry/init-firewall.sh   /tmp/fw/init-firewall.sh
+COPY --chown=root:root ./entry/allowlist.local*   /tmp/fw/
+RUN set -eu; \
+    : > /tmp/fw/site.entries; \
+    if [ -f /tmp/fw/allowlist.local ]; then \
+        sed 's/#.*//; s/[[:space:]]//g' /tmp/fw/allowlist.local | grep -v '^$' | sed 's/^/    /' >> /tmp/fw/site.entries; \
+    fi; \
+    sed -e '/__SITE_LOCAL_ENTRIES__/{r /tmp/fw/site.entries' -e 'd}' \
+        /tmp/fw/init-firewall.sh > /usr/local/bin/init-firewall.sh; \
+    chmod 0755 /usr/local/bin/init-firewall.sh; \
+    rm -rf /tmp/fw
+
 USER dev
 
 
-ENTRYPOINT ["/bin/zsh", "-c", "tmux -u new-session -A -s main"]
+ENTRYPOINT ["/usr/local/bin/devenv-entry"]
