@@ -8,3 +8,30 @@
 # teamcity.corp.example.com
 # 10.20.30.40
 # 10.20.0.0/16
+# google.com
+# api.anthropic.com
+# sentry.io
+#
+# github.com
+# api.github.com
+# codeload.github.com
+# objects.githubusercontent.com
+# raw.githubusercontent.com
+# 140.82.112.0/20
+# 143.55.64.0/20
+# 192.30.252.0/22
+# 185.199.108.0/22   # raw / objects.githubusercontent.com, pages
+#
+# # package registries
+# registry.npmjs.org
+# pypi.org
+# files.pythonhosted.org
+# static.crates.io
+# index.crates.io
+# proxy.golang.org
+# sum.golang.org
+#
+# # ubuntu apt
+# archive.ubuntu.com
+# security.ubuntu.com
+

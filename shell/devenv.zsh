@@ -16,6 +16,11 @@ devenv() {
 
     local CONTAINER="devenv"
     local NO_TMUX="${NO_TMUX:-}"
+
+    # DinD off by default → no relaxed isolation (default seccomp, no fuse device).
+    # Set DEVENV_DIND=1 AND build with --build-arg ALLOW_DIND=true for nested containers.
+    local DIND="${DEVENV_DIND:-0}"
+
     if [[ -n "${TMUX:-}" ]]; then
         NO_TMUX=1
     fi
@@ -33,25 +38,24 @@ devenv() {
         fi
     fi
 
-    # Flags so nested podman works inside the devenv regardless of the outer engine.
-    #   - both:   /dev/fuse, for the inner podman's fuse-overlayfs storage driver
-    #   - podman: keep SELinux enforcing (container_engine_t) and map the host user
-    #             to the container's dev (uid 1000) via keep-id so bind mounts stay
-    #             writable (both podman-only)
-    #   - docker: relax seccomp, since Docker's default profile blocks the
-    #             namespace/clone syscalls rootless podman needs in order to nest
-    local -a ENGINE_RUN_ARGS=(--device /dev/fuse --device /dev/net/tun)
+    local -a ENGINE_RUN_ARGS=()
     if [[ "$ENGINE" == "podman" ]]; then
-        ENGINE_RUN_ARGS+=(
-            --userns=keep-id:uid=1000,gid=1000
-            --security-opt label=type:container_engine_t
-            --security-opt "unmask=/proc/*"
-        )
+        ENGINE_RUN_ARGS+=(--userns=keep-id:uid=1000,gid=1000)   # always: bind-mount ownership
+        if [[ "$DIND" == 1 ]]; then
+            ENGINE_RUN_ARGS+=(
+                --device /dev/fuse --device /dev/net/tun
+                --security-opt label=type:container_engine_t
+                --security-opt "unmask=/proc/*"
+            )
+        fi
     else
-        ENGINE_RUN_ARGS+=(
-            --security-opt seccomp=unconfined
-            --security-opt systempaths=unconfined
-        )
+        if [[ "$DIND" == 1 ]]; then
+            ENGINE_RUN_ARGS+=(
+                --device /dev/fuse --device /dev/net/tun
+                --security-opt seccomp=unconfined
+                --security-opt systempaths=unconfined
+            )
+        fi
     fi
 
     if ! "$ENGINE" image inspect "${CONTAINER}:latest" &>/dev/null; then

@@ -2,6 +2,7 @@ FROM ubuntu:24.04@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TARGETARCH
+ARG ALLOW_DIND=false
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -34,7 +35,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dotnet-sdk-10.0 dotnet-runtime-10.0 \
     clangd-16 \
     lsof \
-    podman uidmap fuse-overlayfs slirp4netns passt crun \
     iptables ipset dnsutils iproute2 \
     && locale-gen en_US.UTF-8
 
@@ -49,6 +49,11 @@ RUN if [ "$(dpkg --print-architecture)" = "amd64" ]; then \
     | sudo tee /etc/apt/sources.list.d/perforce.list \
     && sudo apt-get update \
     && sudo apt-get install -y --no-install-recommends p4-cli; \
+    fi
+
+RUN if [ "$ALLOW_DIND" = "true" ]; then \
+      sudo apt-get install -y --no-install-recommends \
+         podman uidmap fuse-overlayfs slirp4netns passt crun; \
     fi
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -138,15 +143,17 @@ RUN NVIM_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "arm64" || 
     && sudo tar -C /usr/local --strip-components=1 -xzf /tmp/nvim.tar.gz \
     && rm /tmp/nvim.tar.gz
 
-# ── Podman-in-Podman (nested rootless containers) ─────────────────────────────
-RUN sudo mkdir -p /etc/containers \
-    && printf '[storage]\ndriver = "overlay"\n[storage.options.overlay]\nmount_program = "/usr/bin/fuse-overlayfs"\nignore_chown_errors = "true"\n' \
-        | sudo tee /etc/containers/storage.conf > /dev/null \
-&& printf '[containers]\ndefault_sysctls = []\n[engine]\ncgroup_manager = "cgroupfs"\nevents_logger = "file"\n' \
-        | sudo tee /etc/containers/containers.conf > /dev/null \
-    && printf 'unqualified-search-registries = ["docker.io"]\n' \
-        | sudo tee /etc/containers/registries.conf > /dev/null
-RUN mkdir -p /home/dev/.local/share/containers
+# ── Podman-in-Podman (nested rootless containers) — only when ALLOW_DIND=true ──
+RUN if [ "$ALLOW_DIND" = "true" ]; then \
+        sudo mkdir -p /etc/containers \
+        && printf '[storage]\ndriver = "overlay"\n[storage.options.overlay]\nmount_program = "/usr/bin/fuse-overlayfs"\nignore_chown_errors = "true"\n' \
+             | sudo tee /etc/containers/storage.conf > /dev/null \
+        && printf '[containers]\ndefault_sysctls = []\n[engine]\ncgroup_manager = "cgroupfs"\nevents_logger = "file"\n' \
+             | sudo tee /etc/containers/containers.conf > /dev/null \
+        && printf 'unqualified-search-registries = ["docker.io"]\n' \
+             | sudo tee /etc/containers/registries.conf > /dev/null \
+        && mkdir -p /home/dev/.local/share/containers ; \
+    fi
 
 # ── Claude Code ───────────────────────────────────────────────────────────────
 RUN curl -fsSL https://claude.ai/install.sh | bash

@@ -12,14 +12,6 @@ set -euo pipefail
 # ── allowlist ─────────────────────────────────────────────────────────────────
 # Everything the caged agent legitimately needs, and nothing else. Edit here.
 ALLOWED_DOMAINS=(
-    api.anthropic.com
-    sentry.io
-    # github.com
-    # api.github.com
-    # codeload.github.com
-    # objects.githubusercontent.com
-    # raw.githubusercontent.com
-
     # Site-local entries (work P4 IP, TeamCity host, etc.) are spliced in HERE at
     # build time from entry/allowlist.local (gitignored, never pushed). Empty in
     # the public repo. Raw IPs/CIDRs are allowed directly; hostnames are resolved.
@@ -59,29 +51,6 @@ fi
 
 # ── build the allowed-IP set ───────────────────────────────────────────────────
 ipset create allowed-domains hash:net
-
-# GitHub's hosts (github.com, codeload, api, *.githubusercontent) all live in a
-# few stable, published CIDR ranges. Pin them directly: a single dig snapshot
-# misses per-host IP rotation within these ranges, which is what broke codeload
-# tarball downloads. These change rarely and GitHub announces when they do.
-# GITHUB_CIDRS=(
-#     140.82.112.0/20
-#     143.55.64.0/20
-#     192.30.252.0/22
-#     185.199.108.0/22   # raw / objects.githubusercontent.com, pages
-# )
-# for cidr in "${GITHUB_CIDRS[@]}"; do
-#     ipset add allowed-domains "$cidr" -exist
-# done
-
-# Best-effort top-up from the live meta API, in case the ranges above ever shift.
-# Failure here is fine and expected (it's unauthenticated + rate-limited) - the
-# static ranges above are the real coverage.
-if gh_meta="$(curl -fsS --max-time 10 https://api.github.com/meta 2>/dev/null)"; then
-    while read -r cidr; do
-        [[ "$cidr" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+$ ]] && ipset add allowed-domains "$cidr" -exist
-    done < <(jq -r '(.git + .web + .api)[]?' <<<"$gh_meta" 2>/dev/null || true)
-fi
 
 # Add one target to the set: a raw IPv4 / CIDR goes in directly; anything else is
 # treated as a hostname and resolved. Site-local entries (which may be bare IPs)
