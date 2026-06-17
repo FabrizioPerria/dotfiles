@@ -1,10 +1,11 @@
 ifeq ($(OS),Windows_NT)
 DOCKER_RUN_SCRIPT = pwsh -File container_run.ps1
+ARCH := x86_64
 else
 DOCKER_RUN_SCRIPT = ./container_run.sh
+ARCH := $(shell uname -m)
 endif
 
-ARCH := $(shell uname -m)
 ifeq ($(ARCH),x86_64)
 PODMAN_PLATFORM = linux/amd64
 else
@@ -29,7 +30,7 @@ tmux:
 	echo "Reload tmux"
 
 build_docker:
-	docker build --tag devenv:latest .
+	docker build --progress=plain --tag devenv:latest .
 
 build_podman:
 	podman build --platform $(PODMAN_PLATFORM) -t devenv:latest .

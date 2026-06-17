@@ -12,6 +12,7 @@ set -euo pipefail
 # ── allowlist ─────────────────────────────────────────────────────────────────
 # Everything the caged agent legitimately needs, and nothing else. Edit here.
 ALLOWED_DOMAINS=(
+    api.github.com
     # Site-local entries (work P4 IP, TeamCity host, etc.) are spliced in HERE at
     # build time from entry/allowlist.local (gitignored, never pushed). Empty in
     # the public repo. Raw IPs/CIDRs are allowed directly; hostnames are resolved.

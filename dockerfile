@@ -99,7 +99,7 @@ RUN GONOSUMCHECK=* GOFLAGS=-mod=mod go install golang.org/x/tools/gopls@v0.17.1 
     && go install github.com/jesseduffield/lazydocker@v0.25.2 \
     && go install github.com/jorgerojas26/lazysql@v0.4.8 \
     && go install github.com/Lifailon/lazyjournal@0.8.6 \
-    && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2 \ 
+    && go install github.com/JetBrains/teamcity-cli/tc@v0.7.2 \
     && go install github.com/air-verse/air@v1.65.3
 
 # ── Rust tools ────────────────────────────────────────────────────────────────
@@ -163,7 +163,7 @@ RUN sudo -E env PATH="${HOME}/.cargo/bin:${PATH}" luarocks install --lua-version
 
 # ── powershell ─────────────────────────────────────────────────────────────
 RUN PWSH_ARCH=$([ "$(dpkg --print-architecture)" = "arm64" ] && echo "arm64" || echo "x64") \
-    && curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/powershell-7.5.5-linux-${PWSH_ARCH}.tar.gz \
+    && curl -L -o /tmp/powershell.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v7.5.7/powershell-7.5.7-linux-${PWSH_ARCH}.tar.gz \
     && sudo mkdir -p /opt/microsoft/powershell/7 \
     && sudo tar zxf /tmp/powershell.tar.gz -C /opt/microsoft/powershell/7 \
     && sudo chmod +x /opt/microsoft/powershell/7/pwsh \
