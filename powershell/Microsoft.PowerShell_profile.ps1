@@ -69,13 +69,13 @@ function Get-UnixShell {
 
     if (-not (docker image inspect $IMAGE 2>$null)) {
         Write-Host "Image not found — run ./build.ps1 first."
-        exit 1
+        return
     }
 
     if (docker ps --format '{{.Names}}' | Select-String -Quiet "^$CONTAINER$") {
         Write-Host "Attaching to running container..."
         docker exec -it $CONTAINER /bin/zsh -c "tmux -u new-session -A -s main"
-        exit 0
+        return
     }
 
     if (docker ps -a --format '{{.Names}}' | Select-String -Quiet "^$CONTAINER$") {
@@ -97,6 +97,13 @@ function Get-UnixShell {
 
     $mounts += '-v', "claude-data:/home/dev/.claude"
     $mounts += '-v', "$PWSH_HOME/.claude.json:/home/dev/.claude.json"
+    $mounts += '-v', "$PWSH_HOME/lazyperf:/workspaces/lazyperf"
+    $mounts += '-v', "$HOME/Desktop/projects:/workspaces/TC-projects-xml"
+    $mounts += '-v', "maven:/home/dev/.m2"
+    $mounts += '-v', "ssh:/home/dev/.ssh"
+    $mounts += '-v', "obsidian-notes:/workspaces/hmn-notes"
+    $mounts += '-v', "$PWSH_HOME/.zsh_history_devenv:/home/dev/.zsh_history"
+
 
     $envFile = "$PWSH_HOME/.devenv.env"
     $envArgs = @()
@@ -105,11 +112,13 @@ function Get-UnixShell {
         $envArgs = '--env-file', $envFile
     }
 
-    docker run -it --name $CONTAINER --hostname devenv @envArgs --dns $env:DNS @mounts $IMAGE
+    docker run -it --name $CONTAINER --hostname devenv `
+    --user root --cap-add=NET_ADMIN --cap-add=NET_RAW `
+    @envArgs --dns-search corp.ioi.dk  @mounts $IMAGE
 }
 
 function sh() {
-    Get-UnixShell -Paths D:\scripting,D:\claude
+    Get-UnixShell -Paths D:\scripting,D:\claude,D:\dotfiles
 }
 
 function rc() {
@@ -133,6 +142,7 @@ $cred=Import-Clixml C:\Users\fabriziop\Documents\PowerShell\p.cred
 . "$PWSH_HOME/tcUtils.ps1"
 . "$PWSH_HOME/psUtils.ps1"
 . "$PWSH_HOME/Whitelisting.ps1"
+. "$PWSH_HOME/secret.ps1"
 . "$PWSH_HOME/tc-p4-completion.ps1"
 . "$PWSH_HOME/agents.ps1"
 
