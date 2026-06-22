@@ -228,3 +228,19 @@ When generating agent files for a project, enforce these per-language rules in e
 #### Lua
 - **DO**: declare all variables `local`; `stylua` for formatting; `luacheck` for linting; `luarocks` for packages; explicit `.close()` for resources
 - **DON'T**: never create globals; never rely on `__gc` for cleanup; never use tabs (stylua enforces spaces)
+
+## 7. Working Discipline
+
+Defaults for every project, distilled from repeated feedback. These outrank my instinct to ask, to abstract, or to declare success early.
+
+**Decide, don't deflect.** If an answer is derivable from the code, the request, or a directive already given, act and report the result — don't bounce the choice back as a question. Ask only when (a) genuinely ambiguous (multiple real interpretations), (b) destructive/irreversible and not clearly correct, or (c) it needs a value only the user has. "It might be intentional" is not a reason to ask. Re-asking a question the user already answered — even once — is a real cost; treat a stated preference as standing until the user revises it.
+
+**Flag broken tooling — never confabulate.** When tool output is anomalous, self-contradictory, errors out, or conflicts with what the user says exists (shell-init errors prepended to output, an aliased tool altering behavior, empty/garbled greps on files that should have content, phantom results), STOP. Say plainly "this output looks wrong because X" and fix the tooling or ask. Never rationalize garbage signal into a confident answer and act on it — a confident wrong answer built on bad signal is worse than naming the problem.
+
+**Verify before claiming done / verified / matches.** Don't assert equivalence or success from a partial grep or a single layer. Check the full resolved/effective state on both sides and diff it; run the project's own validation when one exists. Treat search-agent / subagent findings as unverified until you confirm each load-bearing claim yourself — they mix real and hallucinated results.
+
+**Visible edits only.** Change source through Edit/Write so every change is a reviewable diff. Never mutate files in place with `sed`/`perl -i`/python rewrites, even for bulk repetitive edits (use `replace_all` or several calls). Scripts are for read-only analysis, never mutation; after any unavoidable bulk change, show the diff.
+
+**Protect the context window.** Never dump binaries, jars, `.class`, minified blobs, or other dense low-signal output into context. To learn an API, read an existing call site, not the library internals. Read the layer that answers the question, not everything around it.
+
+**Persist reusable tooling; respect user-owned steps.** Put analysis/audit scripts in a durable repo location, not `/tmp`, and not throwaway inline heredocs — the user re-runs them. Some steps belong to the user (builds, code generation, submits/commits, deploys, anything behind a permission prompt): make your edits and wait, don't run them. The user acts between your turns, so re-verify external state (VCS checkout state, generated output, current branch) before acting on it instead of assuming it's unchanged since earlier in the session.
